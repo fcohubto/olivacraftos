@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Library — Olivacraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9,600;1,9,300&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --night: #0D2B4A; --blue: #0A7EC2; --cyan: #3EC6D4; --frost: #F2F8FD;
+  --ink: #1A2C3D; --ink-soft: #3D5A74; --ink-muted: #6A8EA8; --ink-faint: #9AB4C8;
+  --border: rgba(10,126,194,0.13); --surface: #EAF3FB;
+  --font-d: 'Fraunces', Georgia, serif;
+  --font-b: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+html { font-size: 16px; scroll-behavior: smooth; }
+body { background: var(--frost); color: var(--ink); font-family: var(--font-b); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+/* LAYOUT */
+.layout { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar { position: fixed; top: 0; left: 0; width: 200px; height: 100vh; background: var(--night); display: flex; flex-direction: column; padding: 1.5rem 0; overflow-y: auto; z-index: 10; }
+.sb-brand { padding: 0 1.25rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.07); margin-bottom: 0.75rem; }
+.sb-wm { display: flex; align-items: baseline; }
+.sb-wm em   { font-family: var(--font-d); font-style: italic; font-weight: 300; font-size: 18px; color: var(--cyan); font-variation-settings: 'opsz' 9; }
+.sb-wm span { font-family: var(--font-d); font-weight: 600; font-size: 18px; color: #fff; font-variation-settings: 'opsz' 9; }
+.sb-wm b    { font-family: var(--font-d); font-weight: 700; font-size: 20px; color: var(--cyan); position: relative; top: -1px; margin-left: 1px; font-variation-settings: 'opsz' 9; }
+.sb-sub { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 3px; letter-spacing: 0.04em; }
+.sb-cat { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.25); padding: 0.75rem 1.25rem 0.3rem; }
+.sb-link { display: flex; align-items: center; gap: 7px; padding: 6px 1.25rem; font-size: 12px; color: rgba(255,255,255,0.5); cursor: pointer; border-left: 2px solid transparent; transition: all 0.15s; text-decoration: none; }
+.sb-link:hover { color: #fff; background: rgba(255,255,255,0.04); }
+.sb-link.active { color: var(--cyan); border-left-color: var(--cyan); background: rgba(62,198,212,0.06); }
+.sb-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; flex-shrink: 0; opacity: 0.5; }
+.sb-link.active .sb-dot { opacity: 1; }
+.sb-footer { margin-top: auto; padding: 1rem 1.25rem 0; border-top: 1px solid rgba(255,255,255,0.06); font-size: 10px; color: rgba(255,255,255,0.2); line-height: 1.6; }
+
+/* MAIN */
+.main { margin-left: 200px; flex: 1; padding: 2.5rem 3rem 6rem; max-width: calc(100vw - 200px); }
+
+/* HEADER */
+.page-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+.page-title { font-family: var(--font-d); font-style: italic; font-weight: 300; font-size: 2rem; color: var(--night); letter-spacing: -0.02em; line-height: 1.1; font-variation-settings: 'opsz' 9; }
+.page-sub { font-size: 13px; color: var(--ink-muted); margin-top: 6px; }
+
+/* CATEGORY */
+.category { margin-bottom: 3rem; scroll-margin-top: 2rem; }
+.cat-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid var(--border); }
+.cat-badge { font-size: 9px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
+.badge-biz    { background: var(--surface); color: var(--blue); }
+.badge-id     { background: rgba(13,43,74,0.08); color: var(--night); }
+.cat-title { font-size: 16px; font-weight: 600; color: var(--ink); }
+
+/* PROMPT CARD */
+.prompt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.prompt-card { background: #fff; border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+.pc-head { padding: 10px 14px; background: var(--surface); border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pc-name { font-size: 12px; font-weight: 600; color: var(--ink); }
+.pc-file { font-size: 10px; color: var(--ink-faint); font-family: monospace; }
+.pc-body { padding: 12px 14px; }
+.pc-prompt { font-size: 12px; color: var(--ink-soft); line-height: 1.65; white-space: pre-wrap; font-family: var(--font-b); }
+.pc-actions { padding: 8px 14px; border-top: 0.5px solid var(--border); display: flex; justify-content: flex-end; gap: 6px; }
+.copy-btn { font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 999px; border: 0.5px solid var(--border); background: transparent; color: var(--ink-muted); cursor: pointer; font-family: var(--font-b); transition: all 0.15s; }
+.copy-btn:hover { background: var(--surface); color: var(--blue); border-color: var(--blue); }
+.copy-btn.copied { background: #E1F5EE; color: #0F6E56; border-color: #0F6E56; }
+
+/* FULL WIDTH CARD */
+.prompt-card.full { grid-column: 1 / -1; }
+
+@media (max-width: 900px) {
+  .sidebar { width: 160px; }
+  .main { margin-left: 160px; padding: 2rem 1.5rem 4rem; max-width: calc(100vw - 160px); }
+  .prompt-grid { grid-template-columns: 1fr; }
+  .prompt-card.full { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-wm"><em>Oliva</em><span>craft</span><b>·</b></div>
+    <div class="sb-sub">Prompt Library</div>
+  </div>
+
+  <div class="sb-cat">Negocio</div>
+  <a class="sb-link active" href="#estrategia"><span class="sb-dot"></span>Estrategia</a>
+  <a class="sb-link" href="#comercial"><span class="sb-dot"></span>Comercial</a>
+  <a class="sb-link" href="#comunicacion"><span class="sb-dot"></span>Comunicación</a>
+  <a class="sb-link" href="#presentaciones"><span class="sb-dot"></span>Presentaciones</a>
+
+  <div class="sb-cat">Identidad</div>
+  <a class="sb-link" href="#exploracion"><span class="sb-dot"></span>Exploración</a>
+  <a class="sb-link" href="#sistema"><span class="sb-dot"></span>Sistema</a>
+
+  <div class="sb-footer">olivacraft.com<br>Uso interno</div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <div class="page-header">
+    <h1 class="page-title">Prompt Library</h1>
+    <p class="page-sub">Prompts reutilizables para generar documentos de negocio e identidad de marca con IA. Copia el prompt, pégalo en Claude y completa los campos entre corchetes.</p>
+  </div>
+
+  <!-- ══ NEGOCIO ══════════════════════════ -->
+
+  <div class="category" id="estrategia">
+    <div class="cat-header">
+      <span class="cat-badge badge-biz">Negocio</span>
+      <span class="cat-title">Estrategia</span>
+    </div>
+    <div class="prompt-grid">
+
+      <div class="prompt-card full">
+        <div class="pc-head">
+          <span class="pc-name">Roadmap de negocio</span>
+          <span class="pc-file">olivacraft-roadmap.html</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-roadmap">Construye un roadmap absoluto para [NOMBRE DEL NEGOCIO].
+
+Contexto:
+- Tipo de negocio: [descripción breve]
+- Servicios: [lista de servicios]
+- Estado actual: [0 clientes / en operación / etc]
+- Equipo: [1 persona + IA / equipo pequeño / etc]
+- Urgencia inmediata: [qué necesita resolver esta semana]
+
+Formato: HTML interactivo descargable, colapsable por fases.
+Incluir: fases estructuradas, tareas por fase, prioridades, tiempos estimados y métricas clave.
+Tono: profesional, directo, técnico. Español latino neutro.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-roadmap', this)">Copiar prompt</button></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ COMERCIAL ══════════════════════════ -->
+
+  <div class="category" id="comercial">
+    <div class="cat-header">
+      <span class="cat-badge badge-biz">Negocio</span>
+      <span class="cat-title">Documentos comerciales</span>
+    </div>
+    <div class="prompt-grid">
+
+      <div class="prompt-card">
+        <div class="pc-head">
+          <span class="pc-name">Presupuesto</span>
+          <span class="pc-file">olivacraft-presupuesto.html + .pdf</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-presupuesto">Genera un presupuesto de servicios para [NOMBRE DEL NEGOCIO].
+
+Datos del prestador:
+- Nombre: [nombre completo]
+- Facturación: [boleta de honorarios / factura]
+- Email: [email]
+- Sitio web: [URL]
+
+Servicio:
+- Nombre: [nombre del servicio]
+- Alcance incluido: [lista de ítems]
+- Ítems opcionales: [lista o "ninguno"]
+- Valor base: [monto en CLP]
+- Estructura de pago: [50/50 / pago único / otra]
+- Plazo de entrega: [días o semanas]
+- Validez: [días corridos]
+
+Formato: HTML con campos editables en navegador + PDF descargable.
+Incluir: tabla de alcance, resumen económico, calendario de pagos, entregables, condiciones.
+Tono: español latino neutro.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-presupuesto', this)">Copiar prompt</button></div>
+      </div>
+
+      <div class="prompt-card">
+        <div class="pc-head">
+          <span class="pc-name">Contrato de servicios</span>
+          <span class="pc-file">olivacraft-contrato.html + .pdf</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-contrato">Genera un contrato de servicios para [NOMBRE DEL NEGOCIO].
+
+Datos del prestador:
+- Nombre completo: [nombre]
+- Facturación: [boleta de honorarios / factura]
+- Email: [email]
+
+Servicio:
+- Tipo: [descripción]
+- Alcance incluido: [lista]
+- Exclusiones explícitas: [lista]
+- Valor total: [monto]
+- Estructura de pago: [detalle]
+- Plazo estimado: [semanas]
+
+Marco legal: República de Chile.
+Aceptación válida por email según Ley 19.799.
+
+Formato: HTML con cláusulas colapsables y campos editables + PDF descargable.
+Incluir: 10 cláusulas mínimas (objeto, alcance, pago, plazos, responsabilidades del cliente, propiedad intelectual, cambios de alcance, confidencialidad, resolución anticipada, ley aplicable).
+Tono: español latino neutro.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-contrato', this)">Copiar prompt</button></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ COMUNICACIÓN ══════════════════════ -->
+
+  <div class="category" id="comunicacion">
+    <div class="cat-header">
+      <span class="cat-badge badge-biz">Negocio</span>
+      <span class="cat-title">Comunicación con clientes</span>
+    </div>
+    <div class="prompt-grid">
+
+      <div class="prompt-card">
+        <div class="pc-head">
+          <span class="pc-name">Plantillas de respuesta</span>
+          <span class="pc-file">olivacraft-respuesta-formulario.html</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-respuesta">Genera plantillas de respuesta al formulario de contacto para [NOMBRE DEL NEGOCIO].
+
+Contexto:
+- Servicio principal: [descripción]
+- Canal de comunicación: [email / WhatsApp / etc]
+- Tono de marca: [descripción breve]
+
+Crear 3 plantillas:
+1. Primera respuesta a cliente nuevo con formulario completo
+2. Respuesta a solicitud con información incompleta
+3. Respuesta para declinar proyecto fuera de alcance
+
+Formato: HTML con tabs por plantilla, variables marcadas visualmente y botón para copiar cada email.
+Incluir: firma con identidad de la marca.
+Tono: español latino neutro.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-respuesta', this)">Copiar prompt</button></div>
+      </div>
+
+      <div class="prompt-card">
+        <div class="pc-head">
+          <span class="pc-name">Sistema operativo de proyecto</span>
+          <span class="pc-file">olivacraft-sistema-operativo.html</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-sistema">Genera el sistema operativo completo de proyectos para [NOMBRE DEL NEGOCIO].
+
+Contexto:
+- Tipo de servicio: [descripción]
+- Canal de comunicación: email únicamente
+- Estructura de pago: [50/50 / pago único / otra]
+- Etapa de testeo: [fija / opcional / no aplica]
+
+Crear flujo completo con:
+- Etapas numeradas desde el primer contacto hasta el cierre
+- Checklist interactivo por etapa (ítems marcables)
+- Email plantilla por cada etapa que requiere comunicación
+- Criterio de entrada y salida por etapa
+- Distinción entre trabajo interno y acciones del cliente
+
+Formato: HTML con navegación lateral y teclado (↑↓).
+Tono: español latino neutro.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-sistema', this)">Copiar prompt</button></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ PRESENTACIONES ═════════════════════ -->
+
+  <div class="category" id="presentaciones">
+    <div class="cat-header">
+      <span class="cat-badge badge-biz">Negocio</span>
+      <span class="cat-title">Presentaciones comerciales</span>
+    </div>
+    <div class="prompt-grid">
+
+      <div class="prompt-card">
+        <div class="pc-head">
+          <span class="pc-name">Deck — Diseño web</span>
+          <span class="pc-file">olivacraft-presentacion.html</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-deck-diseno">Genera un deck de presentación de proyecto de diseño web para [NOMBRE DEL NEGOCIO].
+
+Datos:
+- Nombre del negocio: [nombre]
+- Email: [email]
+- Sitio web: [URL]
+- Valor del servicio: [monto]
+- Estructura de pago: [detalle]
+- Plazo estimado: [semanas]
+- Entregables incluidos: [lista]
+
+Estructura (7 slides):
+1. Portada con nombre del cliente editable
+2. El problema — campos editables por cliente
+3. El proceso — etapas del servicio
+4. Alcance — qué incluye
+5. Plazos — timeline
+6. Inversión — precio y forma de pago
+7. Cierre — contacto y siguiente paso
+
+Formato: HTML fullscreen, navegación con teclado (←→) y botones. Logo persistente en slides 2 a 6.
+Identidad visual: [describir paleta y tipografía].
+Tono: español latino neutro.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-deck-diseno', this)">Copiar prompt</button></div>
+      </div>
+
+      <div class="prompt-card">
+        <div class="pc-head">
+          <span class="pc-name">Deck — Auditoría UX</span>
+          <span class="pc-file">olivacraft-presentacion-auditoria.html</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-deck-auditoria">Genera un deck de presentación de auditoría UX para [NOMBRE DEL NEGOCIO].
+
+Datos:
+- Nombre del negocio: [nombre]
+- Email: [email]
+- Sitio web: [URL]
+- Valor del servicio: [monto — desde]
+- Plazo de entrega: [días hábiles]
+- Entregables incluidos: [lista]
+
+Estructura (7 slides):
+1. Portada con nombre del cliente editable
+2. El problema — síntoma visible y causa probable editables
+3. Qué es una auditoría — metodología y enfoque
+4. Hallazgos preliminares — 4 tarjetas editables con severidad
+5. Entregables — qué recibirá el cliente
+6. Inversión — precio y plazo
+7. Cierre — contacto y siguiente paso
+
+Formato: HTML fullscreen, navegación con teclado (←→) y botones. Logo persistente en slides 2 a 6.
+Identidad visual: [describir paleta y tipografía].
+Tono: español latino neutro.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-deck-auditoria', this)">Copiar prompt</button></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ IDENTIDAD — EXPLORACIÓN ═══════════ -->
+
+  <div class="category" id="exploracion">
+    <div class="cat-header">
+      <span class="cat-badge badge-id">Identidad</span>
+      <span class="cat-title">Exploración</span>
+    </div>
+    <div class="prompt-grid">
+
+      <div class="prompt-card">
+        <div class="pc-head">
+          <span class="pc-name">Exploración de paleta</span>
+          <span class="pc-file">— widget visual interactivo</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-paleta">Necesito explorar direcciones de color para la marca [NOMBRE].
+
+Contexto semántico:
+- Qué significa el nombre: [explicar conceptos que evoca]
+
+Posicionamiento:
+- Personalidad: [cálida / premium / técnica / cercana / etc]
+- Sector: [tipo de industria]
+- Audiencia: [descripción breve]
+
+Generar 3 direcciones de paleta, cada una con:
+- Nombre de la dirección
+- 4 tokens de color con hex y rol
+- Wordmark de muestra aplicado
+- Registro emocional en 4 palabras
+- Riesgo o advertencia
+
+Formato: widget visual interactivo con selección entre opciones.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-paleta', this)">Copiar prompt</button></div>
+      </div>
+
+      <div class="prompt-card">
+        <div class="pc-head">
+          <span class="pc-name">Exploración de wordmark</span>
+          <span class="pc-file">— widget visual interactivo</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-wordmark">Genera variantes de wordmark tipográfico para la marca [NOMBRE].
+
+Paleta seleccionada:
+- Color principal: [hex]
+- Color acento: [hex]
+- Color apoyo: [hex]
+- Fondo: [hex]
+
+Tipografía: [nombre de la fuente o "proponer opciones"]
+
+Tensión tipográfica:
+- Primera palabra: [itálica / ligera / roman / etc]
+- Segunda palabra: [roman / peso / etc]
+- Elemento de apoyo: [punto / línea / símbolo / "explorar"]
+
+Generar 4 variantes con:
+- Nombre y descripción de cada una
+- Preview en fondo claro
+- Comparativa sobre 4 fondos (claro, blanco, oscuro, acento)
+- Recomendación crítica
+
+Formato: widget visual interactivo con selección entre variantes.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-wordmark', this)">Copiar prompt</button></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ IDENTIDAD — SISTEMA ════════════════ -->
+
+  <div class="category" id="sistema">
+    <div class="cat-header">
+      <span class="cat-badge badge-id">Identidad</span>
+      <span class="cat-title">Sistema de identidad</span>
+    </div>
+    <div class="prompt-grid">
+
+      <div class="prompt-card">
+        <div class="pc-head">
+          <span class="pc-name">Sistema de identidad completo</span>
+          <span class="pc-file">olivacraft-wordmark.svg</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-sistema-id">Genera el sistema de identidad visual completo para [NOMBRE].
+
+Identidad definida:
+- Wordmark: [descripción de la variante seleccionada]
+- Tipografía display: [fuente + pesos + opsz si aplica]
+- Tipografía cuerpo: [fuente + pesos]
+- Paleta: [tokens de color con hex y roles]
+- Elemento de apoyo: [punto / línea / símbolo]
+
+Usos por contexto:
+- Avatar (LinkedIn, email): [descripción]
+- Favicon: [descripción]
+- Sello en documentos: [descripción]
+- Header del sitio: [versión clara u oscura]
+
+Generar:
+- 4 versiones cromáticas del wordmark
+- Especificaciones tipográficas completas
+- Tokens de color documentados
+- Reglas de uso y prohibiciones
+
+Formato: SVG exportable con las 4 versiones, tokens y reglas embebidas.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-sistema-id', this)">Copiar prompt</button></div>
+      </div>
+
+      <div class="prompt-card">
+        <div class="pc-head">
+          <span class="pc-name">Brand manual</span>
+          <span class="pc-file">olivacraft-brand-manual.html</span>
+        </div>
+        <div class="pc-body">
+          <div class="pc-prompt" id="p-brand">Genera el brand manual completo para [NOMBRE].
+
+Sistema de identidad:
+- Wordmark: [descripción]
+- Tipografía: [sistema tipográfico completo]
+- Paleta: [tokens con hex y roles]
+- Símbolo de apoyo: [descripción]
+- Usos por contexto: [avatar, favicon, sello, header]
+
+Voz y tono:
+- Personalidad: [3 adjetivos]
+- Lo que la marca no es: [3 contraejemplos]
+- Idioma: español latino neutro
+
+Aplicaciones a documentar:
+- Sitio web
+- Documentos y propuestas
+- Email y firma
+- Redes sociales
+
+Formato: HTML interactivo con navegación lateral activa por scroll.
+Incluir: do/don't, muestras tipográficas, tamaños mínimos y áreas de protección.</div>
+        </div>
+        <div class="pc-actions"><button class="copy-btn" onclick="copy('p-brand', this)">Copiar prompt</button></div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+// Sidebar active on scroll
+var sections = document.querySelectorAll('.category');
+var links = document.querySelectorAll('.sb-link');
+
+window.addEventListener('scroll', function() {
+  var cur = '';
+  sections.forEach(function(s) {
+    if (window.scrollY >= s.offsetTop - 100) cur = s.id;
+  });
+  links.forEach(function(l) {
+    l.classList.toggle('active', l.getAttribute('href') === '#' + cur);
+  });
+}, { passive: true });
+
+// Copy prompt
+function copy(id, btn) {
+  var text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = 'Copiar prompt';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

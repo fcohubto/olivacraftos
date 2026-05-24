@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  viewBox="0 0 600 520"
+  width="600"
+  height="520"
+  role="img"
+  aria-label="Olivacraft — wordmark en 4 versiones de color"
+>
+  <title>Olivacraft — Wordmark System</title>
+  <desc>Sistema de wordmark de Olivacraft en 4 versiones: fondo claro, fondo blanco, fondo oscuro y fondo azul activo. Fraunces opsz=9, Oliva Italic 300, craft Roman 600.</desc>
+
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9,600;1,9,300&amp;display=swap');
+
+      .wm-italic {
+        font-family: 'Fraunces', Georgia, serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 52px;
+        letter-spacing: -1.3px;
+        font-variation-settings: 'opsz' 9;
+      }
+      .wm-roman {
+        font-family: 'Fraunces', Georgia, serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 52px;
+        letter-spacing: -1.3px;
+        font-variation-settings: 'opsz' 9;
+      }
+      .wm-dot {
+        font-family: 'Fraunces', Georgia, serif;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 58px;
+        font-variation-settings: 'opsz' 9;
+      }
+      .wm-tagline {
+        font-family: 'Plus Jakarta Sans', 'Segoe UI', Helvetica, Arial, sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 11px;
+        letter-spacing: 1.2px;
+      }
+      .version-label {
+        font-family: 'Plus Jakarta Sans', 'Segoe UI', Helvetica, Arial, sans-serif;
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 1px;
+      }
+    </style>
+  </defs>
+
+  <!-- ─────────────────────────────────────────
+       VERSIÓN 1 — FONDO CLARO
+  ───────────────────────────────────────── -->
+  <g id="version-clear" transform="translate(20, 20)">
+    <rect x="0" y="0" width="280" height="120" rx="10" fill="#F2F8FD"/>
+    <rect x="0" y="0" width="280" height="120" rx="10" fill="none" stroke="#C8DCF0" stroke-width="0.5"/>
+    <text x="22" y="72" class="wm-italic" fill="#0D2B4A">Oliva</text>
+    <text x="140" y="72" class="wm-roman"  fill="#0D2B4A">craft</text>
+    <text x="247" y="70" class="wm-dot"    fill="#0A7EC2">·</text>
+    <text x="22" y="95" class="wm-tagline" fill="#4A7FA0">DISEÑO CON PROCESO</text>
+    <text x="22" y="113" class="version-label" fill="#8AAEC8">Fondo claro · #F2F8FD</text>
+  </g>
+
+  <!-- ─────────────────────────────────────────
+       VERSIÓN 2 — FONDO BLANCO
+  ───────────────────────────────────────── -->
+  <g id="version-white" transform="translate(320, 20)">
+    <rect x="0" y="0" width="280" height="120" rx="10" fill="#FFFFFF"/>
+    <rect x="0" y="0" width="280" height="120" rx="10" fill="none" stroke="#D8E8F4" stroke-width="0.5"/>
+    <text x="22" y="72" class="wm-italic" fill="#0D2B4A">Oliva</text>
+    <text x="140" y="72" class="wm-roman"  fill="#0D2B4A">craft</text>
+    <text x="247" y="70" class="wm-dot"    fill="#0A7EC2">·</text>
+    <text x="22" y="95" class="wm-tagline" fill="#4A7FA0">DISEÑO CON PROCESO</text>
+    <text x="22" y="113" class="version-label" fill="#9ABACF">Blanco puro · #FFFFFF</text>
+  </g>
+
+  <!-- ─────────────────────────────────────────
+       VERSIÓN 3 — FONDO OSCURO
+  ───────────────────────────────────────── -->
+  <g id="version-dark" transform="translate(20, 180)">
+    <rect x="0" y="0" width="280" height="120" rx="10" fill="#0D2B4A"/>
+    <text x="22" y="72" class="wm-italic" fill="#3EC6D4">Oliva</text>
+    <text x="140" y="72" class="wm-roman"  fill="#FFFFFF">craft</text>
+    <text x="247" y="70" class="wm-dot"    fill="#3EC6D4">·</text>
+    <text x="22" y="95" class="wm-tagline" fill="rgba(255,255,255,0.45)">DISEÑO CON PROCESO</text>
+    <text x="22" y="113" class="version-label" fill="rgba(255,255,255,0.28)">Fondo oscuro · #0D2B4A</text>
+  </g>
+
+  <!-- ─────────────────────────────────────────
+       VERSIÓN 4 — FONDO AZUL ACTIVO
+  ───────────────────────────────────────── -->
+  <g id="version-blue" transform="translate(320, 180)">
+    <rect x="0" y="0" width="280" height="120" rx="10" fill="#0A7EC2"/>
+    <text x="22" y="72" class="wm-italic" fill="rgba(255,255,255,0.88)">Oliva</text>
+    <text x="140" y="72" class="wm-roman"  fill="#FFFFFF">craft</text>
+    <text x="247" y="70" class="wm-dot"    fill="#FFFFFF">·</text>
+    <text x="22" y="95" class="wm-tagline" fill="rgba(255,255,255,0.5)">DISEÑO CON PROCESO</text>
+    <text x="22" y="113" class="version-label" fill="rgba(255,255,255,0.35)">Azul activo · #0A7EC2</text>
+  </g>
+
+  <!-- ─────────────────────────────────────────
+       TOKENS DE COLOR
+  ───────────────────────────────────────── -->
+  <g id="color-tokens" transform="translate(20, 340)">
+    <text x="0" y="0" class="version-label" fill="#8A9AB0">PALETA · TOKENS DE COLOR</text>
+    <rect x="0"   y="12" width="120" height="48" rx="6" fill="#0D2B4A"/>
+    <text x="10"  y="32" class="version-label" fill="rgba(255,255,255,0.5)">Azul noche</text>
+    <text x="10"  y="50" style="font-family:monospace;font-size:11px;" fill="rgba(255,255,255,0.75)">#0D2B4A</text>
+    <rect x="130" y="12" width="120" height="48" rx="6" fill="#0A7EC2"/>
+    <text x="140" y="32" class="version-label" fill="rgba(255,255,255,0.6)">Azul activo</text>
+    <text x="140" y="50" style="font-family:monospace;font-size:11px;" fill="rgba(255,255,255,0.85)">#0A7EC2</text>
+    <rect x="260" y="12" width="120" height="48" rx="6" fill="#3EC6D4"/>
+    <text x="270" y="32" class="version-label" fill="rgba(255,255,255,0.7)">Cian apoyo</text>
+    <text x="270" y="50" style="font-family:monospace;font-size:11px;" fill="rgba(255,255,255,0.9)">#3EC6D4</text>
+    <rect x="390" y="12" width="120" height="48" rx="6" fill="#F2F8FD" stroke="#C8DCF0" stroke-width="0.5"/>
+    <text x="400" y="32" class="version-label" fill="#4A7FA0">Blanco frío</text>
+    <text x="400" y="50" style="font-family:monospace;font-size:11px;" fill="#6A9ABF">#F2F8FD</text>
+  </g>
+
+  <!-- ─────────────────────────────────────────
+       ESPECIFICACIONES TÉCNICAS
+  ───────────────────────────────────────── -->
+  <g id="tech-specs" transform="translate(20, 430)">
+    <text x="0" y="0" class="version-label" fill="#8A9AB0">ESPECIFICACIONES TIPOGRÁFICAS</text>
+    <text x="0"  y="18" style="font-family:'Plus Jakarta Sans',Helvetica,sans-serif;font-size:10.5px;" fill="#4A7FA0">· Oliva — Fraunces · Italic · Weight 300 · font-variation-settings: 'opsz' 9</text>
+    <text x="0"  y="34" style="font-family:'Plus Jakarta Sans',Helvetica,sans-serif;font-size:10.5px;" fill="#4A7FA0">· craft — Fraunces · Roman · Weight 600 · font-variation-settings: 'opsz' 9</text>
+    <text x="0"  y="50" style="font-family:'Plus Jakarta Sans',Helvetica,sans-serif;font-size:10.5px;" fill="#4A7FA0">· Punto · — Fraunces · Roman · Weight 700 · #0A7EC2 claros / #3EC6D4 oscuros</text>
+    <text x="0"  y="66" style="font-family:'Plus Jakarta Sans',Helvetica,sans-serif;font-size:10.5px;" fill="#C0C8D0">olivacraft.com · Sistema de identidad v1.1 · 2025</text>
+  </g>
+
+</svg>

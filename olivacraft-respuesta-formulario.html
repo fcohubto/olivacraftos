@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plantillas de respuesta — Olivacraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9,600;0,9,700;1,9,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --night:#0D2B4A; --blue:#0A7EC2; --cyan:#3EC6D4; --frost:#F2F8FD;
+  --ink:#1A2C3D; --ink-soft:#3D5A74; --ink-muted:#6A8EA8; --ink-faint:#9AB4C8;
+  --border:rgba(10,126,194,0.12); --border-mid:rgba(10,126,194,0.22);
+  --surface:#EAF3FB; --success:#0F6E56; --success-soft:#E1F5EE;
+  --warn:#FEF3CD; --warn-t:#7A5500;
+  --font-d:'Fraunces',Georgia,serif; --font-b:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+html { font-size:16px; scroll-behavior:smooth; }
+body { background:var(--frost); color:var(--ink); font-family:var(--font-b); font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+.page { max-width:860px; margin:0 auto; padding:2.5rem 2rem 5rem; }
+
+/* HEADER */
+.doc-header { background:var(--night); border-radius:14px; padding:1.75rem 2.5rem; margin-bottom:2px; display:flex; align-items:center; justify-content:space-between; gap:2rem; }
+.wordmark { display:flex; align-items:baseline; }
+.wordmark em { font-family:var(--font-d); font-style:italic; font-weight:300; font-size:24px; color:var(--cyan); letter-spacing:-0.02em; font-variation-settings:'opsz' 9; }
+.wordmark span { font-family:var(--font-d); font-weight:600; font-size:24px; color:#fff; letter-spacing:-0.02em; font-variation-settings:'opsz' 9; }
+.wordmark b { font-family:var(--font-d); font-weight:700; font-size:27px; color:var(--cyan); position:relative; top:-2px; margin-left:1px; font-variation-settings:'opsz' 9; }
+.header-right { text-align:right; }
+.header-right p { font-size:11px; color:rgba(255,255,255,0.4); line-height:1.8; }
+
+/* TABS */
+.tabs { display:flex; gap:2px; margin-bottom:2px; }
+.tab { flex:1; padding:10px 14px; background:#fff; border:0.5px solid var(--border); border-radius:10px; cursor:pointer; font-size:12px; font-weight:500; color:var(--ink-muted); text-align:center; transition:all 0.15s; }
+.tab:hover { border-color:var(--blue); color:var(--blue); }
+.tab.active { background:var(--night); color:#fff; border-color:var(--night); }
+.tab-num { display:block; font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:2px; opacity:0.6; }
+
+/* TEMPLATE PANEL */
+.template-panel { display:none; }
+.template-panel.active { display:block; }
+
+/* META INFO */
+.template-meta { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; margin-bottom:2px; }
+.meta-item { background:#fff; border:0.5px solid var(--border); border-radius:10px; padding:1rem 1.25rem; }
+.meta-label { font-size:9px; font-weight:600; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:4px; }
+.meta-value { font-size:12.5px; font-weight:500; color:var(--ink); line-height:1.4; }
+.meta-value.blue { color:var(--blue); }
+
+/* EMAIL PREVIEW */
+.email-shell { background:#fff; border:0.5px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:2px; }
+.email-client-bar { background:#F5F5F5; padding:8px 16px; border-bottom:0.5px solid var(--border); display:flex; align-items:center; gap:8px; }
+.ec-dot { width:10px; height:10px; border-radius:50%; }
+.email-header { padding:1rem 1.5rem; border-bottom:0.5px solid var(--border); }
+.email-field { display:flex; gap:8px; padding:4px 0; font-size:12px; }
+.email-field-label { color:var(--ink-faint); font-weight:500; min-width:40px; }
+.email-field-val { color:var(--ink); }
+.email-field-val .bracket { color:var(--blue); font-weight:600; }
+.email-subject { font-size:14px; font-weight:600; color:var(--ink); margin-top:8px; }
+.email-body { padding:1.5rem; font-size:13.5px; color:var(--ink-soft); line-height:1.75; }
+.email-body p { margin-bottom:0.75rem; }
+.email-body p:last-child { margin-bottom:0; }
+.email-body .var { background:rgba(10,126,194,0.08); color:var(--blue); font-weight:600; padding:1px 5px; border-radius:4px; font-size:12px; }
+.email-body .highlight { color:var(--ink); font-weight:500; }
+.email-sig { margin-top:1.5rem; padding-top:1rem; border-top:0.5px solid var(--border); }
+.sig-name { font-size:13px; font-weight:600; color:var(--ink); }
+.sig-role { font-size:11.5px; color:var(--ink-muted); margin-bottom:6px; }
+.sig-brand { display:flex; align-items:baseline; margin-top:6px; }
+.sig-brand em { font-family:var(--font-d); font-style:italic; font-weight:300; font-size:14px; color:var(--blue); font-variation-settings:'opsz' 9; }
+.sig-brand span { font-family:var(--font-d); font-weight:600; font-size:14px; color:var(--ink); font-variation-settings:'opsz' 9; }
+.sig-brand b { font-family:var(--font-d); font-weight:700; font-size:16px; color:var(--blue); position:relative; top:-1px; font-variation-settings:'opsz' 9; }
+.sig-contact { font-size:11px; color:var(--ink-muted); margin-top:3px; }
+.sig-contact a { color:var(--blue); text-decoration:none; }
+
+/* VARIABLES GUIDE */
+.vars-guide { background:var(--surface); border:0.5px solid var(--border); border-radius:10px; padding:1.25rem; margin-bottom:2px; }
+.vars-title { font-size:10px; font-weight:600; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:10px; }
+.vars-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.var-item { display:flex; flex-direction:column; gap:3px; }
+.var-code { font-size:11px; font-weight:600; color:var(--blue); background:rgba(10,126,194,0.08); padding:2px 7px; border-radius:4px; width:fit-content; }
+.var-desc { font-size:11px; color:var(--ink-muted); line-height:1.4; }
+
+/* NOTES */
+.notes-block { display:flex; flex-direction:column; gap:2px; }
+.note-item { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; border:0.5px solid var(--border); border-radius:8px; background:#fff; }
+.note-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+.nd-tip  { background:var(--blue); }
+.nd-warn { background:#EF9F27; }
+.nd-must { background:var(--success); }
+.note-text { font-size:12.5px; color:var(--ink-soft); line-height:1.55; }
+.note-text strong { color:var(--ink); font-weight:500; }
+
+/* COPY BTN */
+.copy-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border:0.5px solid var(--border-mid); border-radius:999px; background:transparent; cursor:pointer; font-family:var(--font-b); font-size:11.5px; font-weight:500; color:var(--ink-muted); transition:all 0.15s; }
+.copy-btn:hover { background:var(--surface); color:var(--blue); border-color:var(--blue); }
+.copy-btn.copied { background:var(--success-soft); color:var(--success); border-color:var(--success); }
+.actions-row { display:flex; justify-content:flex-end; padding:10px 16px; border-top:0.5px solid var(--border); background:var(--frost); gap:8px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div>
+      <div class="wordmark"><em>Oliva</em><span>craft</span><b>·</b></div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;">Plantillas de respuesta al formulario de contacto</div>
+    </div>
+    <div class="header-right">
+      <p>3 plantillas · Diseño web + Auditoría</p>
+      <p>Francisco Orellana · contacto@olivacraft.com</p>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('t1')">
+      <span class="tab-num">Plantilla 01</span>
+      Primera respuesta — cliente nuevo
+    </div>
+    <div class="tab" onclick="showTab('t2')">
+      <span class="tab-num">Plantilla 02</span>
+      Solicitud incompleta
+    </div>
+    <div class="tab" onclick="showTab('t3')">
+      <span class="tab-num">Plantilla 03</span>
+      Cliente fuera de alcance
+    </div>
+  </div>
+
+  <!-- ══ PLANTILLA 01 ══ -->
+  <div class="template-panel active" id="t1">
+
+    <div class="template-meta">
+      <div class="meta-item">
+        <div class="meta-label">Cuándo usar</div>
+        <div class="meta-value">Primera respuesta a cualquier formulario completo y válido</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Objetivo</div>
+        <div class="meta-value blue">Confirmar recepción + generar confianza + abrir conversación</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Plazo de envío</div>
+        <div class="meta-value">Dentro de las 12 horas hábiles de recibir el formulario</div>
+      </div>
+    </div>
+
+    <div class="email-shell">
+      <div class="email-client-bar">
+        <div class="ec-dot" style="background:#FF5F57;"></div>
+        <div class="ec-dot" style="background:#FEBC2E;"></div>
+        <div class="ec-dot" style="background:#28C840;"></div>
+        <span style="font-size:11px;color:#999;margin-left:8px;">Nuevo mensaje — Gmail / Outlook</span>
+      </div>
+      <div class="email-header">
+        <div class="email-field"><span class="email-field-label">Para:</span><span class="email-field-val"><span class="bracket">[email del cliente]</span></span></div>
+        <div class="email-field"><span class="email-field-label">De:</span><span class="email-field-val">Francisco Orellana &lt;contacto@olivacraft.com&gt;</span></div>
+        <div class="email-subject">Re: Solicitud de diseño web — <span style="color:var(--blue);">[nombre del proyecto o empresa]</span></div>
+      </div>
+      <div class="email-body" id="body-t1">
+        <p>Hola <span class="var">[nombre]</span>,</p>
+        <p>Recibí tu solicitud y la leí con atención. Gracias por tomarte el tiempo de explicar bien el contexto — eso ayuda mucho a entender desde dónde partir.</p>
+        <p>Antes de mandarte cualquier propuesta, quiero asegurarme de entender bien lo que necesitás. Por eso te hago algunas preguntas cortas:</p>
+        <p>
+          <span class="highlight">1.</span> ¿Tenés un sitio web actual o estamos partiendo desde cero?<br>
+          <span class="highlight">2.</span> ¿Hay una fecha límite o urgencia particular para tener el sitio listo?<br>
+          <span class="highlight">3.</span> ¿Tenés claro el contenido (textos e imágenes) o eso también es parte de lo que necesitás resolver?
+        </p>
+        <p>Con eso puedo darte una primera lectura de tu caso y contarte cómo trabajaría con vos.</p>
+        <p>Cualquier duda que surja antes de que respondas, escribime directo acá.</p>
+        <div class="email-sig">
+          <div class="sig-name">Francisco Orellana</div>
+          <div class="sig-role">Product Designer · UX/UI</div>
+          <div class="sig-brand"><em>Oliva</em><span>craft</span><b>·</b></div>
+          <div class="sig-contact"><a href="mailto:contacto@olivacraft.com">contacto@olivacraft.com</a> · <a href="#">olivacraft.com</a></div>
+        </div>
+      </div>
+      <div class="actions-row">
+        <button class="copy-btn" onclick="copyEmail('body-t1', this)">Copiar cuerpo del email</button>
+      </div>
+    </div>
+
+    <div class="vars-guide">
+      <div class="vars-title">Variables a reemplazar antes de enviar</div>
+      <div class="vars-grid">
+        <div class="var-item"><span class="var-code">[nombre]</span><span class="var-desc">Nombre del contacto del formulario</span></div>
+        <div class="var-item"><span class="var-code">[email del cliente]</span><span class="var-desc">Email ingresado en el formulario</span></div>
+        <div class="var-item"><span class="var-code">[nombre del proyecto]</span><span class="var-desc">El asunto del sitio o empresa mencionada</span></div>
+      </div>
+    </div>
+
+    <div class="notes-block">
+      <div class="note-item"><div class="note-dot nd-must"></div><div class="note-text"><strong>Siempre responder dentro de 12 horas hábiles.</strong> Es parte del posicionamiento de marca — el silencio es exactamente lo que diferencia a Olivacraft de una agencia opaca.</div></div>
+      <div class="note-item"><div class="note-dot nd-tip"></div><div class="note-text"><strong>No adjuntar el presupuesto en el primer email.</strong> Primero entender el caso, luego cotizar. Mandar un precio sin contexto es una señal de que no te importa el problema del cliente.</div></div>
+      <div class="note-item"><div class="note-dot nd-warn"></div><div class="note-text"><strong>Personalizar al menos el párrafo de apertura.</strong> Si el cliente mencionó algo específico en el formulario, referenciarlo. Un email genérico se nota y resta confianza.</div></div>
+    </div>
+
+  </div>
+
+  <!-- ══ PLANTILLA 02 ══ -->
+  <div class="template-panel" id="t2">
+
+    <div class="template-meta">
+      <div class="meta-item">
+        <div class="meta-label">Cuándo usar</div>
+        <div class="meta-value">El formulario llegó sin URL, sin descripción del problema, o con información insuficiente</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Objetivo</div>
+        <div class="meta-value blue">Abrir conversación sin generar fricción por la información faltante</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Tono</div>
+        <div class="meta-value">Cercano y directo. No reclamar la info faltante — pedirla con naturalidad</div>
+      </div>
+    </div>
+
+    <div class="email-shell">
+      <div class="email-client-bar">
+        <div class="ec-dot" style="background:#FF5F57;"></div>
+        <div class="ec-dot" style="background:#FEBC2E;"></div>
+        <div class="ec-dot" style="background:#28C840;"></div>
+        <span style="font-size:11px;color:#999;margin-left:8px;">Nuevo mensaje — Gmail / Outlook</span>
+      </div>
+      <div class="email-header">
+        <div class="email-field"><span class="email-field-label">Para:</span><span class="email-field-val"><span class="bracket">[email del cliente]</span></span></div>
+        <div class="email-field"><span class="email-field-label">De:</span><span class="email-field-val">Francisco Orellana &lt;contacto@olivacraft.com&gt;</span></div>
+        <div class="email-subject">Hola <span style="color:var(--blue);">[nombre]</span> — recibí tu mensaje</div>
+      </div>
+      <div class="email-body" id="body-t2">
+        <p>Hola <span class="var">[nombre]</span>,</p>
+        <p>Recibí tu mensaje. Gracias por escribir.</p>
+        <p>Para entender bien tu caso y darte una respuesta útil, necesito un par de datos más:</p>
+        <p>
+          <span class="highlight">·</span> ¿Tenés un sitio web actualmente? Si es así, ¿cuál es la URL?<br>
+          <span class="highlight">·</span> ¿Qué es lo principal que querés resolver o mejorar?
+        </p>
+        <p>Con eso puedo hacerme una primera idea de lo que necesitás y contarte si puedo ayudarte.</p>
+        <div class="email-sig">
+          <div class="sig-name">Francisco Orellana</div>
+          <div class="sig-role">Product Designer · UX/UI</div>
+          <div class="sig-brand"><em>Oliva</em><span>craft</span><b>·</b></div>
+          <div class="sig-contact"><a href="mailto:contacto@olivacraft.com">contacto@olivacraft.com</a> · <a href="#">olivacraft.com</a></div>
+        </div>
+      </div>
+      <div class="actions-row">
+        <button class="copy-btn" onclick="copyEmail('body-t2', this)">Copiar cuerpo del email</button>
+      </div>
+    </div>
+
+    <div class="vars-guide">
+      <div class="vars-title">Variables a reemplazar</div>
+      <div class="vars-grid">
+        <div class="var-item"><span class="var-code">[nombre]</span><span class="var-desc">Nombre del contacto</span></div>
+        <div class="var-item"><span class="var-code">[email del cliente]</span><span class="var-desc">Email del formulario</span></div>
+      </div>
+    </div>
+
+    <div class="notes-block">
+      <div class="note-item"><div class="note-dot nd-tip"></div><div class="note-text"><strong>Máximo 2 preguntas por email.</strong> Más que eso genera fricción. Si necesitás más info, pedirla en la siguiente vuelta.</div></div>
+      <div class="note-item"><div class="note-dot nd-warn"></div><div class="note-text"><strong>No usar frases como "para poder continuar necesito que..."</strong> Suena a agencia con checklist. El tono es conversación, no proceso burocrático.</div></div>
+    </div>
+
+  </div>
+
+  <!-- ══ PLANTILLA 03 ══ -->
+  <div class="template-panel" id="t3">
+
+    <div class="template-meta">
+      <div class="meta-item">
+        <div class="meta-label">Cuándo usar</div>
+        <div class="meta-value">El pedido no encaja con el servicio: presupuesto muy bajo, alcance incompatible, o urgencia irreal</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Objetivo</div>
+        <div class="meta-value blue">Declinar con respeto y dejar la puerta abierta para el futuro</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Tono</div>
+        <div class="meta-value">Honesto y directo. Sin excusas vagas ni fórmulas corporativas</div>
+      </div>
+    </div>
+
+    <div class="email-shell">
+      <div class="email-client-bar">
+        <div class="ec-dot" style="background:#FF5F57;"></div>
+        <div class="ec-dot" style="background:#FEBC2E;"></div>
+        <div class="ec-dot" style="background:#28C840;"></div>
+        <span style="font-size:11px;color:#999;margin-left:8px;">Nuevo mensaje — Gmail / Outlook</span>
+      </div>
+      <div class="email-header">
+        <div class="email-field"><span class="email-field-label">Para:</span><span class="email-field-val"><span class="bracket">[email del cliente]</span></span></div>
+        <div class="email-field"><span class="email-field-label">De:</span><span class="email-field-val">Francisco Orellana &lt;contacto@olivacraft.com&gt;</span></div>
+        <div class="email-subject">Re: Tu consulta a Olivacraft</div>
+      </div>
+      <div class="email-body" id="body-t3">
+        <p>Hola <span class="var">[nombre]</span>,</p>
+        <p>Gracias por escribirme. Leí tu caso con atención.</p>
+        <p>Siendo directo: en este momento no soy la persona indicada para este proyecto. <span class="var">[motivo breve y honesto]</span></p>
+        <p>No quiero mandarte una propuesta que no se ajuste a lo que necesitás — eso no te ayuda y tampoco es la forma en que trabajo.</p>
+        <p>Si en algún momento cambia el contexto o surge un nuevo proyecto, escribime sin problema.</p>
+        <div class="email-sig">
+          <div class="sig-name">Francisco Orellana</div>
+          <div class="sig-role">Product Designer · UX/UI</div>
+          <div class="sig-brand"><em>Oliva</em><span>craft</span><b>·</b></div>
+          <div class="sig-contact"><a href="mailto:contacto@olivacraft.com">contacto@olivacraft.com</a> · <a href="#">olivacraft.com</a></div>
+        </div>
+      </div>
+      <div class="actions-row">
+        <button class="copy-btn" onclick="copyEmail('body-t3', this)">Copiar cuerpo del email</button>
+      </div>
+    </div>
+
+    <div class="vars-guide">
+      <div class="vars-title">Variables a reemplazar · Ejemplos de motivo</div>
+      <div class="vars-grid">
+        <div class="var-item"><span class="var-code">[nombre]</span><span class="var-desc">Nombre del contacto</span></div>
+        <div class="var-item"><span class="var-code">[motivo]</span><span class="var-desc">Ver ejemplos abajo ↓</span></div>
+      </div>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;">
+        <div style="font-size:11px;color:var(--ink-muted);"><strong style="color:var(--ink);">Presupuesto:</strong> "El presupuesto que mencionás está por debajo de lo que requiere el trabajo que describís."</div>
+        <div style="font-size:11px;color:var(--ink-muted);"><strong style="color:var(--ink);">Urgencia:</strong> "El plazo que necesitás no me permite hacer el trabajo con la calidad que merece."</div>
+        <div style="font-size:11px;color:var(--ink-muted);"><strong style="color:var(--ink);">Alcance:</strong> "Lo que describís requiere un equipo más grande del que manejo actualmente."</div>
+      </div>
+    </div>
+
+    <div class="notes-block">
+      <div class="note-item"><div class="note-dot nd-must"></div><div class="note-text"><strong>Siempre responder, aunque sea para declinar.</strong> Dejar un mensaje sin respuesta es exactamente lo que hacen las agencias malas. No hacer lo mismo.</div></div>
+      <div class="note-item"><div class="note-dot nd-tip"></div><div class="note-text"><strong>El motivo debe ser específico y honesto.</strong> "No tenemos capacidad en este momento" es una excusa. "El presupuesto no alcanza para hacer esto bien" es respeto.</div></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.template-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = parseInt(id.replace('t','')) - 1;
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+}
+
+function copyEmail(bodyId, btn) {
+  const el = document.getElementById(bodyId);
+  const text = el.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copiar cuerpo del email';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

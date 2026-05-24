@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentación de Proyecto — Olivacraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9,600;0,9,700;1,9,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --night:#0D2B4A; --blue:#0A7EC2; --cyan:#3EC6D4; --frost:#F2F8FD;
+  --ink:#1A2C3D; --ink-soft:#3D5A74; --ink-muted:#6A8EA8; --ink-faint:#9AB4C8;
+  --border:rgba(10,126,194,0.12); --border-mid:rgba(10,126,194,0.22); --surface:#EAF3FB;
+  --success:#0F6E56; --success-soft:#E1F5EE;
+  --font-d:'Fraunces',Georgia,serif; --font-b:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+html { font-size:16px; }
+body { background:var(--night); color:#fff; font-family:var(--font-b); font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow:hidden; height:100vh; }
+
+.deck { width:100vw; height:100vh; position:relative; }
+.slide { position:absolute; inset:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity 0.35s ease; overflow:hidden; }
+.slide.active { opacity:1; pointer-events:all; }
+
+/* NAV */
+.nav { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:1rem; z-index:100; background:rgba(13,43,74,0.9); backdrop-filter:blur(12px); padding:10px 16px; border-radius:999px; border:0.5px solid rgba(255,255,255,0.1); }
+.nav-btn { width:34px; height:34px; border-radius:50%; border:0.5px solid rgba(255,255,255,0.2); background:transparent; color:rgba(255,255,255,0.6); cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+.nav-btn:hover { background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.4); }
+.nav-btn:disabled { opacity:0.25; cursor:not-allowed; }
+.nav-dots { display:flex; gap:6px; }
+.nav-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.2); cursor:pointer; transition:all 0.15s; }
+.nav-dot.active { background:var(--cyan); width:18px; border-radius:3px; }
+.nav-count { font-size:11px; color:rgba(255,255,255,0.35); min-width:40px; text-align:center; }
+.nav-print { font-size:11px; color:rgba(255,255,255,0.3); cursor:pointer; padding:4px 8px; border-radius:6px; border:0.5px solid rgba(255,255,255,0.1); transition:all 0.15s; }
+.nav-print:hover { color:rgba(255,255,255,0.7); border-color:rgba(255,255,255,0.3); }
+
+/* WORDMARK */
+.wm { display:inline-flex; align-items:baseline; }
+.wm em  { font-family:var(--font-d); font-style:italic; font-weight:300; color:var(--cyan); font-variation-settings:'opsz' 9; }
+.wm span{ font-family:var(--font-d); font-weight:600; color:#fff; font-variation-settings:'opsz' 9; }
+.wm b   { font-family:var(--font-d); font-weight:700; color:var(--cyan); position:relative; font-variation-settings:'opsz' 9; }
+.wm.sm em, .wm.sm span { font-size:15px; } .wm.sm b { font-size:17px; top:-1px; margin-left:1px; }
+.wm.lg em, .wm.lg span { font-size:28px; } .wm.lg b { font-size:31px; top:-2px; margin-left:1px; }
+
+/* SLIDE LAYOUTS */
+.s-cover { background:var(--night); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:0 2rem; position:relative; overflow:hidden; }
+.s-cover::before { content:''; position:absolute; width:600px; height:600px; border-radius:50%; border:1px solid rgba(62,198,212,0.06); top:-200px; right:-200px; }
+.s-cover::after  { content:''; position:absolute; width:400px; height:400px; border-radius:50%; border:1px solid rgba(62,198,212,0.04); bottom:-150px; left:-100px; }
+.s-dark  { background:var(--night); display:flex; flex-direction:column; justify-content:center; align-items:center; padding:5.5rem 2rem 7rem; }
+
+.slide-inner {
+  width: 100%;
+  max-width: 860px;
+}
+
+/* TYPOGRAPHY */
+.slide-label { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:1rem; opacity:0.8; }
+.slide-title  { font-family:var(--font-d); font-style:italic; font-weight:300; font-variation-settings:'opsz' 9; line-height:1.15; letter-spacing:-0.02em; }
+.slide-title.xl { font-size:clamp(2.5rem,5vw,4rem); }
+.slide-title.lg { font-size:clamp(2rem,4vw,3rem); }
+
+/* CARDS */
+.card-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:1.5rem; }
+.card-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:1.5rem; }
+.slide-card { background:rgba(255,255,255,0.05); border:0.5px solid rgba(255,255,255,0.1); border-radius:12px; padding:1.25rem; }
+.card-num   { font-family:var(--font-d); font-style:italic; font-size:28px; color:var(--cyan); line-height:1; margin-bottom:8px; font-variation-settings:'opsz' 9; }
+.card-title { font-size:14px; font-weight:600; margin-bottom:6px; }
+.card-desc  { font-size:12.5px; line-height:1.55; color:rgba(255,255,255,0.6); }
+
+/* PROCESS */
+.process-cols { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:2rem; }
+.process-item { display:flex; flex-direction:column; gap:6px; }
+.proc-step    { font-family:var(--font-d); font-style:italic; font-size:32px; color:rgba(62,198,212,0.3); line-height:1; font-variation-settings:'opsz' 9; }
+.proc-divider { height:2px; background:var(--blue); width:24px; border-radius:1px; margin-bottom:4px; }
+.proc-title   { font-size:13px; font-weight:600; }
+.proc-desc    { font-size:11.5px; color:rgba(255,255,255,0.5); line-height:1.5; }
+
+/* TIMELINE */
+.timeline { display:flex; flex-direction:column; margin-top:2rem; }
+.tl-item  { display:flex; gap:1.5rem; padding:0.75rem 0; position:relative; }
+.tl-item:not(:last-child)::after { content:''; position:absolute; left:14px; top:42px; width:1px; height:calc(100% - 14px); background:rgba(255,255,255,0.1); }
+.tl-dot   { width:28px; height:28px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; flex-shrink:0; margin-top:2px; }
+.tl-title { font-size:14px; font-weight:600; margin-bottom:3px; }
+.tl-desc  { font-size:12.5px; color:rgba(255,255,255,0.55); line-height:1.5; }
+.tl-tag   { display:inline-flex; font-size:10px; font-weight:500; padding:2px 8px; border-radius:999px; background:rgba(62,198,212,0.15); color:var(--cyan); margin-left:8px; }
+
+/* INVESTMENT */
+.invest-box { background:rgba(255,255,255,0.04); border:0.5px solid rgba(255,255,255,0.1); border-radius:16px; padding:2.5rem; display:flex; align-items:center; justify-content:space-between; gap:2rem; margin-top:2rem; flex-wrap:wrap; }
+.invest-label  { font-size:11px; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:4px; }
+.invest-amount { font-family:var(--font-d); font-size:clamp(3rem,6vw,4.5rem); font-weight:600; color:#fff; letter-spacing:-0.04em; line-height:1; font-variation-settings:'opsz' 9; }
+.invest-suffix { font-size:13px; color:rgba(255,255,255,0.4); margin-top:4px; }
+.ib-item { display:flex; align-items:center; gap:12px; }
+.ib-pct  { font-family:var(--font-d); font-size:22px; color:var(--cyan); font-variation-settings:'opsz' 9; font-weight:600; min-width:52px; }
+.ib-text { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.4; }
+
+/* CLOSING */
+.closing-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:2rem; width:100%; min-width:400px; max-width:520px; }
+.closing-item { background:rgba(255,255,255,0.05); border:0.5px solid rgba(255,255,255,0.12); border-radius:12px; padding:1.25rem; }
+.ci-label { font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:6px; }
+.ci-val   { font-size:13.5px; font-weight:500; color:#fff; line-height:1.4; }
+.ci-val a { color:var(--cyan); text-decoration:none; }
+
+/* PERSISTENT LOGO */
+.deck-logo { position:fixed; top:1.5rem; left:2rem; z-index:200; display:flex; align-items:baseline; pointer-events:none; }
+.deck-logo em   { font-family:var(--font-d); font-style:italic; font-weight:300; font-size:14px; color:var(--cyan); font-variation-settings:'opsz' 9; }
+.deck-logo span { font-family:var(--font-d); font-weight:600; font-size:14px; color:rgba(255,255,255,0.7); font-variation-settings:'opsz' 9; }
+.deck-logo b    { font-family:var(--font-d); font-weight:700; font-size:16px; color:var(--cyan); position:relative; top:-1px; margin-left:1px; font-variation-settings:'opsz' 9; }
+
+@media print {
+  body { overflow:auto; height:auto; }
+  .deck { height:auto; }
+  .slide { position:relative; opacity:1; pointer-events:all; min-height:100vh; page-break-after:always; }
+  .s-cover, .s-dark { background:var(--night) !important; }
+  .nav { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGO PERSISTENTE -->
+<div class="deck-logo" id="deck-logo">
+  <em>Oliva</em><span>craft</span><b>·</b>
+</div>
+
+<div class="deck">
+
+  <!-- SLIDE 1 — PORTADA -->
+  <div class="slide s-cover active" id="s0">
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:clamp(0.75rem,2vh,1.5rem);width:100%;max-width:700px;margin-top:2rem;margin-bottom:5rem;">
+      <div class="wm lg"><em>Oliva</em><span>craft</span><b>·</b></div>
+      <div style="width:48px;height:1px;background:rgba(62,198,212,0.3);"></div>
+      <h1 class="slide-title xl" style="color:#fff;max-width:14ch;">
+        Propuesta de diseño web para
+        <span style="color:var(--cyan);cursor:pointer;" id="cover-client" title="Clic para editar">[nombre del cliente]</span>
+      </h1>
+      <p style="font-size:14px;color:rgba(255,255,255,0.4);max-width:36ch;text-align:center;" id="cover-date"></p>
+      <div style="display:flex;gap:10px;margin-top:1rem;flex-wrap:wrap;justify-content:center;">
+        <span style="font-size:12px;padding:5px 14px;border-radius:999px;border:0.5px solid rgba(62,198,212,0.35);color:var(--cyan);">Diseño web</span>
+        <span style="font-size:12px;padding:5px 14px;border-radius:999px;border:0.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);">Desarrollo</span>
+        <span style="font-size:12px;padding:5px 14px;border-radius:999px;border:0.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);">Publicación</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 — EL PROBLEMA -->
+  <div class="slide s-dark" id="s1">
+    <div class="slide-inner">
+      <div class="slide-label">Lo que entendí</div>
+      <h2 class="slide-title lg" style="color:#fff;">El problema que necesitas resolver</h2>
+      <div style="margin-top:1.25rem;font-size:15px;color:rgba(255,255,255,0.7);line-height:1.75;border-bottom:1px dashed rgba(255,255,255,0.12);padding-bottom:1rem;outline:none;min-height:50px;width:100%;" contenteditable="true">
+        Escribe aquí el problema principal del cliente en términos concretos. Por ejemplo: "Tu sitio actual no refleja el nivel de tu negocio y está generando dudas antes del primer contacto."
+      </div>
+      <div class="card-grid-2">
+        <div class="slide-card">
+          <div class="card-title" style="color:rgba(255,255,255,0.45);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Situación actual</div>
+          <div style="font-size:13.5px;color:rgba(255,255,255,0.65);line-height:1.6;outline:none;min-height:40px;" contenteditable="true">
+            Describe brevemente dónde está el cliente hoy.
+          </div>
+        </div>
+        <div class="slide-card">
+          <div class="card-title" style="color:var(--cyan);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Objetivo del proyecto</div>
+          <div style="font-size:13.5px;color:rgba(255,255,255,0.65);line-height:1.6;outline:none;min-height:40px;" contenteditable="true">
+            Describe el resultado que se quiere lograr.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 — PROCESO -->
+  <div class="slide s-dark" id="s2">
+    <div class="slide-inner">
+      <div class="slide-label">Cómo trabajo</div>
+      <h2 class="slide-title lg" style="color:#fff;">El proceso. Sin sorpresas.</h2>
+      <p style="font-size:14px;color:rgba(255,255,255,0.45);margin-top:0.75rem;">Sabes qué pasa en cada etapa, qué se hace y qué necesito de tu parte.</p>
+      <div class="process-cols">
+        <div class="process-item">
+          <div class="proc-step">01</div>
+          <div class="proc-divider"></div>
+          <div class="proc-title">Brief y estrategia</div>
+          <div class="proc-desc">Entiendo tu negocio, tu audiencia y tus objetivos. Defino la estructura antes de diseñar.</div>
+        </div>
+        <div class="process-item">
+          <div class="proc-step">02</div>
+          <div class="proc-divider"></div>
+          <div class="proc-title">Diseño UI</div>
+          <div class="proc-desc">Diseño visual completo para mobile y desktop. Se presenta para aprobación antes de desarrollar.</div>
+        </div>
+        <div class="process-item">
+          <div class="proc-step">03</div>
+          <div class="proc-divider"></div>
+          <div class="proc-title">Desarrollo</div>
+          <div class="proc-desc">Implementación del diseño aprobado. Sitio funcional, optimizado y responsive.</div>
+        </div>
+        <div class="process-item">
+          <div class="proc-step">04</div>
+          <div class="proc-divider"></div>
+          <div class="proc-title">Entrega</div>
+          <div class="proc-desc">Publicación en tu dominio, traspaso de accesos y guía de uso. El sitio es tuyo desde el segundo pago.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 — ALCANCE -->
+  <div class="slide s-dark" id="s3">
+    <div class="slide-inner">
+      <div class="slide-label">Qué incluye</div>
+      <h2 class="slide-title lg" style="color:#fff;">Alcance del proyecto</h2>
+      <div class="card-grid-3">
+        <div class="slide-card">
+          <div class="card-num">01</div>
+          <div class="card-title">Estrategia y estructura</div>
+          <div class="card-desc">Arquitectura de navegación y jerarquía de contenidos orientada a conversión.</div>
+        </div>
+        <div class="slide-card">
+          <div class="card-num">02</div>
+          <div class="card-title">Diseño UI responsive</div>
+          <div class="card-desc">Diseño visual completo. Mobile, tablet y desktop.</div>
+        </div>
+        <div class="slide-card">
+          <div class="card-num">03</div>
+          <div class="card-title">Contenido y copy</div>
+          <div class="card-desc">Textos orientados a decisión. Hasta 6 secciones principales.</div>
+        </div>
+        <div class="slide-card">
+          <div class="card-num">04</div>
+          <div class="card-title">Desarrollo y publicación</div>
+          <div class="card-desc">Sitio publicado en tu dominio, optimizado y funcional desde el día uno.</div>
+        </div>
+        <div class="slide-card">
+          <div class="card-num">05</div>
+          <div class="card-title">SEO base</div>
+          <div class="card-desc">Meta tags, sitemap, robots.txt y configuración en Search Console.</div>
+        </div>
+        <div class="slide-card">
+          <div class="card-num">06</div>
+          <div class="card-title">Revisiones post-entrega</div>
+          <div class="card-desc">Hasta 2 rondas de ajustes dentro de los 10 días hábiles posteriores a la entrega.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 — PLAZOS -->
+  <div class="slide s-dark" id="s4">
+    <div class="slide-inner">
+      <div class="slide-label">Cuándo</div>
+      <h2 class="slide-title lg" style="color:#fff;">Plazos del proyecto</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot">1</div>
+          <div>
+            <div class="tl-title">Inicio oficial <span class="tl-tag">Día 1</span></div>
+            <div class="tl-desc">Al recibir el primer pago (50%) y el brief completo. Comienza la etapa de estrategia y arquitectura.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">2</div>
+          <div>
+            <div class="tl-title">Presentación del diseño <span class="tl-tag">Semana 1–2</span></div>
+            <div class="tl-desc">Diseño visual completo para revisión y aprobación. Una ronda de ajustes incluida.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">3</div>
+          <div>
+            <div class="tl-title">Desarrollo completado <span class="tl-tag">Semana 3–4</span></div>
+            <div class="tl-desc">Sitio implementado y funcional listo para revisión final antes del deploy.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--cyan);">✓</div>
+          <div>
+            <div class="tl-title" style="color:var(--cyan);">Entrega y publicación <span class="tl-tag">Semana 4–5</span></div>
+            <div class="tl-desc">Sitio publicado, accesos transferidos y guía de uso entregada. Segundo pago al confirmar la entrega.</div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:11.5px;color:rgba(255,255,255,0.25);margin-top:1.5rem;">Los plazos pueden ajustarse según el tiempo de respuesta del cliente en cada etapa de aprobación.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 — INVERSIÓN -->
+  <div class="slide s-dark" id="s5">
+    <div class="slide-inner">
+      <div class="slide-label">Inversión</div>
+      <h2 class="slide-title lg" style="color:#fff;">Lo que cuesta y cómo se paga</h2>
+      <div class="invest-box">
+        <div>
+          <div class="invest-label">Valor total del proyecto</div>
+          <div class="invest-amount">$399.000</div>
+          <div class="invest-suffix">Boleta de honorarios · Sin IVA</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="ib-item">
+            <div class="ib-pct">50%</div>
+            <div class="ib-text">
+              <strong style="color:#fff;display:block;margin-bottom:2px;">Al inicio</strong>
+              Al aceptar la propuesta. Da inicio oficial al trabajo.
+            </div>
+          </div>
+          <div style="height:0.5px;background:rgba(255,255,255,0.08);"></div>
+          <div class="ib-item">
+            <div class="ib-pct">50%</div>
+            <div class="ib-text">
+              <strong style="color:#fff;display:block;margin-bottom:2px;">A la entrega</strong>
+              Al publicar el sitio con tu aprobación confirmada.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:10px;border:0.5px solid rgba(255,255,255,0.07);">
+        <p style="font-size:12.5px;color:rgba(255,255,255,0.4);line-height:1.6;">La propiedad del sitio y todos los archivos se transfieren al completar el segundo pago. Hasta entonces, los derechos permanecen con el prestador.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7 — CIERRE -->
+  <div class="slide s-cover" id="s6">
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:clamp(0.75rem,2vh,1.5rem);width:100%;max-width:540px;margin-top:3rem;margin-bottom:5rem;">
+      <div style="width:36px;height:1px;background:rgba(62,198,212,0.3);"></div>
+      <h2 style="font-family:var(--font-d);font-style:italic;font-weight:300;font-variation-settings:'opsz' 9;font-size:clamp(2.25rem,5vh,3.5rem);color:#fff;letter-spacing:-0.02em;line-height:1.1;text-align:center;">¿Continuamos?</h2>
+      <p style="font-size:clamp(13px,1.8vh,15px);color:rgba(255,255,255,0.45);line-height:1.65;max-width:34ch;text-align:center;">Cualquier pregunta, escribe directo al email.<br>Sin formularios ni tiempos de espera.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;">
+        <div class="closing-item">
+          <div class="ci-label">Email</div>
+          <div class="ci-val"><a href="mailto:contacto@olivacraft.com">contacto@olivacraft.com</a></div>
+        </div>
+        <div class="closing-item">
+          <div class="ci-label">Sitio web</div>
+          <div class="ci-val"><a href="https://olivacraft.com">olivacraft.com</a></div>
+        </div>
+        <div class="closing-item">
+          <div class="ci-label">Siguiente paso</div>
+          <div class="ci-val" style="font-size:12px;color:rgba(255,255,255,0.55);font-weight:400;">Responde el email con tu aprobación para iniciar.</div>
+        </div>
+        <div class="closing-item">
+          <div class="ci-label">Validez de esta propuesta</div>
+          <div class="ci-val" style="font-size:12px;color:rgba(255,255,255,0.55);font-weight:400;" id="closing-validity"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn" id="btn-prev" onclick="go(-1)" disabled>←</button>
+  <div class="nav-dots" id="nav-dots"></div>
+  <button class="nav-btn" id="btn-next" onclick="go(1)">→</button>
+  <span class="nav-count" id="nav-count">1 / 7</span>
+  <span class="nav-print" onclick="window.print()">Imprimir</span>
+</div>
+
+<script>
+var slides = document.querySelectorAll('.slide');
+var dotsEl = document.getElementById('nav-dots');
+var countEl = document.getElementById('nav-count');
+var cur = 0;
+
+// Init logo state — hidden on cover
+var logo = document.getElementById('deck-logo');
+if (logo) logo.style.opacity = '0';
+logo.style.transition = 'opacity 0.3s ease';
+
+// Build dots
+slides.forEach(function(_, i) {
+  var d = document.createElement('div');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.addEventListener('click', function() { goTo(i); });
+  dotsEl.appendChild(d);
+});
+
+function goTo(n) {
+  slides[cur].classList.remove('active');
+  dotsEl.querySelectorAll('.nav-dot')[cur].classList.remove('active');
+  cur = n;
+  slides[cur].classList.add('active');
+  dotsEl.querySelectorAll('.nav-dot')[cur].classList.add('active');
+  document.getElementById('btn-prev').disabled = cur === 0;
+  document.getElementById('btn-next').disabled = cur === slides.length - 1;
+  countEl.textContent = (cur + 1) + ' / ' + slides.length;
+  // Ocultar logo en portada (0) y cierre (último slide)
+  var logo = document.getElementById('deck-logo');
+  if (logo) {
+    logo.style.opacity = (cur === 0 || cur === slides.length - 1) ? '0' : '1';
+  }
+}
+
+function go(dir) {
+  var next = Math.max(0, Math.min(slides.length - 1, cur + dir));
+  goTo(next);
+}
+
+// Keyboard
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+});
+
+// Dates
+var today = new Date();
+var fmt = function(d) {
+  return d.toLocaleDateString('es-CL', { day:'2-digit', month:'long', year:'numeric' });
+};
+var validity = new Date(today);
+validity.setDate(validity.getDate() + 15);
+document.getElementById('cover-date').textContent = 'Propuesta preparada el ' + fmt(today);
+document.getElementById('closing-validity').textContent = '15 días — hasta el ' + fmt(validity);
+
+// Editable client name
+document.getElementById('cover-client').addEventListener('click', function() {
+  var current = this.textContent.trim();
+  var val = prompt('Nombre del cliente:', current === '[nombre del cliente]' ? '' : current);
+  if (val !== null) {
+    this.textContent = val.trim() || '[nombre del cliente]';
+  }
+});
+</script>
+</body>
+</html>

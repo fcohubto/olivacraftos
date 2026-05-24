@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrato de Servicios — Olivacraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9,600;0,9,700;1,9,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --night:#0D2B4A; --blue:#0A7EC2; --cyan:#3EC6D4; --frost:#F2F8FD;
+  --ink:#1A2C3D; --ink-soft:#3D5A74; --ink-muted:#6A8EA8; --ink-faint:#9AB4C8;
+  --border:rgba(10,126,194,0.12); --border-mid:rgba(10,126,194,0.22); --surface:#EAF3FB;
+  --font-d:'Fraunces',Georgia,serif; --font-b:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+html { font-size:16px; }
+body { background:var(--frost); color:var(--ink); font-family:var(--font-b); font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+.page { max-width:760px; margin:0 auto; padding:2.5rem 2rem 5rem; }
+
+/* HEADER */
+.doc-header { background:var(--night); border-radius:14px; padding:2rem 2.5rem; margin-bottom:2px; display:flex; justify-content:space-between; align-items:flex-start; gap:2rem; flex-wrap:wrap; }
+.wordmark { display:flex; align-items:baseline; }
+.wordmark em { font-family:var(--font-d); font-style:italic; font-weight:300; font-size:24px; color:var(--cyan); font-variation-settings:'opsz' 9; }
+.wordmark span { font-family:var(--font-d); font-weight:600; font-size:24px; color:#fff; font-variation-settings:'opsz' 9; }
+.wordmark b { font-family:var(--font-d); font-weight:700; font-size:27px; color:var(--cyan); position:relative; top:-2px; margin-left:1px; font-variation-settings:'opsz' 9; }
+.doc-title-block { text-align:right; }
+.doc-title-block h1 { font-family:var(--font-d); font-style:italic; font-weight:300; font-size:20px; color:#fff; font-variation-settings:'opsz' 9; line-height:1.2; margin-bottom:4px; }
+.doc-title-block p { font-size:10px; color:rgba(255,255,255,0.4); line-height:1.8; }
+
+/* PARTIES */
+.parties-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-bottom:2px; }
+.party-card { background:#fff; border:0.5px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem; }
+.party-role { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--blue); margin-bottom:8px; }
+.party-field { display:flex; flex-direction:column; gap:2px; padding:5px 0; border-bottom:0.5px solid var(--border); }
+.party-field:last-child { border-bottom:none; }
+.pf-label { font-size:10px; color:var(--ink-faint); font-weight:500; }
+.pf-val { font-size:12.5px; font-weight:500; color:var(--ink); }
+.pf-val.editable { border:none; background:transparent; font-family:var(--font-b); font-size:12.5px; font-weight:500; color:var(--ink); outline:none; width:100%; border-bottom:1px dashed var(--border-mid); cursor:text; }
+.pf-val.editable:focus { border-bottom-color:var(--blue); color:var(--blue); }
+
+/* CLAUSES */
+.clause { background:#fff; border:0.5px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:2px; }
+.clause-header { padding:10px 16px; background:var(--surface); border-bottom:0.5px solid var(--border); display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; transition:background 0.15s; }
+.clause-header:hover { background:#DFF0FB; }
+.clause-num { font-family:var(--font-d); font-style:italic; font-size:13px; color:var(--blue); min-width:28px; font-variation-settings:'opsz' 9; }
+.clause-title { font-size:13px; font-weight:600; color:var(--ink); flex:1; }
+.clause-arrow { font-size:11px; color:var(--ink-faint); transition:transform 0.2s; }
+.clause.closed .clause-arrow { transform:rotate(-90deg); }
+.clause-body { padding:1.25rem 1.5rem; overflow:hidden; max-height:2000px; transition:max-height 0.3s ease; }
+.clause.closed .clause-body { max-height:0; padding-top:0; padding-bottom:0; }
+.clause-text { font-size:13px; color:var(--ink-soft); line-height:1.75; margin-bottom:0.75rem; }
+.clause-text:last-child { margin-bottom:0; }
+.clause-text strong { color:var(--ink); font-weight:500; }
+.clause-text .editable-inline { border:none; background:rgba(10,126,194,0.06); font-family:var(--font-b); font-size:13px; color:var(--blue); font-weight:600; outline:none; border-bottom:1px dashed var(--blue); cursor:text; min-width:80px; }
+.clause-text .editable-inline:focus { background:rgba(10,126,194,0.1); }
+
+/* SCOPE TABLE */
+.scope-table { width:100%; border-collapse:collapse; font-size:12.5px; margin:0.75rem 0; }
+.scope-table th { background:var(--surface); font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-muted); padding:7px 12px; text-align:left; border-bottom:0.5px solid var(--border-mid); }
+.scope-table td { padding:8px 12px; border-bottom:0.5px solid var(--border); color:var(--ink-soft); vertical-align:top; }
+.scope-table tr:last-child td { border-bottom:none; }
+.scope-table td:first-child { font-weight:500; color:var(--ink); }
+
+/* SIGNATURES */
+.signatures { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:2px; }
+.sig-card { background:#fff; border:0.5px solid var(--border); border-radius:10px; padding:1.5rem; }
+.sig-role { font-size:9.5px; font-weight:600; letter-spacing:0.09em; text-transform:uppercase; color:var(--blue); margin-bottom:1rem; }
+.sig-line { height:1px; background:var(--border-mid); margin:2rem 0 0.5rem; }
+.sig-name-label { font-size:11px; color:var(--ink-faint); }
+.sig-field { display:flex; flex-direction:column; gap:2px; margin-top:0.75rem; }
+.sig-field label { font-size:10px; color:var(--ink-faint); }
+.sig-input { border:none; border-bottom:1px dashed var(--border-mid); background:transparent; font-family:var(--font-b); font-size:12.5px; color:var(--ink); padding:3px 0; outline:none; width:100%; }
+.sig-input:focus { border-bottom-color:var(--blue); }
+
+/* PRINT */
+@media print {
+  body { background:white; font-size:12px; }
+  .page { padding:1rem; max-width:100%; }
+  .clause.closed .clause-body { max-height:none !important; padding:1.25rem 1.5rem !important; }
+  .clause-arrow { display:none; }
+  .clause-header { cursor:default; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div>
+      <div class="wordmark"><em>Oliva</em><span>craft</span><b>·</b></div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;">Diseño con proceso</div>
+    </div>
+    <div class="doc-title-block">
+      <h1>Contrato de Servicios</h1>
+      <p>Diseño web + Desarrollo</p>
+      <p id="contrato-num">N° OC-CONT-2025-001</p>
+      <p id="contrato-fecha"></p>
+    </div>
+  </div>
+
+  <!-- PARTIES -->
+  <div class="parties-grid">
+    <div class="party-card">
+      <div class="party-role">Prestador del servicio</div>
+      <div class="party-field"><span class="pf-label">Nombre completo</span><span class="pf-val">Francisco Orellana Valdés</span></div>
+      <div class="party-field"><span class="pf-label">RUT</span><span class="pf-val">XX.XXX.XXX-X</span></div>
+      <div class="party-field"><span class="pf-label">Email</span><span class="pf-val">contacto@olivacraft.com</span></div>
+      <div class="party-field"><span class="pf-label">Representado por</span><span class="pf-val">Olivacraft</span></div>
+    </div>
+    <div class="party-card">
+      <div class="party-role">Cliente</div>
+      <div class="party-field"><span class="pf-label">Nombre o empresa</span><input class="pf-val editable" placeholder="Nombre completo o razón social"></div>
+      <div class="party-field"><span class="pf-label">RUT</span><input class="pf-val editable" placeholder="XX.XXX.XXX-X"></div>
+      <div class="party-field"><span class="pf-label">Email</span><input class="pf-val editable" placeholder="email@dominio.com"></div>
+      <div class="party-field"><span class="pf-label">Representante</span><input class="pf-val editable" placeholder="Nombre del representante legal"></div>
+    </div>
+  </div>
+
+  <!-- CLAUSE 1 -->
+  <div class="clause" id="cl1">
+    <div class="clause-header" onclick="tog('cl1')">
+      <span class="clause-num">01</span>
+      <span class="clause-title">Objeto del contrato</span>
+      <span class="clause-arrow">▼</span>
+    </div>
+    <div class="clause-body">
+      <p class="clause-text">El presente contrato regula la prestación de servicios de <strong>diseño web y desarrollo</strong> por parte del Prestador al Cliente, según el alcance detallado en la Cláusula 2.</p>
+      <p class="clause-text">El Prestador actúa como persona natural bajo el nombre comercial <strong>Olivacraft</strong>, emitiendo boleta de honorarios por los servicios prestados.</p>
+      <p class="clause-text">El proyecto al que aplica este contrato es: <input class="editable-inline" placeholder="[nombre del proyecto]" style="min-width:200px;"></p>
+    </div>
+  </div>
+
+  <!-- CLAUSE 2 -->
+  <div class="clause" id="cl2">
+    <div class="clause-header" onclick="tog('cl2')">
+      <span class="clause-num">02</span>
+      <span class="clause-title">Alcance del servicio</span>
+      <span class="clause-arrow">▼</span>
+    </div>
+    <div class="clause-body">
+      <p class="clause-text">Los servicios contratados incluyen exclusivamente los siguientes ítems. Cualquier trabajo fuera de este alcance deberá ser cotizado y acordado por escrito de forma separada.</p>
+      <table class="scope-table">
+        <thead><tr><th>Ítem</th><th>Descripción</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Estrategia y arquitectura</td><td>Estructura de navegación y jerarquía de contenidos</td><td>Incluido</td></tr>
+          <tr><td>Diseño UI responsive</td><td>Diseño en Figma para mobile, tablet y desktop</td><td>Incluido</td></tr>
+          <tr><td>Contenido y copywriting</td><td>Redacción de textos para hasta 6 secciones</td><td>Incluido</td></tr>
+          <tr><td>Desarrollo y publicación</td><td>Implementación y publicación en dominio del cliente</td><td>Incluido</td></tr>
+          <tr><td>SEO base</td><td>Meta tags, sitemap, robots.txt, Search Console</td><td>Incluido</td></tr>
+          <tr><td>Revisiones post-entrega</td><td>Hasta 2 rondas dentro de 10 días hábiles post-entrega</td><td>Incluido</td></tr>
+        </tbody>
+      </table>
+      <p class="clause-text" style="margin-top:0.75rem;">Quedan <strong>expresamente excluidos</strong>: desarrollo de e-commerce, integraciones con sistemas externos, mantenimiento continuo, producción fotográfica o de video, y cualquier servicio no listado anteriormente.</p>
+    </div>
+  </div>
+
+  <!-- CLAUSE 3 -->
+  <div class="clause" id="cl3">
+    <div class="clause-header" onclick="tog('cl3')">
+      <span class="clause-num">03</span>
+      <span class="clause-title">Valor y condiciones de pago</span>
+      <span class="clause-arrow">▼</span>
+    </div>
+    <div class="clause-body">
+      <p class="clause-text">El valor total acordado por los servicios descritos en la Cláusula 2 es de <input class="editable-inline" placeholder="$399.000" style="min-width:100px;"> (pesos chilenos), según el presupuesto N° <input class="editable-inline" placeholder="OC-2025-001" style="min-width:120px;">.</p>
+      <p class="clause-text"><strong>Estructura de pago:</strong></p>
+      <p class="clause-text">· <strong>Primer pago (50%):</strong> <input class="editable-inline" placeholder="$199.500"> al momento de la aceptación de este contrato. Da inicio oficial al proyecto.<br>
+      · <strong>Segundo pago (50%):</strong> <input class="editable-inline" placeholder="$199.500"> al momento de la entrega del sitio publicado y funcional, con aprobación del cliente.</p>
+      <p class="clause-text">El Prestador emitirá <strong>boleta de honorarios</strong> por cada pago recibido. La retención de impuesto de segunda categoría (10,75%) es responsabilidad del Cliente si corresponde según la legislación tributaria vigente.</p>
+      <p class="clause-text">El inicio del trabajo está condicionado a la recepción del primer pago. No se iniciará ninguna actividad sin confirmación de pago.</p>
+    </div>
+  </div>
+
+  <!-- CLAUSE 4 -->
+  <div class="clause" id="cl4">
+    <div class="clause-header" onclick="tog('cl4')">
+      <span class="clause-num">04</span>
+      <span class="clause-title">Plazos de entrega</span>
+      <span class="clause-arrow">▼</span>
+    </div>
+    <div class="clause-body">
+      <p class="clause-text">El plazo estimado de entrega del proyecto es de <input class="editable-inline" placeholder="[X semanas]" style="min-width:100px;"> contadas desde la recepción del primer pago y del brief completo del Cliente.</p>
+      <p class="clause-text">El plazo puede verse afectado por los siguientes factores, los cuales no constituyen incumplimiento del Prestador:</p>
+      <p class="clause-text">· Demora del Cliente en entregar contenidos, imágenes o información necesaria para el proyecto.<br>
+      · Demora del Cliente en aprobar etapas intermedias más allá del plazo de respuesta acordado (5 días hábiles).<br>
+      · Cambios de alcance solicitados por el Cliente durante la ejecución.</p>
+      <p class="clause-text">En caso de que el Cliente no responda una solicitud de aprobación dentro de <strong>5 días hábiles</strong>, se considerará la etapa aprobada y se avanzará a la siguiente.</p>
+    </div>
+  </div>
+
+  <!-- CLAUSE 5 -->
+  <div class="clause" id="cl5">
+    <div class="clause-header" onclick="tog('cl5')">
+      <span class="clause-num">05</span>
+      <span class="clause-title">Responsabilidades del cliente</span>
+      <span class="clause-arrow">▼</span>
+    </div>
+    <div class="clause-body">
+      <p class="clause-text">El Cliente se compromete a:</p>
+      <p class="clause-text">· Proporcionar en tiempo y forma los contenidos, imágenes, accesos y cualquier material necesario para el desarrollo del proyecto.<br>
+      · Designar un único punto de contacto para la revisión y aprobación de entregables.<br>
+      · Revisar y aprobar (o rechazar con comentarios específicos) cada entregable dentro del plazo de 5 días hábiles.<br>
+      · Realizar los pagos en las fechas acordadas.<br>
+      · Garantizar que los materiales entregados al Prestador (textos, imágenes, logos) son de su propiedad o cuenta con las licencias necesarias para su uso.</p>
+    </div>
+  </div>
+
+  <!-- CLAUSE 6 -->
+  <div class="clause" id="cl6">
+    <div class="clause-header" onclick="tog('cl6')">
+      <span class="clause-num">06</span>
+      <span class="clause-title">Propiedad intelectual y entrega de archivos</span>
+      <span class="clause-arrow">▼</span>
+    </div>
+    <div class="clause-body">
+      <p class="clause-text">Una vez completado el <strong>segundo pago</strong>, el Cliente adquiere la propiedad total del sitio web publicado y de todos los archivos de diseño (Figma, código fuente y recursos gráficos producidos para el proyecto).</p>
+      <p class="clause-text">Hasta el pago total, todos los derechos sobre los entregables son propiedad del Prestador. El Cliente no podrá publicar, modificar ni distribuir ningún entregable parcial sin autorización escrita.</p>
+      <p class="clause-text">El Prestador se reserva el derecho de incluir el proyecto en su portafolio y materiales de comunicación, salvo que el Cliente solicite expresamente lo contrario por escrito antes de la firma de este contrato.</p>
+    </div>
+  </div>
+
+  <!-- CLAUSE 7 -->
+  <div class="clause" id="cl7">
+    <div class="clause-header" onclick="tog('cl7')">
+      <span class="clause-num">07</span>
+      <span class="clause-title">Cambios de alcance</span>
+      <span class="clause-arrow">▼</span>
+    </div>
+    <div class="clause-body">
+      <p class="clause-text">Cualquier solicitud de trabajo que exceda el alcance definido en la Cláusula 2 será considerada un <strong>cambio de alcance</strong>.</p>
+      <p class="clause-text">Los cambios de alcance deben ser solicitados por escrito (email). El Prestador evaluará el impacto en tiempo y costo, y enviará una cotización separada. El trabajo adicional no comenzará hasta que el Cliente apruebe formalmente la cotización y se acuerde el pago correspondiente.</p>
+      <p class="clause-text">Las revisiones menores dentro de la ronda de ajustes incluida (Cláusula 2) no constituyen cambio de alcance.</p>
+    </div>
+  </div>
+
+  <!-- CLAUSE 8 -->
+  <div class="clause" id="cl8">
+    <div class="clause-header" onclick="tog('cl8')">
+      <span class="clause-num">08</span>
+      <span class="clause-title">Confidencialidad</span>
+      <span class="clause-arrow">▼</span>
+    </div>
+    <div class="clause-body">
+      <p class="clause-text">Ambas partes se comprometen a mantener la confidencialidad de la información sensible que se comparta durante la ejecución del proyecto, incluyendo datos comerciales, estratégicos o de clientes finales del Cliente.</p>
+      <p class="clause-text">Esta obligación se mantiene vigente por un plazo de <strong>2 años</strong> después del término del contrato.</p>
+    </div>
+  </div>
+
+  <!-- CLAUSE 9 -->
+  <div class="clause" id="cl9">
+    <div class="clause-header" onclick="tog('cl9')">
+      <span class="clause-num">09</span>
+      <span class="clause-title">Resolución anticipada</span>
+      <span class="clause-arrow">▼</span>
+    </div>
+    <div class="clause-body">
+      <p class="clause-text"><strong>Por parte del Cliente:</strong> El Cliente puede resolver el contrato en cualquier momento notificando al Prestador por escrito con al menos 5 días hábiles de anticipación. En ese caso, el Cliente pagará por el trabajo ya realizado hasta la fecha de resolución, calculado de forma proporcional al avance del proyecto. El primer pago no es reembolsable.</p>
+      <p class="clause-text"><strong>Por parte del Prestador:</strong> El Prestador puede resolver el contrato si el Cliente incumple reiteradamente los plazos de pago o de entrega de materiales, previa notificación escrita con 5 días hábiles de anticipación. En ese caso se liquidará el trabajo realizado hasta la fecha.</p>
+    </div>
+  </div>
+
+  <!-- CLAUSE 10 -->
+  <div class="clause" id="cl10">
+    <div class="clause-header" onclick="tog('cl10')">
+      <span class="clause-num">10</span>
+      <span class="clause-title">Ley aplicable y resolución de conflictos</span>
+      <span class="clause-arrow">▼</span>
+    </div>
+    <div class="clause-body">
+      <p class="clause-text">Este contrato se rige por la legislación vigente de la <strong>República de Chile</strong>.</p>
+      <p class="clause-text">Ante cualquier disputa derivada de este contrato, las partes se comprometen a buscar una solución amistosa en primera instancia. Si no se llega a acuerdo en un plazo de 15 días corridos, la disputa será sometida a los <strong>Juzgados de Letras de Santiago</strong>.</p>
+    </div>
+  </div>
+
+  <!-- SIGNATURES -->
+  <div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);padding:8px 0 6px;border-bottom:0.5px solid var(--border-mid);margin-bottom:2px;margin-top:1rem;">FIRMAS Y ACEPTACIÓN</div>
+  <div class="signatures">
+    <div class="sig-card">
+      <div class="sig-role">Prestador del servicio</div>
+      <div class="sig-line"></div>
+      <div class="sig-name-label">Francisco Orellana Valdés</div>
+      <div class="sig-field"><label>Fecha</label><input class="sig-input" placeholder="DD/MM/AAAA" id="sig-fecha-prestador"></div>
+      <div class="sig-field"><label>Lugar</label><input class="sig-input" value="Santiago, Chile"></div>
+    </div>
+    <div class="sig-card">
+      <div class="sig-role">Cliente</div>
+      <div class="sig-line"></div>
+      <div class="sig-name-label">Firma y timbre (si aplica)</div>
+      <div class="sig-field"><label>Nombre completo</label><input class="sig-input" placeholder="________________________"></div>
+      <div class="sig-field"><label>Fecha</label><input class="sig-input" placeholder="DD/MM/AAAA"></div>
+      <div class="sig-field"><label>Lugar</label><input class="sig-input" placeholder="Ciudad, Chile"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER NOTE -->
+  <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:var(--surface);border-radius:10px;font-size:11.5px;color:var(--ink-muted);line-height:1.6;">
+    <strong style="color:var(--ink);">Nota:</strong> Este contrato puede ser aceptado por email. La respuesta escrita del Cliente confirmando su aceptación de los términos tiene el mismo valor legal que la firma física, según lo establecido en la Ley 19.799 de Documentos Electrónicos de Chile.
+  </div>
+
+</div>
+
+<script>
+const today = new Date();
+const fmt = d => d.toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'numeric'});
+document.getElementById('contrato-fecha').textContent = fmt(today);
+document.getElementById('sig-fecha-prestador').value = fmt(today);
+
+function tog(id) {
+  document.getElementById(id).classList.toggle('closed');
+}
+</script>
+</body>
+</html>
