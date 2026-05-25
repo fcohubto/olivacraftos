@@ -12,6 +12,7 @@
   --night:#0D2B4A; --blue:#0A7EC2; --cyan:#3EC6D4; --frost:#F2F8FD;
   --ink:#1A2C3D; --ink-soft:#3D5A74; --ink-muted:#6A8EA8; --ink-faint:#9AB4C8;
   --border:rgba(10,126,194,0.12); --border-mid:rgba(10,126,194,0.22); --surface:#EAF3FB;
+  --success:#0F6E56; --success-soft:#E1F5EE;
   --font-d:'Fraunces',Georgia,serif; --font-b:'Plus Jakarta Sans',system-ui,sans-serif;
 }
 html { font-size:16px; }
@@ -27,6 +28,11 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
 .doc-title-block { text-align:right; }
 .doc-title-block h1 { font-family:var(--font-d); font-style:italic; font-weight:300; font-size:20px; color:#fff; font-variation-settings:'opsz' 9; line-height:1.2; margin-bottom:4px; }
 .doc-title-block p { font-size:10px; color:rgba(255,255,255,0.4); line-height:1.8; }
+
+/* DOC TYPE TOGGLE */
+.dt-toggle { display:flex; gap:2px; background:var(--surface); border-radius:7px; padding:2px; }
+.dt-opt { padding:4px 12px; border-radius:5px; font-family:var(--font-b); font-size:11.5px; font-weight:500; cursor:pointer; border:none; background:transparent; color:var(--ink-muted); transition:all 0.15s; }
+.dt-opt.active { background:#fff; color:var(--blue); font-weight:600; box-shadow:0 1px 3px rgba(0,0,0,0.07); }
 
 /* PARTIES */
 .parties-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-bottom:2px; }
@@ -47,20 +53,56 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
 .clause-title { font-size:13px; font-weight:600; color:var(--ink); flex:1; }
 .clause-arrow { font-size:11px; color:var(--ink-faint); transition:transform 0.2s; }
 .clause.closed .clause-arrow { transform:rotate(-90deg); }
-.clause-body { padding:1.25rem 1.5rem; overflow:hidden; max-height:2000px; transition:max-height 0.3s ease; }
+.clause-body { padding:1.25rem 1.5rem; overflow:hidden; max-height:3000px; transition:max-height 0.3s ease; }
 .clause.closed .clause-body { max-height:0; padding-top:0; padding-bottom:0; }
 .clause-text { font-size:13px; color:var(--ink-soft); line-height:1.75; margin-bottom:0.75rem; }
 .clause-text:last-child { margin-bottom:0; }
 .clause-text strong { color:var(--ink); font-weight:500; }
-.clause-text .editable-inline { border:none; background:rgba(10,126,194,0.06); font-family:var(--font-b); font-size:13px; color:var(--blue); font-weight:600; outline:none; border-bottom:1px dashed var(--blue); cursor:text; min-width:80px; }
-.clause-text .editable-inline:focus { background:rgba(10,126,194,0.1); }
+.editable-inline { border:none; background:rgba(10,126,194,0.06); font-family:var(--font-b); font-size:13px; color:var(--blue); font-weight:600; outline:none; border-bottom:1px dashed var(--blue); cursor:text; min-width:80px; }
+.editable-inline:focus { background:rgba(10,126,194,0.1); }
+.dyn-val { color:var(--blue); font-weight:600; }
 
-/* SCOPE TABLE */
-.scope-table { width:100%; border-collapse:collapse; font-size:12.5px; margin:0.75rem 0; }
-.scope-table th { background:var(--surface); font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-muted); padding:7px 12px; text-align:left; border-bottom:0.5px solid var(--border-mid); }
-.scope-table td { padding:8px 12px; border-bottom:0.5px solid var(--border); color:var(--ink-soft); vertical-align:top; }
-.scope-table tr:last-child td { border-bottom:none; }
-.scope-table td:first-child { font-weight:500; color:var(--ink); }
+/* SCOPE SELECTABLE */
+.scope-list-wrap { background:#fff; border:0.5px solid var(--border); border-radius:8px; overflow:hidden; margin:0.75rem 0; }
+.scope-cat-label { background:var(--surface); font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-muted); padding:7px 12px; border-bottom:0.5px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.scope-cat-count { font-weight:400; text-transform:none; letter-spacing:0; font-size:10px; color:var(--ink-faint); }
+.scope-row { display:flex; align-items:flex-start; gap:10px; padding:9px 12px; cursor:pointer; border-bottom:0.5px solid var(--border); transition:background 0.1s; user-select:none; }
+.scope-row:last-child { border-bottom:none; }
+.scope-row:hover { background:var(--frost); }
+.scope-row.selected { background:#F0F8FF; }
+.scope-cb { width:15px; height:15px; border-radius:3px; border:1.5px solid var(--border-mid); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.15s; margin-top:2px; font-size:9px; color:transparent; }
+.scope-row.selected .scope-cb { background:var(--blue); border-color:var(--blue); color:#fff; }
+.scope-row-info { flex:1; min-width:0; }
+.scope-row-name { font-size:12.5px; font-weight:500; color:var(--ink); }
+.scope-row-desc { font-size:11px; color:var(--ink-muted); line-height:1.4; margin-top:1px; }
+.scope-row-price { font-size:12.5px; font-weight:600; color:var(--ink-faint); flex-shrink:0; white-space:nowrap; transition:color 0.15s; }
+.scope-row.selected .scope-row-price { color:var(--blue); }
+
+/* SCOPE SUMMARY */
+.ct-sum-block { border:0.5px solid var(--border); border-radius:8px; overflow:hidden; margin:0 0 0.75rem; }
+.ct-sum-row { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:0.5px solid var(--border); font-size:12.5px; }
+.ct-sum-row:last-child { border-bottom:none; }
+.ct-sum-label { color:var(--ink-muted); }
+.ct-sum-val { font-weight:600; color:var(--ink); }
+.ct-sum-val.blue { color:var(--blue); }
+.ct-sum-total { background:var(--surface); }
+.ct-sum-total .ct-sum-label { font-weight:500; color:var(--ink); }
+.ct-sum-total .ct-sum-val { color:var(--night); font-size:14px; }
+
+/* DYNAMIC DELIVERABLES */
+.del-sub-head { font-size:9.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-muted); padding:10px 0 6px; border-bottom:0.5px solid var(--border-mid); margin:1rem 0 0; }
+.deliverables-list { margin-top:0.5rem; }
+.del-item { display:flex; align-items:flex-start; gap:10px; padding:7px 0; border-bottom:0.5px solid var(--border); }
+.del-item:last-child { border-bottom:none; }
+.del-text { font-size:12.5px; color:var(--ink-soft); line-height:1.4; }
+.del-sub { font-size:11px; color:var(--ink-muted); margin-top:1px; }
+.del-empty { padding:1.25rem 0; font-size:12.5px; color:var(--ink-faint); font-style:italic; }
+.del-svc-head { font-size:9.5px; font-weight:600; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-muted); padding:10px 0 5px; border-bottom:0.5px solid var(--border); margin-bottom:0; }
+.del-svc-head:not(:first-child) { margin-top:8px; }
+.del-cb { width:16px; height:16px; border-radius:3px; border:1.5px solid var(--success); background:var(--success-soft); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; cursor:pointer; transition:all 0.15s; font-size:9px; color:var(--success); font-weight:700; user-select:none; }
+.del-item.unchecked .del-cb { background:var(--surface); border-color:var(--border-mid); color:transparent; }
+.del-item.unchecked .del-text { color:var(--ink-faint); }
+.del-item.unchecked .del-sub { color:var(--ink-faint); }
 
 /* SIGNATURES */
 .signatures { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:2px; }
@@ -73,13 +115,32 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
 .sig-input { border:none; border-bottom:1px dashed var(--border-mid); background:transparent; font-family:var(--font-b); font-size:12.5px; color:var(--ink); padding:3px 0; outline:none; width:100%; }
 .sig-input:focus { border-bottom-color:var(--blue); }
 
+/* PRINT BUTTON */
+.print-btn { position:fixed; bottom:2rem; right:2rem; display:flex; align-items:center; gap:8px; padding:11px 22px; background:var(--night); color:#fff; border:none; border-radius:999px; font-family:var(--font-b); font-size:13px; font-weight:500; cursor:pointer; box-shadow:0 4px 16px rgba(13,43,74,0.2); transition:all 0.15s; z-index:100; }
+.print-btn:hover { background:var(--blue); transform:translateY(-1px); box-shadow:0 6px 20px rgba(10,126,194,0.28); }
+
 /* PRINT */
 @media print {
+  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   body { background:white; font-size:12px; }
   .page { padding:1rem; max-width:100%; }
-  .clause.closed .clause-body { max-height:none !important; padding:1.25rem 1.5rem !important; }
+  .no-print, .print-btn { display:none !important; }
+  .clause-body { max-height:none !important; overflow:visible !important; }
+  .clause.closed .clause-body { padding:1.25rem 1.5rem !important; }
   .clause-arrow { display:none; }
   .clause-header { cursor:default; }
+  .pf-val.editable { border-bottom:none !important; }
+  #billing-extra { display:block !important; }
+  .scope-row:not(.selected) { display:none !important; }
+  .scope-cb { display:none !important; }
+  .scope-row-price { color:var(--ink) !important; }
+  .scope-cat-group.print-empty { display:none !important; }
+  .del-item.unchecked { display:none !important; }
+  .del-cb { display:none !important; }
+  .del-svc-head.print-empty-head { display:none !important; }
+  .clause { break-inside:avoid; page-break-inside:avoid; }
+  .signatures { break-inside:avoid; }
+  .editable-inline { border-bottom:none !important; background:transparent !important; }
 }
 </style>
 </head>
@@ -94,9 +155,18 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
     </div>
     <div class="doc-title-block">
       <h1>Contrato de Servicios</h1>
-      <p>Diseño web + Desarrollo</p>
+      <p id="ct-doc-type-header">Boleta de honorarios</p>
       <p id="contrato-num">N° OC-CONT-2025-001</p>
       <p id="contrato-fecha"></p>
+    </div>
+  </div>
+
+  <!-- DOC TYPE BAR -->
+  <div class="no-print" style="background:#fff;border:0.5px solid var(--border);border-radius:10px;padding:0.65rem 1.25rem;margin-bottom:2px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:11.5px;color:var(--ink-muted);">Tipo de documento tributario</span>
+    <div class="dt-toggle">
+      <button class="dt-opt active" onclick="setDocType('boleta',this)">Boleta de honorarios</button>
+      <button class="dt-opt" onclick="setDocType('factura',this)">Factura electrónica</button>
     </div>
   </div>
 
@@ -111,10 +181,14 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
     </div>
     <div class="party-card">
       <div class="party-role">Cliente</div>
-      <div class="party-field"><span class="pf-label">Nombre o empresa</span><input class="pf-val editable" placeholder="Nombre completo o razón social"></div>
-      <div class="party-field"><span class="pf-label">RUT</span><input class="pf-val editable" placeholder="XX.XXX.XXX-X"></div>
-      <div class="party-field"><span class="pf-label">Email</span><input class="pf-val editable" placeholder="email@dominio.com"></div>
-      <div class="party-field"><span class="pf-label">Representante</span><input class="pf-val editable" placeholder="Nombre del representante legal"></div>
+      <div class="party-field"><span class="pf-label">Nombre o empresa</span><input class="pf-val editable" id="cl-nombre" placeholder="Nombre completo o razón social"></div>
+      <div class="party-field"><span class="pf-label">RUT</span><input class="pf-val editable" id="cl-rut" placeholder="XX.XXX.XXX-X"></div>
+      <div class="party-field"><span class="pf-label">Email</span><input class="pf-val editable" id="cl-email" placeholder="email@dominio.com"></div>
+      <div class="party-field"><span class="pf-label">Representante</span><input class="pf-val editable" id="cl-rep" placeholder="Nombre del representante legal"></div>
+      <div id="billing-extra" style="display:none;">
+        <div class="party-field"><span class="pf-label">Razón social</span><input class="pf-val editable" id="cl-razon" placeholder="Empresa S.A."></div>
+        <div class="party-field"><span class="pf-label">Giro</span><input class="pf-val editable" id="cl-giro" placeholder="Servicios de tecnología"></div>
+      </div>
     </div>
   </div>
 
@@ -126,9 +200,9 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
       <span class="clause-arrow">▼</span>
     </div>
     <div class="clause-body">
-      <p class="clause-text">El presente contrato regula la prestación de servicios de <strong>diseño web y desarrollo</strong> por parte del Prestador al Cliente, según el alcance detallado en la Cláusula 2.</p>
-      <p class="clause-text">El Prestador actúa como persona natural bajo el nombre comercial <strong>Olivacraft</strong>, emitiendo boleta de honorarios por los servicios prestados.</p>
-      <p class="clause-text">El proyecto al que aplica este contrato es: <input class="editable-inline" placeholder="[nombre del proyecto]" style="min-width:200px;"></p>
+      <p class="clause-text">El presente contrato regula la prestación de servicios de <strong>diseño, desarrollo y consultoría digital</strong> por parte del Prestador al Cliente, según el alcance detallado en la Cláusula 2.</p>
+      <p class="clause-text">El Prestador actúa como persona natural bajo el nombre comercial <strong>Olivacraft</strong>, emitiendo <strong id="ct-doc-inline">boleta de honorarios</strong> por los servicios prestados.</p>
+      <p class="clause-text">El proyecto al que aplica este contrato es: <input class="editable-inline" id="proyecto-nombre" placeholder="[nombre del proyecto]" style="min-width:200px;"></p>
     </div>
   </div>
 
@@ -136,23 +210,33 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
   <div class="clause" id="cl2">
     <div class="clause-header" onclick="tog('cl2')">
       <span class="clause-num">02</span>
-      <span class="clause-title">Alcance del servicio</span>
+      <span class="clause-title" id="scope-head">Alcance del servicio</span>
       <span class="clause-arrow">▼</span>
     </div>
     <div class="clause-body">
-      <p class="clause-text">Los servicios contratados incluyen exclusivamente los siguientes ítems. Cualquier trabajo fuera de este alcance deberá ser cotizado y acordado por escrito de forma separada.</p>
-      <table class="scope-table">
-        <thead><tr><th>Ítem</th><th>Descripción</th><th>Estado</th></tr></thead>
-        <tbody>
-          <tr><td>Estrategia y arquitectura</td><td>Estructura de navegación y jerarquía de contenidos</td><td>Incluido</td></tr>
-          <tr><td>Diseño UI responsive</td><td>Diseño en Figma para mobile, tablet y desktop</td><td>Incluido</td></tr>
-          <tr><td>Contenido y copywriting</td><td>Redacción de textos para hasta 6 secciones</td><td>Incluido</td></tr>
-          <tr><td>Desarrollo y publicación</td><td>Implementación y publicación en dominio del cliente</td><td>Incluido</td></tr>
-          <tr><td>SEO base</td><td>Meta tags, sitemap, robots.txt, Search Console</td><td>Incluido</td></tr>
-          <tr><td>Revisiones post-entrega</td><td>Hasta 2 rondas dentro de 10 días hábiles post-entrega</td><td>Incluido</td></tr>
-        </tbody>
-      </table>
-      <p class="clause-text" style="margin-top:0.75rem;">Quedan <strong>expresamente excluidos</strong>: desarrollo de e-commerce, integraciones con sistemas externos, mantenimiento continuo, producción fotográfica o de video, y cualquier servicio no listado anteriormente.</p>
+      <p class="clause-text">Los servicios contratados incluyen exclusivamente los ítems marcados a continuación. Cualquier trabajo fuera de este alcance deberá ser cotizado y acordado por escrito de forma separada.</p>
+
+      <div id="scope-list" class="scope-list-wrap"></div>
+
+      <div class="ct-sum-block">
+        <div class="ct-sum-row">
+          <span class="ct-sum-label">Valor neto</span>
+          <span class="ct-sum-val blue" id="ct-neto">—</span>
+        </div>
+        <div class="ct-sum-row" id="ct-iva-row" style="display:none;">
+          <span class="ct-sum-label">IVA (19%)</span>
+          <span class="ct-sum-val" id="ct-iva">—</span>
+        </div>
+        <div class="ct-sum-row ct-sum-total">
+          <span class="ct-sum-label">Total acordado</span>
+          <span class="ct-sum-val" id="ct-total-sum">—</span>
+        </div>
+      </div>
+
+      <p class="clause-text">Quedan <strong>expresamente excluidos</strong> todos los servicios no listados anteriormente. Cualquier incorporación posterior requiere acuerdo escrito y cotización adicional.</p>
+
+      <div class="del-sub-head">Entregables acordados</div>
+      <div id="deliverables-list" class="deliverables-list"></div>
     </div>
   </div>
 
@@ -164,14 +248,13 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
       <span class="clause-arrow">▼</span>
     </div>
     <div class="clause-body">
-      <p class="clause-text">El valor total acordado por los servicios descritos en la Cláusula 2 es de <input class="editable-inline" placeholder="$399.000" style="min-width:100px;"> (pesos chilenos), según el presupuesto N° <input class="editable-inline" placeholder="OC-2025-001" style="min-width:120px;">.</p>
+      <p class="clause-text">El valor total acordado por los servicios descritos en la Cláusula 2 es de <strong id="ct-total-text" class="dyn-val">[monto pendiente]</strong> (pesos chilenos), según el presupuesto N° <input class="editable-inline" placeholder="OC-2025-001" style="min-width:120px;">.</p>
       <p class="clause-text"><strong>Estructura de pago:</strong></p>
-      <p class="clause-text">· <strong>Primer pago (50%):</strong> <input class="editable-inline" placeholder="$199.500"> al momento de la aceptación de este contrato. Da inicio oficial al proyecto.<br>
-      · <strong>Segundo pago (50%):</strong> <input class="editable-inline" placeholder="$199.500"> al momento de la entrega del sitio publicado y funcional, con aprobación del cliente.</p>
-      <p class="clause-text">El Prestador emitirá <strong>boleta de honorarios</strong> por cada pago recibido. La retención de impuesto de segunda categoría (10,75%) es responsabilidad del Cliente si corresponde según la legislación tributaria vigente.</p>
-      <p class="clause-text">Para dar inicio oficial al proyecto se requieren <strong>dos condiciones simultáneas</strong>: (1) la firma del presente contrato por parte del Cliente y (2) la recepción del primer pago. El pago sin contrato firmado no da inicio al proyecto; el contrato firmado sin pago tampoco. El <strong>pago</strong> es la condición de mayor peso para iniciar el trabajo.</p>
-      <p class="clause-text"><strong>Caducidad del presupuesto:</strong> Los valores y condiciones indicados en este contrato son válidos por <strong>15 días corridos</strong> desde la fecha de emisión indicada en el encabezado. Transcurrido ese plazo sin aceptación del Cliente, el Prestador se reserva el derecho de revisar precios y condiciones antes de firmar un nuevo acuerdo.</p>
-      <p class="clause-text"><strong>Tipo de documento tributario:</strong> Olivacraft opera como persona natural y emite <strong>boleta de honorarios</strong> por cada pago recibido. Si el Cliente requiere factura electrónica en lugar de boleta, deberá indicarlo antes de la firma de este contrato. La emisión de factura puede requerir una modalidad de pago y condiciones distintas. <strong>[A DEFINIR según caso]</strong></p>
+      <p class="clause-text">· <strong>Primer pago (50%):</strong> <strong id="ct-pago-1" class="dyn-val">[50% del total]</strong> al momento de la aceptación de este contrato. Da inicio oficial al proyecto.<br>
+      · <strong>Segundo pago (50%):</strong> <strong id="ct-pago-2" class="dyn-val">[50% del total]</strong> al momento de la entrega con aprobación del cliente.</p>
+      <p id="ct-doc-note" class="clause-text">El Prestador emitirá <strong>boleta de honorarios</strong> por cada pago recibido. La retención de impuesto de segunda categoría (10,75%) es responsabilidad del Cliente si corresponde según la legislación tributaria vigente.</p>
+      <p class="clause-text">Para dar inicio oficial al proyecto se requieren <strong>dos condiciones simultáneas</strong>: (1) la firma del presente contrato por parte del Cliente y (2) la recepción del primer pago. El pago sin contrato firmado no da inicio al proyecto; el contrato firmado sin pago tampoco.</p>
+      <p class="clause-text"><strong>Caducidad:</strong> Los valores y condiciones indicados en este contrato son válidos por <strong>15 días corridos</strong> desde la fecha de emisión. Transcurrido ese plazo sin aceptación del Cliente, el Prestador se reserva el derecho de revisar precios y condiciones antes de firmar un nuevo acuerdo.</p>
     </div>
   </div>
 
@@ -189,7 +272,7 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
       · Demora del Cliente en aprobar etapas intermedias más allá del plazo de respuesta acordado (5 días hábiles).<br>
       · Cambios de alcance solicitados por el Cliente durante la ejecución.</p>
       <p class="clause-text">En caso de que el Cliente no responda una solicitud de aprobación dentro de <strong>5 días hábiles</strong>, se considerará la etapa aprobada y se avanzará a la siguiente.</p>
-      <p class="clause-text"><strong>Extensión por demora del Cliente:</strong> Si el Cliente demora más de <strong>5 días hábiles</strong> en entregar contenidos, imágenes, accesos u otra información necesaria para continuar el proyecto, el plazo de entrega acordado se extenderá de forma proporcional a la demora, sin que ello constituya incumplimiento del Prestador ni genere cobros adicionales. El Prestador notificará al Cliente por email cuando el retraso supere dicho plazo.</p>
+      <p class="clause-text"><strong>Extensión por demora del Cliente:</strong> Si el Cliente demora más de <strong>5 días hábiles</strong> en entregar contenidos, imágenes, accesos u otra información necesaria, el plazo de entrega acordado se extenderá de forma proporcional, sin que ello constituya incumplimiento del Prestador ni genere cobros adicionales.</p>
     </div>
   </div>
 
@@ -234,7 +317,7 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
     <div class="clause-body">
       <p class="clause-text">Cualquier solicitud de trabajo que exceda el alcance definido en la Cláusula 2 será considerada un <strong>cambio de alcance</strong>.</p>
       <p class="clause-text">Los cambios de alcance deben ser solicitados por escrito (email). El Prestador evaluará el impacto en tiempo y costo, y enviará una cotización separada. El trabajo adicional no comenzará hasta que el Cliente apruebe formalmente la cotización y se acuerde el pago correspondiente.</p>
-      <p class="clause-text">Las revisiones menores dentro de la ronda de ajustes incluida (Cláusula 2) no constituyen cambio de alcance.</p>
+      <p class="clause-text">Las revisiones menores dentro de la ronda de ajustes incluida no constituyen cambio de alcance.</p>
     </div>
   </div>
 
@@ -278,7 +361,7 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
   </div>
 
   <!-- SIGNATURES -->
-  <div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);padding:8px 0 6px;border-bottom:0.5px solid var(--border-mid);margin-bottom:2px;margin-top:1rem;">FIRMAS Y ACEPTACIÓN</div>
+  <div style="font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);padding:8px 0 6px;border-bottom:0.5px solid var(--border-mid);margin-bottom:2px;margin-top:1rem;">Firmas y aceptación</div>
   <div class="signatures">
     <div class="sig-card">
       <div class="sig-role">Prestador del servicio</div>
@@ -303,24 +386,321 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
     <br><br>
     · <strong style="color:var(--ink);">Por email:</strong> El Cliente responde por escrito confirmando la aceptación de los términos. Tiene el mismo valor legal que la firma física, según la Ley 19.799 de Documentos Electrónicos de Chile.
     <br>
-    · <strong style="color:var(--ink);">Por PDF firmado:</strong> El contrato se exporta como PDF, el Cliente lo imprime, firma y devuelve escaneado o fotografiado. <strong>[A DEFINIR — evaluar si se implementa]</strong>
+    · <strong style="color:var(--ink);">Por PDF firmado:</strong> El contrato se exporta como PDF, el Cliente lo imprime, firma y devuelve escaneado o fotografiado.
     <br>
-    · <strong style="color:var(--ink);">Por firma electrónica:</strong> Plataformas como DocuSign o Firma.cl permiten firma digital con validez legal en Chile. <strong>[A DEFINIR — evaluar costo y adopción]</strong>
+    · <strong style="color:var(--ink);">Por firma electrónica:</strong> Plataformas como DocuSign o Firma.cl permiten firma digital con validez legal en Chile.
     <br><br>
     En todos los casos, el Prestador conservará registro del documento firmado en la carpeta del proyecto.
   </div>
 
 </div>
 
+<button class="print-btn no-print" onclick="printDoc()">⎙ Exportar / Imprimir</button>
+
 <script>
+// ── DATES ────────────────────────────────────────────────────
 const today = new Date();
 const fmt = d => d.toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'numeric'});
 document.getElementById('contrato-fecha').textContent = fmt(today);
+document.getElementById('contrato-num').textContent = `N° OC-CONT-${today.getFullYear()}-001`;
 document.getElementById('sig-fecha-prestador').value = fmt(today);
 
+// ── CATALOG ─────────────────────────────────────────────────
+const CATALOG = [
+  { cat: 'Diseño Web', items: [
+    { id: 'landing',      label: 'Landing page',             desc: 'Página de aterrizaje orientada a conversión. Diseño, copy y desarrollo incluidos.', price: 250000 },
+    { id: 'ecommerce',    label: 'Ecommerce',                desc: 'Tienda en línea con carrito, pagos y gestión de productos.', price: 650000 },
+    { id: 'cms',          label: 'Sitio CMS',                desc: 'Sitio web con panel de administración para actualizar contenido sin código.', price: 420000 },
+    { id: 'ui',           label: 'UI / Diseño visual',       desc: 'Diseño visual en Figma con sistema de componentes y guía de estilos.', price: 180000 },
+    { id: 'seo',          label: 'SEO base',                 desc: 'Meta tags, estructura semántica, sitemap, robots.txt y Search Console.', price: 90000 },
+  ]},
+  { cat: 'UX / Research', items: [
+    { id: 'audit',        label: 'UX Audit',                 desc: 'Análisis de usabilidad. Informe con hallazgos y recomendaciones accionables.', price: 200000 },
+    { id: 'discovery',    label: 'Product Discovery',        desc: 'Investigación de usuarios, definición de problema y oportunidades de diseño.', price: 350000 },
+    { id: 'testing',      label: 'Usability Testing',        desc: 'Sesiones con usuarios reales. Informe de hallazgos y puntos de fricción.', price: 160000 },
+  ]},
+  { cat: 'Estrategia', items: [
+    { id: 'consultoria',  label: 'Consultoría estratégica',  desc: 'Sesión de consultoría focalizada. Diagnóstico y plan de acción concreto.', price: 120000 },
+    { id: 'pm',           label: 'Project Management',       desc: 'Gestión del proyecto: hitos, entregables, comunicación y seguimiento.', price: 200000 },
+    { id: 'mentoria',     label: 'Mentoría',                 desc: 'Sesiones de mentoría para diseñadores o founders. Foco en craft y proceso.', price: 80000 },
+  ]},
+  { cat: 'IA y Automatización', items: [
+    { id: 'workflow',       label: 'IA Workflow',                 desc: 'Diseño e implementación de flujos con IA integrada a herramientas existentes.', price: 380000 },
+    { id: 'automatizacion', label: 'Automatización de procesos',  desc: 'Automatización de tareas repetitivas para reducir errores y ganar tiempo.', price: 300000 },
+    { id: 'integracion',    label: 'Integración IA',              desc: 'Integración de capacidades IA en un producto o sitio web existente.', price: 250000 },
+  ]},
+];
+
+const allItems = CATALOG.flatMap(c => c.items);
+
+// ── STATE ────────────────────────────────────────────────────
+const selectedItems = new Set();
+let docType = 'boleta';
+
+// ── FORMAT ───────────────────────────────────────────────────
+function formatCLP(n) { return '$' + Math.round(n).toLocaleString('es-CL'); }
+
+// ── RENDER SCOPE LIST ────────────────────────────────────────
+function renderScopeList() {
+  const container = document.getElementById('scope-list');
+  container.innerHTML = '';
+  CATALOG.forEach(catDef => {
+    const group = document.createElement('div');
+    group.className = 'scope-cat-group';
+
+    const catLabel = document.createElement('div');
+    catLabel.className = 'scope-cat-label';
+    const selCount = catDef.items.filter(i => selectedItems.has(i.id)).length;
+    catLabel.innerHTML = `<span>${catDef.cat}</span><span class="scope-cat-count">${selCount > 0 ? selCount + ' seleccionado' + (selCount !== 1 ? 's' : '') : catDef.items.length + ' disponibles'}</span>`;
+    group.appendChild(catLabel);
+
+    catDef.items.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'scope-row' + (selectedItems.has(item.id) ? ' selected' : '');
+      row.dataset.id = item.id;
+      row.innerHTML = `
+        <div class="scope-cb">✓</div>
+        <div class="scope-row-info">
+          <div class="scope-row-name">${item.label}</div>
+          <div class="scope-row-desc">${item.desc}</div>
+        </div>
+        <div class="scope-row-price">${formatCLP(item.price)}</div>`;
+      row.addEventListener('click', () => toggleItem(item.id));
+      group.appendChild(row);
+    });
+    container.appendChild(group);
+  });
+}
+
+// ── TOGGLE ITEM ──────────────────────────────────────────────
+function toggleItem(id) {
+  if (selectedItems.has(id)) {
+    selectedItems.delete(id);
+    (DELIVERABLES[id] || []).forEach((_, idx) => uncheckedDeliverables.delete(`${id}::${idx}`));
+  } else {
+    selectedItems.add(id);
+  }
+  const row = document.querySelector(`.scope-row[data-id="${id}"]`);
+  if (row) {
+    row.classList.toggle('selected', selectedItems.has(id));
+    const group = row.closest('.scope-cat-group');
+    const catDef = CATALOG.find(c => c.items.some(i => i.id === id));
+    if (group && catDef) {
+      const selCount = catDef.items.filter(i => selectedItems.has(i.id)).length;
+      const countEl = group.querySelector('.scope-cat-count');
+      if (countEl) countEl.textContent = selCount > 0 ? selCount + ' seleccionado' + (selCount !== 1 ? 's' : '') : catDef.items.length + ' disponibles';
+    }
+  }
+  updateTotals();
+  renderDeliverables();
+}
+
+// ── DOC TYPE ─────────────────────────────────────────────────
+function setDocType(type, btn) {
+  docType = type;
+  document.querySelectorAll('.dt-opt').forEach(b => b.classList.toggle('active', b === btn));
+  const label = type === 'factura' ? 'Factura electrónica' : 'Boleta de honorarios';
+  document.getElementById('ct-doc-type-header').textContent = label;
+  document.getElementById('ct-doc-inline').textContent = label.toLowerCase();
+  document.getElementById('billing-extra').style.display = type === 'factura' ? 'block' : 'none';
+  document.getElementById('ct-iva-row').style.display = type === 'factura' ? 'flex' : 'none';
+  const note = document.getElementById('ct-doc-note');
+  if (note) {
+    note.innerHTML = type === 'factura'
+      ? 'El Prestador emitirá <strong>factura electrónica</strong> por cada pago recibido. El monto indicado incluye IVA del 19%. La factura será emitida a nombre de la razón social y RUT indicados en el encabezado de este contrato.'
+      : 'El Prestador emitirá <strong>boleta de honorarios</strong> por cada pago recibido. La retención de impuesto de segunda categoría (10,75%) es responsabilidad del Cliente si corresponde según la legislación tributaria vigente.';
+  }
+  updateTotals();
+}
+
+// ── UPDATE TOTALS ────────────────────────────────────────────
+function updateTotals() {
+  let subtotal = 0;
+  selectedItems.forEach(id => {
+    const item = allItems.find(i => i.id === id);
+    if (item) subtotal += item.price;
+  });
+
+  const isFactura = docType === 'factura';
+  const iva = isFactura ? Math.round(subtotal * 0.19) : 0;
+  const total = subtotal + iva;
+
+  document.getElementById('ct-neto').textContent     = subtotal > 0 ? formatCLP(subtotal) : '—';
+  document.getElementById('ct-iva').textContent      = subtotal > 0 ? formatCLP(iva) : '—';
+  document.getElementById('ct-total-sum').textContent = total > 0 ? formatCLP(total) : '—';
+  document.getElementById('ct-total-text').textContent = total > 0 ? formatCLP(total) : '[monto pendiente]';
+
+  const half = Math.round(total / 2);
+  document.getElementById('ct-pago-1').textContent = total > 0 ? formatCLP(half) : '[50% del total]';
+  document.getElementById('ct-pago-2').textContent = total > 0 ? formatCLP(total - half) : '[50% del total]';
+
+  const n = selectedItems.size;
+  const head = document.getElementById('scope-head');
+  if (head) head.textContent = 'Alcance del servicio' + (n > 0 ? ` — ${n} ítem${n !== 1 ? 's' : ''} seleccionado${n !== 1 ? 's' : ''}` : '');
+}
+
+// ── PRINT ────────────────────────────────────────────────────
+function printDoc() {
+  document.querySelectorAll('.clause').forEach(cl => cl.classList.remove('closed'));
+  document.querySelectorAll('.scope-cat-group').forEach(group => {
+    group.classList.toggle('print-empty', !group.querySelector('.scope-row.selected'));
+  });
+  document.querySelectorAll('.del-svc-head').forEach(head => {
+    let el = head.nextElementSibling;
+    let hasItems = false, allUnchecked = true;
+    while (el && el.classList.contains('del-item')) {
+      hasItems = true;
+      if (!el.classList.contains('unchecked')) { allUnchecked = false; break; }
+      el = el.nextElementSibling;
+    }
+    head.classList.toggle('print-empty-head', hasItems && allUnchecked);
+  });
+  window.addEventListener('afterprint', function cleanup() {
+    document.querySelectorAll('.scope-cat-group').forEach(g => g.classList.remove('print-empty'));
+    document.querySelectorAll('.del-svc-head').forEach(h => h.classList.remove('print-empty-head'));
+    window.removeEventListener('afterprint', cleanup);
+  });
+  window.print();
+}
+
+// ── DELIVERABLES MAP ─────────────────────────────────────────
+const DELIVERABLES = {
+  landing: [
+    { text: 'Landing page publicada en el dominio del cliente', sub: 'Responsive, optimizada y con formulario de contacto operativo' },
+    { text: 'Archivo Figma con diseño final', sub: 'Editable, con componentes organizados y bien nombrados' },
+    { text: 'Guía de estilos básica', sub: 'Colores, tipografías y componentes documentados' },
+  ],
+  ecommerce: [
+    { text: 'Tienda online publicada y funcional', sub: 'Con carrito, checkout y pasarela de pago configurada' },
+    { text: 'Panel de administración configurado', sub: 'Para gestionar productos, stock y pedidos sin código' },
+    { text: 'Archivo Figma con diseño de la tienda', sub: 'Flujo de compra completo y diseño de producto' },
+    { text: 'Capacitación básica en el uso del panel', sub: 'Videollamada de 60 min + resumen escrito' },
+  ],
+  cms: [
+    { text: 'Sitio web publicado con CMS configurado', sub: 'Panel de administración para actualizar contenido sin código' },
+    { text: 'Estructura de contenidos definida', sub: 'Tipos de contenido, campos y relaciones configurados' },
+    { text: 'Capacitación en el uso del CMS', sub: 'Guía escrita + videollamada de entrega' },
+    { text: 'Archivo Figma con diseño del sitio', sub: 'Todas las vistas y estados documentados' },
+  ],
+  ui: [
+    { text: 'Archivo Figma con diseño visual completo', sub: 'Pantallas, componentes y variantes organizados' },
+    { text: 'Sistema de diseño en Figma', sub: 'Tokens de color, tipografía, espaciado y componentes reutilizables' },
+    { text: 'Guía de estilos exportable', sub: 'Colores, fuentes, íconos y normas de uso' },
+  ],
+  seo: [
+    { text: 'Meta tags y estructura semántica optimizadas', sub: 'Title, description, Open Graph y datos estructurados' },
+    { text: 'Sitemap XML y robots.txt configurados', sub: 'Listos para indexación en Google' },
+    { text: 'Google Search Console configurado', sub: 'Propiedad verificada y sitemap enviado' },
+    { text: 'Informe SEO base', sub: 'Estado inicial y recomendaciones de contenido' },
+  ],
+  audit: [
+    { text: 'Informe de auditoría UX', sub: 'Hallazgos, severidad de problemas y recomendaciones priorizadas' },
+    { text: 'Mapa de fricciones del flujo actual', sub: 'Visualización de los principales puntos de dolor del usuario' },
+    { text: 'Plan de mejoras accionable', sub: 'Con criterios de éxito y orden de implementación sugerido' },
+  ],
+  discovery: [
+    { text: 'Informe de investigación de usuarios', sub: 'Síntesis de entrevistas, patrones y citas relevantes' },
+    { text: 'Mapa de oportunidades', sub: 'Problem statements y áreas de diseño priorizadas' },
+    { text: 'Personas y escenarios de uso', sub: 'Arquetipos de usuario basados en datos reales' },
+    { text: 'Brief de diseño definido', sub: 'Documento de arranque listo para el equipo de diseño' },
+  ],
+  testing: [
+    { text: 'Informe de usability testing', sub: 'Sesiones realizadas, hallazgos documentados y clips de referencia' },
+    { text: 'Matriz de problemas detectados', sub: 'Ordenados por frecuencia e impacto en el usuario' },
+    { text: 'Recomendaciones de rediseño', sub: 'Propuestas concretas para cada problema identificado' },
+  ],
+  consultoria: [
+    { text: 'Diagnóstico del estado actual', sub: 'Análisis de la situación, contexto y desafíos principales' },
+    { text: 'Plan de acción concreto', sub: 'Pasos recomendados con prioridad y criterios de éxito' },
+    { text: 'Grabación y notas de la sesión', sub: 'Para consulta posterior del equipo' },
+  ],
+  pm: [
+    { text: 'Plan del proyecto', sub: 'Hitos, entregables, fechas y responsables definidos' },
+    { text: 'Tablero de seguimiento configurado', sub: 'Notion, Linear o la herramienta preferida del cliente' },
+    { text: 'Reportes de avance periódicos', sub: 'Actualizaciones semanales de estado y bloqueos' },
+    { text: 'Cierre del proyecto documentado', sub: 'Informe final con lecciones aprendidas y retrospectiva' },
+  ],
+  mentoria: [
+    { text: 'Sesiones de mentoría pactadas', sub: 'Videollamadas con agenda definida y foco en objetivos del mentee' },
+    { text: 'Recursos y materiales de apoyo', sub: 'Lecturas, herramientas y referencias personalizadas' },
+    { text: 'Plan de desarrollo personalizado', sub: 'Objetivos de corto y mediano plazo con métricas de avance' },
+  ],
+  workflow: [
+    { text: 'Flujo de IA diseñado e implementado', sub: 'Integrado a las herramientas existentes del cliente' },
+    { text: 'Documentación del workflow', sub: 'Diagrama de flujo, instrucciones y casos de uso cubiertos' },
+    { text: 'Pruebas y validación con casos reales', sub: 'Verificación de resultados con datos del cliente' },
+    { text: 'Capacitación en el uso del flujo', sub: 'Videollamada + guía escrita para el equipo' },
+  ],
+  automatizacion: [
+    { text: 'Procesos automatizados implementados', sub: 'Reducción de tareas manuales repetitivas definidas en el alcance' },
+    { text: 'Documentación técnica del sistema', sub: 'Instrucciones de uso, mantenimiento y actualizaciones' },
+    { text: 'Pruebas de estabilidad y error handling', sub: 'Validación de casos borde y flujos de error' },
+  ],
+  integracion: [
+    { text: 'Integración IA implementada en el producto', sub: 'Funcionalidad definida en el alcance activa y probada' },
+    { text: 'Documentación de la integración', sub: 'Endpoints, parámetros y flujo de datos documentados' },
+    { text: 'Informe de pruebas', sub: 'Casos testeados, resultados y limitaciones conocidas' },
+  ],
+};
+
+// ── DELIVERABLES STATE ───────────────────────────────────────
+const uncheckedDeliverables = new Set();
+
+// ── TOGGLE DELIVERABLE ───────────────────────────────────────
+function toggleDeliverable(key, rowEl) {
+  if (uncheckedDeliverables.has(key)) {
+    uncheckedDeliverables.delete(key);
+    rowEl.classList.remove('unchecked');
+    rowEl.querySelector('.del-cb').textContent = '✓';
+  } else {
+    uncheckedDeliverables.add(key);
+    rowEl.classList.add('unchecked');
+    rowEl.querySelector('.del-cb').textContent = '';
+  }
+}
+
+// ── RENDER DELIVERABLES ──────────────────────────────────────
+function renderDeliverables() {
+  const container = document.getElementById('deliverables-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (selectedItems.size === 0) {
+    container.innerHTML = '<div class="del-empty">Selecciona servicios en el Alcance para ver los entregables del contrato.</div>';
+    return;
+  }
+
+  CATALOG.forEach(catDef => {
+    catDef.items.filter(i => selectedItems.has(i.id)).forEach(svc => {
+      const items = DELIVERABLES[svc.id] || [];
+      if (!items.length) return;
+
+      const head = document.createElement('div');
+      head.className = 'del-svc-head';
+      head.textContent = svc.label;
+      container.appendChild(head);
+
+      items.forEach((d, idx) => {
+        const key = `${svc.id}::${idx}`;
+        const isUnchecked = uncheckedDeliverables.has(key);
+        const row = document.createElement('div');
+        row.className = 'del-item' + (isUnchecked ? ' unchecked' : '');
+        row.innerHTML = `<div class="del-cb" onclick="toggleDeliverable('${key}', this.closest('.del-item'))">${isUnchecked ? '' : '✓'}</div><div><div class="del-text">${d.text}</div>${d.sub ? `<div class="del-sub">${d.sub}</div>` : ''}</div>`;
+        container.appendChild(row);
+      });
+    });
+  });
+}
+
+// ── CLAUSE TOGGLE ────────────────────────────────────────────
 function tog(id) {
   document.getElementById(id).classList.toggle('closed');
 }
+
+// ── INIT ─────────────────────────────────────────────────────
+renderScopeList();
+updateTotals();
+renderDeliverables();
 </script>
 </body>
 </html>
