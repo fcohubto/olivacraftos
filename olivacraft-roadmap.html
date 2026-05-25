@@ -5,29 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Olivacraft — Roadmap Absoluto</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9,600;0,9,700;1,9,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --ink:          #1C1C1A;
-    --ink-soft:     #4A4A44;
-    --ink-muted:    #8A8A82;
-    --bg:           #FAFAF7;
-    --surface:      #F4F1EB;
-    --cream:        #EDE8DF;
-    --border:       rgba(28,28,26,0.12);
-    --border-mid:   rgba(28,28,26,0.22);
-    --accent:       #2A2A26;
-    --accent-soft:  #E8E4DC;
-    --gold:         #B89A52;
-    --gold-soft:    #F0E6CA;
+    --ink:          #1A2C3D;
+    --ink-soft:     #3D5A74;
+    --ink-muted:    #6A8EA8;
+    --ink-faint:    #9AB4C8;
+    --bg:           #F2F8FD;
+    --surface:      #EAF3FB;
+    --cream:        #DCE8F4;
+    --night:        #0D2B4A;
+    --blue:         #0A7EC2;
+    --cyan:         #3EC6D4;
+    --border:       rgba(10,126,194,0.12);
+    --border-mid:   rgba(10,126,194,0.22);
+    --accent:       #0D2B4A;
+    --accent-soft:  #EAF3FB;
+    --gold:         #0A7EC2;
+    --gold-soft:    rgba(10,126,194,0.07);
     --critical:     #C0392B;
     --critical-soft:#FAECEB;
-    --action:       #2D5016;
-    --action-soft:  #E6EDD9;
-    --build:        #7A5C1E;
-    --build-soft:   #F5EDD4;
+    --action:       #0A7EC2;
+    --action-soft:  rgba(10,126,194,0.09);
+    --build:        #0F6E56;
+    --build-soft:   #E1F5EE;
   }
 
   html { font-size: 16px; }
@@ -35,7 +39,7 @@
   body {
     background: var(--bg);
     color: var(--ink);
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 14px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -62,17 +66,17 @@
   }
 
   .rm-wordmark {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Fraunces', Georgia, serif;
     font-size: 32px;
     letter-spacing: -0.02em;
     line-height: 1;
-    color: var(--ink);
+    display: flex;
+    align-items: baseline;
   }
 
-  .rm-wordmark em {
-    font-style: italic;
-    color: var(--ink-soft);
-  }
+  .rm-wordmark em   { font-style: italic; font-weight: 300; color: var(--ink); font-variation-settings: 'opsz' 9; }
+  .rm-wordmark span { font-weight: 600; color: var(--ink); font-variation-settings: 'opsz' 9; }
+  .rm-wordmark b    { font-weight: 700; font-style: normal; color: var(--blue); position: relative; top: -2px; margin-left: 2px; font-variation-settings: 'opsz' 9; }
 
   .rm-meta {
     text-align: right;
@@ -136,7 +140,7 @@
   .tl-phase:not(.now) .tl-num { color: var(--ink-muted); }
 
   .tl-name {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Fraunces', Georgia, serif;
     font-size: 13px;
     line-height: 1.2;
   }
@@ -187,7 +191,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Fraunces', Georgia, serif;
     font-size: 15px;
     flex-shrink: 0;
   }
@@ -209,7 +213,7 @@
   .phase:not(.phase-now) .ph-label { color: var(--ink-muted); }
 
   .ph-title {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Fraunces', Georgia, serif;
     font-size: 16px;
     line-height: 1.2;
   }
@@ -264,7 +268,7 @@
   }
 
   .ic-title {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Fraunces', Georgia, serif;
     font-size: 15px;
     color: var(--ink);
   }
@@ -403,7 +407,7 @@
   }
 
   .metric-n {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Fraunces', Georgia, serif;
     font-size: 28px;
     color: var(--ink);
     line-height: 1;
@@ -452,10 +456,10 @@
 <div class="page">
 
   <header class="rm-header">
-    <div class="rm-wordmark"><em>Oliva</em>craft</div>
+    <div class="rm-wordmark"><em>Oliva</em><span>craft</span><b>·</b></div>
     <div class="rm-meta">
       <p>Roadmap absoluto</p>
-      <p>1 persona + IA · 2025–2026</p>
+      <p>1 persona + IA · 2026</p>
       <p>Generado con Claude · Olivacraft</p>
     </div>
   </header>
