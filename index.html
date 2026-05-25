@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olivacraft — Documentos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9,600;1,9,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --night: #0D2B4A;
+      --blue:  #0A7EC2;
+      --cyan:  #3EC6D4;
+      --bg:    #F2F8FD;
+      --surface: #EAF3FB;
+      --border: rgba(10,126,194,0.14);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--night);
+      min-height: 100vh;
+      padding: 48px 24px;
+    }
+
+    header {
+      max-width: 640px;
+      margin: 0 auto 48px;
+    }
+
+    .wordmark {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .wordmark em   { font-style: italic; font-weight: 300; color: var(--night); font-variation-settings: 'opsz' 9; }
+    .wordmark span { font-weight: 600; color: var(--night); font-variation-settings: 'opsz' 9; }
+    .wordmark b    { font-weight: 700; font-style: normal; color: var(--blue); position: relative; top: -2px; margin-left: 2px; font-variation-settings: 'opsz' 9; }
+
+    header p {
+      font-size: 14px;
+      font-weight: 400;
+      color: #6A8EA8;
+    }
+
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9AB4C8;
+      margin-top: 24px;
+      margin-bottom: 4px;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    a.doc {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--night);
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    a.doc:hover {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(10,126,194,0.08);
+    }
+    a.doc .arrow {
+      color: var(--blue);
+      font-size: 16px;
+      opacity: 0.6;
+    }
+    a.doc:hover .arrow { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wordmark"><em>Oliva</em><span>craft</span><b>·</b></div>
+    <p>Documentos internos del estudio</p>
+  </header>
+
+  <main>
+
+    <p class="section-label">Identidad</p>
+    <a class="doc" href="olivacraft-brand-manual.html">Manual de marca <span class="arrow">→</span></a>
+
+    <p class="section-label">Operación</p>
+    <a class="doc" href="olivacraft-sistema-operativo.html">Sistema operativo <span class="arrow">→</span></a>
+    <a class="doc" href="olivacraft-respuesta-formulario.html">Respuesta a formulario <span class="arrow">→</span></a>
+    <a class="doc" href="olivacraft-prompt-library.html">Librería de prompts <span class="arrow">→</span></a>
+
+    <p class="section-label">Negocio</p>
+    <a class="doc" href="olivacraft-roadmap.html">Roadmap <span class="arrow">→</span></a>
+    <a class="doc" href="olivacraft-presupuesto.html">Presupuesto <span class="arrow">→</span></a>
+    <a class="doc" href="olivacraft-contrato.html">Contrato <span class="arrow">→</span></a>
+
+    <p class="section-label">Presentaciones</p>
+    <a class="doc" href="olivacraft-presentacion.html">Presentación general <span class="arrow">→</span></a>
+    <a class="doc" href="olivacraft-presentacion-auditoria.html">Presentación auditoría <span class="arrow">→</span></a>
+
+  </main>
+
+</body>
+</html>
