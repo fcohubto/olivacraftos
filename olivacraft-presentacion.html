@@ -178,7 +178,7 @@ body { background: var(--night); color: #fff; font-family: var(--font-body); fon
 .sp-right { flex: 1; }
 
 /* ── INVESTMENT ── */
-.invest-box { background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2.5rem; margin-top: 1rem; }
+.invest-box { background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
 .invest-label { font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
 .invest-amount { font-family: var(--font-title); font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 700; color: #fff; letter-spacing: -0.04em; line-height: 1; }
 .invest-suffix { font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px; }
@@ -186,32 +186,11 @@ body { background: var(--night); color: #fff; font-family: var(--font-body); fon
 .ib-pct { font-family: var(--font-title); font-size: 22px; font-weight: 700; color: var(--cyan); min-width: 52px; }
 .ib-text { font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.4; }
 .invest-note { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 10px; border: 0.5px solid rgba(255,255,255,0.07); font-family: var(--font-body); font-size: 12.5px; color: rgba(255,255,255,0.4); line-height: 1.6; }
-/* ── INVESTMENT EDITABLE ── */
-.inv-toggle { display: flex; gap: 0; margin-bottom: 1rem; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.12); width: fit-content; }
-.inv-toggle button { font-family: var(--font-body); font-size: 11px; font-weight: 500; padding: 5px 14px; border: none; cursor: pointer; background: transparent; color: rgba(255,255,255,0.5); transition: background 0.15s, color 0.15s; }
-.inv-toggle button.active { background: var(--cyan); color: #0a1628; }
-.inv-input { font-family: var(--font-title); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #fff; outline: none; padding: 8px 14px; width: 100%; box-sizing: border-box; }
-.inv-input:focus { border-color: var(--cyan); }
-.inv-input.big { font-size: clamp(1.8rem,3.5vw,2.75rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
-.inv-doc-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-.inv-doc-row label { font-family: var(--font-body); font-size: 11px; color: rgba(255,255,255,0.4); }
-.inv-doc-row select { font-family: var(--font-body); font-size: 11px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 5px; color: #fff; padding: 4px 10px; outline: none; cursor: pointer; }
-.inv-tax-box { margin-top: 12px; background: rgba(255,255,255,0.04); border-radius: 8px; padding: 10px 14px; }
-.inv-tax-line { display: flex; justify-content: space-between; font-family: var(--font-body); font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
-.inv-tax-line.total { color: #fff; font-weight: 600; font-size: 13px; border-top: 0.5px solid rgba(255,255,255,0.1); padding-top: 6px; margin-top: 4px; margin-bottom: 0; }
-.inv-fase-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-.inv-fase-row input { font-family: var(--font-body); font-size: 13px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; color: #fff; outline: none; padding: 6px 10px; }
-.inv-fase-row input:focus { border-color: var(--cyan); }
-.inv-fase-row input.ifn { flex: 2; }
-.inv-fase-row input.ifa { flex: 1; min-width: 110px; }
-.inv-total-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; padding-top: 10px; border-top: 0.5px solid rgba(255,255,255,0.1); }
-.inv-total-label { font-family: var(--font-body); font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.06em; }
-.inv-total-val { font-family: var(--font-title); font-size: 1.75rem; font-weight: 700; color: #fff; }
-.btn-inv-add { font-family: var(--font-body); font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 6px; border: 1px dashed rgba(62,198,212,0.35); background: transparent; color: var(--cyan); cursor: pointer; margin-top: 4px; }
+.btn-inv-add { font-family: var(--font-body); font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 6px; border: 1px dashed rgba(62,198,212,0.35); background: transparent; color: var(--cyan); cursor: pointer; margin-top: 12px; display: block; }
 .btn-inv-add:hover { background: rgba(62,198,212,0.07); }
-.btn-inv-del { font-family: var(--font-body); font-size: 11px; padding: 4px 9px; border-radius: 5px; border: none; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); cursor: pointer; flex-shrink: 0; }
+.btn-inv-del { font-family: var(--font-body); font-size: 10px; padding: 2px 7px; border-radius: 4px; border: none; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.35); cursor: pointer; flex-shrink: 0; vertical-align: middle; margin-left: 6px; }
 .btn-inv-del:hover { background: rgba(200,50,50,0.15); color: #e06060; }
-@media print { .inv-toggle, .btn-inv-add, .btn-inv-del { display: none !important; } }
+@media print { .btn-inv-add, .btn-inv-del { display: none !important; } }
 
 /* ── COVER ── */
 .cover-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: clamp(0.75rem, 2vh, 1.5rem); width: 100%; max-width: 700px; margin: auto; padding: 5rem 2rem 8rem; text-align: center; }
@@ -370,12 +349,7 @@ body { background: var(--night); color: #fff; font-family: var(--font-body); fon
       <div class="slide-inner">
         <div class="slide-label">Inversión</div>
         <h2 class="slide-title lg">Lo que cuesta y cómo se paga</h2>
-        <div class="inv-toggle" id="inv-toggle">
-          <button class="active" onclick="setInvestMode('unica')">Entrega única</button>
-          <button onclick="setInvestMode('fases')">Por fases</button>
-        </div>
-        <div class="invest-box" id="inv-panel-unica"></div>
-        <div class="invest-box" id="inv-panel-fases" style="display:none;"></div>
+        <div class="invest-box" id="invest-box"></div>
         <div id="invest-note" class="invest-note"></div>
       </div>
     </div>
@@ -789,147 +763,161 @@ function renderTimeline(items) {
 
 
 /* ── INVESTMENT EDITABLE ── */
-var investMode = 'unica';
 var investState = {
-  unica: { precio: '', docType: 'boleta' },
-  fases: [{ nombre: '', monto: '' }]
+  fases: [],
+  suffix: ''
 };
 
 function parseMonto(str) { return parseInt((str || '').replace(/\D/g, '')) || 0; }
 function formatMonto(n) { return '$' + n.toLocaleString('es-CL'); }
 
-function setInvestMode(mode) {
-  investMode = mode;
-  document.getElementById('inv-panel-unica').style.display = mode === 'unica' ? '' : 'none';
-  document.getElementById('inv-panel-fases').style.display = mode === 'fases' ? '' : 'none';
-  var btns = document.querySelectorAll('#inv-toggle button');
-  btns[0].classList.toggle('active', mode === 'unica');
-  btns[1].classList.toggle('active', mode === 'fases');
-  if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation();
-}
-
-function buildInvestUnica() {
-  var c = document.getElementById('inv-panel-unica');
-  c.innerHTML = '';
-
-  var lbl = document.createElement('div');
-  lbl.className = 'invest-label';
-  lbl.textContent = 'Precio total del proyecto';
-  c.appendChild(lbl);
-
-  var priceInp = document.createElement('input');
-  priceInp.id = 'inv-precio';
-  priceInp.className = 'inv-input big';
-  priceInp.placeholder = '$0';
-  priceInp.value = investState.unica.precio;
-  priceInp.addEventListener('input', function() {
-    investState.unica.precio = this.value;
-    updateInvestIVA();
-    if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation();
-  });
-  c.appendChild(priceInp);
-
-  var docRow = document.createElement('div');
-  docRow.className = 'inv-doc-row';
-  var docLbl = document.createElement('label');
-  docLbl.textContent = 'Documento:';
-  var docSel = document.createElement('select');
-  docSel.id = 'inv-doctype';
-  ['Boleta', 'Factura'].forEach(function(t) {
-    var o = document.createElement('option');
-    o.value = t.toLowerCase(); o.textContent = t;
-    docSel.appendChild(o);
-  });
-  docSel.value = investState.unica.docType;
-  docSel.addEventListener('change', function() {
-    investState.unica.docType = this.value;
-    updateInvestIVA();
-    if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation();
-  });
-  docRow.appendChild(docLbl);
-  docRow.appendChild(docSel);
-  c.appendChild(docRow);
-
-  var taxBox = document.createElement('div');
-  taxBox.id = 'inv-tax-box';
-  taxBox.className = 'inv-tax-box';
-  taxBox.innerHTML =
-    '<div class="inv-tax-line"><span>Neto</span><span id="inv-tax-neto">—</span></div>' +
-    '<div class="inv-tax-line"><span>IVA 19%</span><span id="inv-tax-iva">—</span></div>' +
-    '<div class="inv-tax-line total"><span>Total</span><span id="inv-tax-total">—</span></div>';
-  c.appendChild(taxBox);
-  updateInvestIVA();
-}
-
-function updateInvestIVA() {
-  var taxBox = document.getElementById('inv-tax-box');
-  var docSel = document.getElementById('inv-doctype');
-  if (!taxBox || !docSel) return;
-  var isFactura = docSel.value === 'factura';
-  taxBox.style.display = isFactura ? '' : 'none';
-  if (!isFactura) return;
-  var total = parseMonto(document.getElementById('inv-precio') ? document.getElementById('inv-precio').value : '');
-  var neto = Math.round(total / 1.19);
-  var iva = total - neto;
-  document.getElementById('inv-tax-neto').textContent = formatMonto(neto);
-  document.getElementById('inv-tax-iva').textContent = formatMonto(iva);
-  document.getElementById('inv-tax-total').textContent = formatMonto(total);
-}
-
-function buildInvestFases() {
-  var c = document.getElementById('inv-panel-fases');
-  function rebuild() {
-    c.innerHTML = '';
-    if (!investState.fases.length) investState.fases = [{ nombre: '', monto: '' }];
-    investState.fases.forEach(function(f, idx) {
-      var row = document.createElement('div');
-      row.className = 'inv-fase-row';
-      var inpN = document.createElement('input');
-      inpN.className = 'ifn'; inpN.placeholder = 'Nombre de la fase'; inpN.value = f.nombre;
-      inpN.addEventListener('input', function() { investState.fases[idx].nombre = this.value; if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation(); });
-      var inpA = document.createElement('input');
-      inpA.className = 'ifa'; inpA.placeholder = '$0'; inpA.value = f.monto;
-      inpA.addEventListener('input', function() { investState.fases[idx].monto = this.value; updateInvestTotal(); if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation(); });
-      var del = document.createElement('button');
-      del.className = 'btn-inv-del'; del.textContent = '✕';
-      del.addEventListener('click', function() { investState.fases.splice(idx, 1); rebuild(); if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation(); });
-      row.appendChild(inpN); row.appendChild(inpA); row.appendChild(del);
-      c.appendChild(row);
-    });
-    var add = document.createElement('button');
-    add.className = 'btn-inv-add'; add.textContent = '+ Agregar fase';
-    add.addEventListener('click', function() { investState.fases.push({ nombre: '', monto: '' }); rebuild(); if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation(); });
-    c.appendChild(add);
-    var totalRow = document.createElement('div');
-    totalRow.className = 'inv-total-row';
-    totalRow.innerHTML = '<div class="inv-total-label">Total del proyecto</div><div class="inv-total-val" id="inv-fases-total">—</div>';
-    c.appendChild(totalRow);
-    updateInvestTotal();
-  }
-  rebuild();
-}
-
 function updateInvestTotal() {
-  var el = document.getElementById('inv-fases-total');
+  var el = document.getElementById('inv-total-display');
   if (!el) return;
   var total = investState.fases.reduce(function(s, f) { return s + parseMonto(f.monto); }, 0);
   el.textContent = total > 0 ? formatMonto(total) : '—';
 }
 
-function renderInvestment(inv) {
-  if (inv.type === 'phases') {
-    investMode = 'fases';
-    investState.fases = [];
-    if (inv.p1amount) investState.fases.push({ nombre: 'Fase 1', monto: inv.p1amount });
-    if (inv.p2amount) investState.fases.push({ nombre: 'Fase 2', monto: inv.p2amount });
-  } else {
-    investMode = 'unica';
-    investState.unica.precio = inv.amount || '';
-    investState.unica.docType = 'boleta';
+function buildInvestBox() {
+  var box = document.getElementById('invest-box');
+  if (!box) return;
+
+  function rebuild() {
+    box.innerHTML = '';
+
+    /* LEFT — amounts */
+    var left = document.createElement('div');
+    investState.fases.forEach(function(f, idx) {
+      var labelRow = document.createElement('div');
+      labelRow.style.cssText = 'display:flex;align-items:center;margin-bottom:4px;';
+      var lbl = document.createElement('div');
+      lbl.className = 'invest-label';
+      lbl.style.marginBottom = '0';
+      lbl.contentEditable = 'true';
+      lbl.spellcheck = false;
+      lbl.textContent = f.label;
+      lbl.addEventListener('input', function() {
+        investState.fases[idx].label = this.textContent;
+        var rightLabels = box.querySelectorAll('.inv-right-label');
+        if (rightLabels[idx]) rightLabels[idx].textContent = this.textContent;
+        if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation();
+      });
+      var del = document.createElement('button');
+      del.className = 'btn-inv-del';
+      del.textContent = '×';
+      del.addEventListener('click', function() {
+        investState.fases.splice(idx, 1);
+        rebuild();
+        if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation();
+      });
+      labelRow.appendChild(lbl);
+      labelRow.appendChild(del);
+      left.appendChild(labelRow);
+
+      var amt = document.createElement('div');
+      amt.className = 'invest-amount';
+      amt.style.fontSize = 'clamp(2rem,4vw,3.25rem)';
+      amt.contentEditable = 'true';
+      amt.spellcheck = false;
+      amt.textContent = f.monto;
+      amt.addEventListener('input', function() {
+        investState.fases[idx].monto = this.textContent;
+        updateInvestTotal();
+        if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation();
+      });
+      left.appendChild(amt);
+
+      var sep = document.createElement('div');
+      sep.style.cssText = 'height:0.5px;background:rgba(255,255,255,0.08);margin:14px 0;';
+      left.appendChild(sep);
+    });
+
+    var totalLbl = document.createElement('div');
+    totalLbl.className = 'invest-label';
+    totalLbl.textContent = 'Total del proyecto';
+    left.appendChild(totalLbl);
+    var totalAmt = document.createElement('div');
+    totalAmt.className = 'invest-amount';
+    totalAmt.id = 'inv-total-display';
+    left.appendChild(totalAmt);
+
+    var sfx = document.createElement('div');
+    sfx.className = 'invest-suffix';
+    sfx.contentEditable = 'true';
+    sfx.spellcheck = false;
+    sfx.textContent = investState.suffix;
+    sfx.addEventListener('input', function() {
+      investState.suffix = this.textContent;
+      if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation();
+    });
+    left.appendChild(sfx);
+
+    var addBtn = document.createElement('button');
+    addBtn.className = 'btn-inv-add';
+    addBtn.textContent = '+ Agregar fase';
+    addBtn.addEventListener('click', function() {
+      investState.fases.push({ label: 'Fase ' + (investState.fases.length + 1), monto: '$XXX.000', desc: 'Descripción del pago.' });
+      rebuild();
+      if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation();
+    });
+    left.appendChild(addBtn);
+    box.appendChild(left);
+
+    /* RIGHT — payment descriptions */
+    var right = document.createElement('div');
+    right.style.cssText = 'display:flex;flex-direction:column;gap:14px;';
+    investState.fases.forEach(function(f, idx) {
+      if (idx > 0) {
+        var sep = document.createElement('div');
+        sep.style.cssText = 'height:0.5px;background:rgba(255,255,255,0.08);';
+        right.appendChild(sep);
+      }
+      var item = document.createElement('div');
+      item.className = 'ib-item';
+      var phLbl = document.createElement('div');
+      phLbl.className = 'inv-right-label';
+      phLbl.style.cssText = 'font-family:var(--font-title);font-size:14px;font-weight:700;color:var(--cyan);min-width:60px;';
+      phLbl.textContent = f.label;
+      var text = document.createElement('div');
+      text.className = 'ib-text';
+      var strong = document.createElement('strong');
+      strong.style.cssText = 'color:#fff;display:block;margin-bottom:2px;';
+      strong.contentEditable = 'true';
+      strong.spellcheck = false;
+      strong.textContent = 'Al iniciar ' + f.label;
+      var span = document.createElement('span');
+      span.contentEditable = 'true';
+      span.spellcheck = false;
+      span.textContent = f.desc;
+      span.addEventListener('input', function() {
+        investState.fases[idx].desc = this.textContent;
+        if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation();
+      });
+      text.appendChild(strong);
+      text.appendChild(span);
+      item.appendChild(phLbl);
+      item.appendChild(text);
+      right.appendChild(item);
+    });
+    box.appendChild(right);
+
+    updateInvestTotal();
   }
-  buildInvestUnica();
-  buildInvestFases();
-  setInvestMode(investMode);
+
+  rebuild();
+}
+
+function renderInvestment(inv) {
+  investState.suffix = inv.suffix || 'Boleta de honorarios · Sin IVA';
+  investState.fases = [];
+  if (inv.type === 'phases') {
+    if (inv.p1amount) investState.fases.push({ label: 'Fase 1', monto: inv.p1amount, desc: 'Al confirmar inicio. Da comienzo al discovery y diseño.' });
+    if (inv.p2amount) investState.fases.push({ label: 'Fase 2', monto: inv.p2amount, desc: 'Al completar la Fase 1 y confirmar continuación.' });
+  } else {
+    investState.fases.push({ label: 'Anticipo 50%', monto: inv.amount || '$XXX.000', desc: inv.p1desc || 'Al aceptar la propuesta.' });
+    investState.fases.push({ label: 'Pago final 50%', monto: inv.amount || '$XXX.000', desc: inv.p2desc || 'Al completar la entrega.' });
+  }
+  buildInvestBox();
   var noteEl = document.getElementById('invest-note');
   if (noteEl) noteEl.textContent = inv.note || '';
 }
@@ -1036,7 +1024,6 @@ function savePresState() {
     plazosMode: plazosMode,
     plazosUnica: document.getElementById('plazos-unica').innerHTML,
     plazosFases: document.getElementById('plazos-fases').innerHTML,
-    investMode: investMode,
     investState: JSON.parse(JSON.stringify(investState)),
     investNote: document.getElementById('invest-note').textContent
   };
@@ -1060,9 +1047,7 @@ function loadPresState() {
     if (s.plazosUnica) document.getElementById('plazos-unica').innerHTML = s.plazosUnica;
     if (s.plazosFases) document.getElementById('plazos-fases').innerHTML = s.plazosFases;
     if (s.investState) investState = s.investState;
-    buildInvestUnica();
-    buildInvestFases();
-    setInvestMode(s.investMode || 'unica');
+    buildInvestBox();
     if (s.investNote) document.getElementById('invest-note').textContent = s.investNote;
     return true;
   } catch(e) { return false; }
