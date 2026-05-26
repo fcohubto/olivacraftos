@@ -116,10 +116,12 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
 [contenteditable]:empty::before { content:attr(placeholder); color:rgba(255,255,255,0.2); font-style:italic; pointer-events:none; }
 
 @media print {
-  body { overflow:auto; height:auto; }
+  *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { overflow:auto; height:auto; background:var(--night) !important; color:#fff !important; }
   .deck { height:auto; }
   .slide { position:relative; opacity:1; pointer-events:all; min-height:100vh; page-break-after:always; }
-  .s-cover, .s-dark { background:var(--night) !important; }
+  .s-cover { background:var(--night) !important; }
+  .s-dark  { background:var(--night) !important; }
   .nav, .type-selector, .deck-logo { display:none !important; }
   [contenteditable]:focus { border-bottom:none; }
 }
