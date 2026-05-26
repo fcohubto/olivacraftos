@@ -145,6 +145,9 @@ body { background: var(--frost); color: var(--ink); font-family: var(--font-b); 
 .scope-row-desc { font-size: 11.5px; color: var(--ink-muted); line-height: 1.4; margin-top: 2px; }
 .scope-row-price { font-size: 13px; font-weight: 600; color: var(--ink-faint); flex-shrink: 0; white-space: nowrap; transition: color 0.15s; }
 .scope-row.selected .scope-row-price { color: var(--blue); }
+.scope-row-price[contenteditable] { outline: none; cursor: text; border-radius: 3px; padding: 1px 4px; margin: -1px -4px; }
+.scope-row-price[contenteditable]:hover { background: rgba(10,126,194,0.07); }
+.scope-row-price[contenteditable]:focus { background: rgba(10,126,194,0.1); }
 
 /* DYNAMIC DELIVERABLES */
 .del-empty { padding: 1.75rem; text-align: center; font-size: 13px; color: var(--ink-faint); font-style: italic; }
@@ -740,7 +743,7 @@ function renderPhaseItemsList(container, phase) {
           <div class="scope-row-name">${item.label}</div>
           <div class="scope-row-desc">${item.desc}</div>
         </div>
-        <div class="scope-row-price">${formatCLP(item.price)}</div>`;
+        <div class="scope-row-price" contenteditable="true" onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onblur="updateItemPrice('${item.id}',this)">${formatCLP(item.price)}</div>`;
       row.addEventListener('click', () => togglePhaseItem(phase.id, item.id));
       group.appendChild(row);
     });
@@ -882,7 +885,7 @@ function renderScopeList() {
           <div class="scope-row-name">${item.label}</div>
           <div class="scope-row-desc">${item.desc}</div>
         </div>
-        <div class="scope-row-price">${formatCLP(item.price)}</div>`;
+        <div class="scope-row-price" contenteditable="true" onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onblur="updateItemPrice('${item.id}',this)">${formatCLP(item.price)}</div>`;
       row.addEventListener('click', () => toggleItem(item.id));
       group.appendChild(row);
     });
@@ -932,6 +935,16 @@ function setDocType(type, btn) {
 }
 
 // ── UPDATE TOTALS (simple mode) ───────────────────────────────
+function updateItemPrice(id, el) {
+  const item = allItems.find(i => i.id === id);
+  if (!item) return;
+  const val = parseInt(el.textContent.replace(/\./g, '').replace(/[$\s]/g, '').replace(',', '')) || 0;
+  if (val > 0) item.price = val;
+  el.textContent = formatCLP(item.price);
+  updateTotals();
+  if (typeof renderPhasesSummary === 'function') renderPhasesSummary();
+}
+
 function updateTotals() {
   let subtotal = 0;
   selectedItems.forEach(id => { const item = allItems.find(i => i.id === id); if (item) subtotal += item.price; });
