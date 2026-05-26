@@ -211,6 +211,49 @@ body { background: var(--night); color: #fff; font-family: var(--font-body); fon
 .clear-btn-pres { position: fixed; bottom: 2rem; left: 2rem; padding: 7px 14px; background: rgba(13,43,74,0.85); backdrop-filter: blur(8px); color: rgba(255,255,255,0.4); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 999px; font-family: var(--font-body); font-size: 11px; cursor: pointer; transition: all 0.15s; z-index: 100; }
 .clear-btn-pres:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.25); }
 
+/* ── SAVE & HISTORY BUTTONS (dark-themed) ── */
+.save-btn-pres { position: fixed; bottom: 2rem; left: 11rem; padding: 7px 14px; background: rgba(13,43,74,0.85); backdrop-filter: blur(8px); color: var(--cyan); border: 0.5px solid rgba(62,198,212,0.25); border-radius: 999px; font-family: var(--font-body); font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.15s; z-index: 100; }
+.save-btn-pres:hover { border-color: rgba(62,198,212,0.55); background: rgba(13,43,74,0.95); }
+.history-btn-pres { position: fixed; bottom: 2rem; left: 18.5rem; padding: 7px 14px; background: rgba(13,43,74,0.85); backdrop-filter: blur(8px); color: rgba(255,255,255,0.4); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 999px; font-family: var(--font-body); font-size: 11px; cursor: pointer; transition: all 0.15s; z-index: 100; }
+.history-btn-pres:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.25); }
+
+/* ── HISTORY PANEL ── */
+.history-overlay { position: fixed; inset: 0; background: rgba(13,43,74,0.45); z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+.history-overlay.open { opacity: 1; pointer-events: all; }
+.history-panel { position: fixed; top: 0; right: -420px; width: 400px; height: 100vh; background: #fff; border-left: 0.5px solid rgba(10,126,194,0.22); box-shadow: -8px 0 40px rgba(13,43,74,0.2); z-index: 400; transition: right 0.3s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; }
+.history-panel.open { right: 0; }
+.history-panel-head { padding: 1.5rem 1.5rem 1.25rem; border-bottom: 0.5px solid rgba(10,126,194,0.12); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.history-panel-title { font-family: var(--font-d); font-style: italic; font-size: 20px; font-weight: 300; color: var(--night); line-height: 1; font-variation-settings: 'opsz' 9; }
+.history-close-btn { background: none; border: 0.5px solid rgba(10,126,194,0.22); border-radius: 6px; padding: 5px 12px; font-family: var(--font-body); font-size: 12px; color: var(--ink-muted); cursor: pointer; transition: all 0.15s; }
+.history-close-btn:hover { color: var(--ink); }
+.history-list { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 8px; }
+.history-empty { padding: 3rem 1rem; text-align: center; font-size: 13px; color: var(--ink-faint); font-style: italic; line-height: 1.6; }
+.history-entry { background: var(--frost); border: 0.5px solid rgba(10,126,194,0.12); border-radius: 10px; padding: 1rem 1.25rem; }
+.history-entry-client { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+.history-entry-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.history-entry-date { font-size: 11px; color: var(--ink-muted); }
+.history-entry-type { font-size: 11px; color: var(--blue); font-weight: 500; }
+.history-entry-actions { display: flex; gap: 6px; }
+.history-load-btn { flex: 1; padding: 8px 14px; background: var(--night); color: #fff; border: none; border-radius: 7px; font-family: var(--font-body); font-size: 12px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+.history-load-btn:hover { background: var(--blue); }
+.history-delete-btn { padding: 8px 14px; background: transparent; color: var(--ink-faint); border: 0.5px solid rgba(10,126,194,0.22); border-radius: 7px; font-family: var(--font-body); font-size: 12px; cursor: pointer; transition: all 0.15s; }
+.history-delete-btn:hover { color: #B91C1C; border-color: #B91C1C; background: #FDE8E8; }
+
+/* ── SAVE MODAL ── */
+.save-modal-overlay { position: fixed; inset: 0; background: rgba(13,43,74,0.55); z-index: 500; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.save-modal-overlay.open { opacity: 1; pointer-events: all; }
+.save-modal { background: #fff; border-radius: 14px; padding: 2rem; width: 380px; max-width: calc(100vw - 2rem); box-shadow: 0 24px 64px rgba(13,43,74,0.25); }
+.save-modal-title { font-family: var(--font-d); font-style: italic; font-size: 22px; font-weight: 300; color: var(--night); margin-bottom: 4px; font-variation-settings: 'opsz' 9; line-height: 1.2; }
+.save-modal-sub { font-size: 12px; color: var(--ink-muted); margin-bottom: 1.25rem; }
+.save-modal-label { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+.save-modal-input { width: 100%; border: 0.5px solid rgba(10,126,194,0.22); border-radius: 8px; padding: 10px 14px; font-family: var(--font-body); font-size: 14px; color: var(--ink); outline: none; box-sizing: border-box; }
+.save-modal-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(10,126,194,0.1); }
+.save-modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.25rem; }
+.save-modal-cancel { padding: 9px 18px; background: transparent; color: var(--ink-muted); border: 0.5px solid rgba(10,126,194,0.22); border-radius: 8px; font-family: var(--font-body); font-size: 13px; cursor: pointer; transition: background 0.15s; }
+.save-modal-cancel:hover { background: var(--frost); }
+.save-modal-confirm { padding: 9px 22px; background: var(--night); color: #fff; border: none; border-radius: 8px; font-family: var(--font-body); font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+.save-modal-confirm:hover { background: var(--blue); }
+
 /* ── PRINT ── */
 @media print {
   *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -222,7 +265,7 @@ body { background: var(--night); color: #fff; font-family: var(--font-body); fon
   .slide-light { background: #fff !important; color: var(--ink) !important; }
   .slide-light-alt { background: #F2F7FC !important; color: var(--ink) !important; }
   .slide-dark { background: var(--night) !important; color: #fff !important; }
-  .nav, .type-selector, .deck-logo, .save-toast-pres, .clear-btn-pres { display: none !important; }
+  .nav, .type-selector, .deck-logo, .save-toast-pres, .clear-btn-pres, .save-btn-pres, .history-btn-pres, .history-overlay, .history-panel, .save-modal-overlay { display: none !important; }
   [contenteditable]:focus { border-bottom: none; }
 }
 </style>
@@ -1047,9 +1090,163 @@ function clearPresState() {
 // ── INIT ──────────────────────────────────────────────────────
 if (!loadPresState()) applyType('web');
 document.addEventListener('input', scheduleSavePresentation);
+
+// ── HISTORY ───────────────────────────────────────────────────
+var PRES_HISTORY_KEY = 'oc-presentacion-history';
+
+function escapeHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function getPresHistory() {
+  try { return JSON.parse(localStorage.getItem(PRES_HISTORY_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function capturePresSnapshot() {
+  return {
+    v: 1,
+    type: currentType,
+    coverClient: document.getElementById('cover-client').textContent,
+    problemMain: document.getElementById('problem-main').innerHTML,
+    problemCurrent: document.getElementById('problem-current').innerHTML,
+    problemGoal: document.getElementById('problem-goal').innerHTML,
+    processCols: document.getElementById('process-cols').innerHTML,
+    scopeGrid: document.getElementById('scope-grid').innerHTML,
+    plazosMode: plazosMode,
+    plazosUnica: document.getElementById('plazos-unica').innerHTML,
+    plazosFases: document.getElementById('plazos-fases').innerHTML,
+    investState: JSON.parse(JSON.stringify(investState)),
+    investNote: document.getElementById('invest-note').textContent
+  };
+}
+
+function showPresHistoryToast(msg) {
+  var t = document.getElementById('save-toast-pres');
+  var prev = t.textContent;
+  t.textContent = msg;
+  t.style.opacity = '1';
+  setTimeout(function() { t.style.opacity = '0'; setTimeout(function() { t.textContent = prev; }, 300); }, 2500);
+}
+
+function openPresSaveModal() {
+  var clientName = document.getElementById('cover-client').textContent.trim();
+  if (clientName === '[nombre del cliente]') clientName = '';
+  document.getElementById('pres-save-modal-input').value = clientName;
+  document.getElementById('save-modal-overlay').classList.add('open');
+  setTimeout(function() { var inp = document.getElementById('pres-save-modal-input'); inp.focus(); inp.select(); }, 80);
+}
+
+function closePresSaveModal() {
+  document.getElementById('save-modal-overlay').classList.remove('open');
+}
+
+function confirmPresSave() {
+  var name  = document.getElementById('pres-save-modal-input').value.trim() || 'Sin nombre';
+  var now   = new Date();
+  var fecha = String(now.getDate()).padStart(2,'0') + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + now.getFullYear();
+  var history = getPresHistory();
+  history.unshift({ name: name, fecha: fecha, state: capturePresSnapshot() });
+  localStorage.setItem(PRES_HISTORY_KEY, JSON.stringify(history));
+  closePresSaveModal();
+  showPresHistoryToast('✓ "' + name + '" guardada');
+}
+
+function openPresHistory() {
+  renderPresHistoryPanel();
+  document.getElementById('history-overlay').classList.add('open');
+  document.getElementById('history-panel').classList.add('open');
+}
+
+function closePresHistory() {
+  document.getElementById('history-overlay').classList.remove('open');
+  document.getElementById('history-panel').classList.remove('open');
+}
+
+function renderPresHistoryPanel() {
+  var list    = document.getElementById('pres-history-list');
+  var history = getPresHistory();
+  if (!history.length) {
+    list.innerHTML = '<div class="history-empty">No hay presentaciones guardadas aún.<br>Usa el botón "Guardar presentación" para crear una entrada.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  history.forEach(function(entry, idx) {
+    var typeLabel = (entry.state && entry.state.type && PROJECT_TYPES[entry.state.type]) ? PROJECT_TYPES[entry.state.type].label : '';
+    var div = document.createElement('div');
+    div.className = 'history-entry';
+    div.innerHTML =
+      '<div class="history-entry-client">' + escapeHtml(entry.name) + '</div>' +
+      '<div class="history-entry-row">' +
+        '<span class="history-entry-date">' + escapeHtml(entry.fecha) + '</span>' +
+        '<span class="history-entry-type">' + escapeHtml(typeLabel) + '</span>' +
+      '</div>' +
+      '<div class="history-entry-actions">' +
+        '<button class="history-load-btn" onclick="loadPresFromHistory(' + idx + ')">Cargar</button>' +
+        '<button class="history-delete-btn" onclick="deletePresFromHistory(' + idx + ')">Eliminar</button>' +
+      '</div>';
+    list.appendChild(div);
+  });
+}
+
+function loadPresFromHistory(idx) {
+  var history = getPresHistory();
+  var entry   = history[idx];
+  if (!entry || !entry.state) return;
+  if (!confirm('¿Cargar "' + entry.name + '"?\nLa presentación actual se perderá si no fue guardada.')) return;
+  var s = entry.state;
+  closePresHistory();
+  applyType(s.type || 'web');
+  if (s.coverClient) document.getElementById('cover-client').textContent = s.coverClient;
+  if (s.problemMain)    document.getElementById('problem-main').innerHTML    = s.problemMain;
+  if (s.problemCurrent) document.getElementById('problem-current').innerHTML = s.problemCurrent;
+  if (s.problemGoal)    document.getElementById('problem-goal').innerHTML    = s.problemGoal;
+  if (s.processCols)    document.getElementById('process-cols').innerHTML    = s.processCols;
+  if (s.scopeGrid)      document.getElementById('scope-grid').innerHTML      = s.scopeGrid;
+  if (s.plazosMode)  setPlazosMode(s.plazosMode);
+  if (s.plazosUnica) document.getElementById('plazos-unica').innerHTML = s.plazosUnica;
+  if (s.plazosFases) document.getElementById('plazos-fases').innerHTML = s.plazosFases;
+  if (s.investState) { investState = s.investState; buildInvestBox(); }
+  if (s.investNote)  document.getElementById('invest-note').textContent = s.investNote;
+  savePresState();
+  showPresHistoryToast('✓ "' + entry.name + '" cargada');
+}
+
+function deletePresFromHistory(idx) {
+  var history = getPresHistory();
+  if (!history[idx]) return;
+  if (!confirm('¿Eliminar "' + history[idx].name + '"?')) return;
+  history.splice(idx, 1);
+  localStorage.setItem(PRES_HISTORY_KEY, JSON.stringify(history));
+  renderPresHistoryPanel();
+}
 </script>
 
 <div id="save-toast-pres" class="save-toast-pres">✓ Guardado automáticamente</div>
 <button class="clear-btn-pres" onclick="clearPresState()">Nuevo documento</button>
+<button class="save-btn-pres" onclick="openPresSaveModal()">↓ Guardar presentación</button>
+<button class="history-btn-pres" onclick="openPresHistory()">≡ Historial</button>
+
+<div id="history-overlay" class="history-overlay" onclick="closePresHistory()"></div>
+<div id="history-panel" class="history-panel">
+  <div class="history-panel-head">
+    <span class="history-panel-title">Historial</span>
+    <button class="history-close-btn" onclick="closePresHistory()">Cerrar ×</button>
+  </div>
+  <div id="pres-history-list" class="history-list"></div>
+</div>
+
+<div id="save-modal-overlay" class="save-modal-overlay" onclick="if(event.target===this)closePresSaveModal()">
+  <div class="save-modal">
+    <div class="save-modal-title">Guardar presentación</div>
+    <div class="save-modal-sub">Copia del estado actual guardada en el historial local.</div>
+    <div class="save-modal-label">Nombre del documento</div>
+    <input id="pres-save-modal-input" class="save-modal-input" type="text" placeholder="Nombre del cliente o proyecto"
+      onkeydown="if(event.key==='Enter')confirmPresSave();if(event.key==='Escape')closePresSaveModal()">
+    <div class="save-modal-actions">
+      <button class="save-modal-cancel" onclick="closePresSaveModal()">Cancelar</button>
+      <button class="save-modal-confirm" onclick="confirmPresSave()">Guardar</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
