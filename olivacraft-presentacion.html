@@ -275,6 +275,7 @@ body { background: var(--night); color: #fff; font-family: var(--font-body); fon
     <button class="type-opt" data-type="sistema" onclick="applyType('sistema')">Sistema / App</button>
     <button class="type-opt" data-type="ux" onclick="applyType('ux')">UX / Consultoría</button>
     <button class="type-opt" data-type="ia" onclick="applyType('ia')">IA y Automatización</button>
+    <button class="type-opt" data-type="gestion" onclick="applyType('gestion')">Sistemas de gestión</button>
   </div>
 </div>
 
@@ -568,6 +569,43 @@ var PROJECT_TYPES = {
       p2label: 'A la entrega', p2desc: 'Al activar el workflow en producción con la capacitación completada.',
       note: 'Los workflows, prompts y documentación se transfieren al completar el segundo pago. Las cuentas de herramientas externas son responsabilidad del cliente.'
     }
+  },
+
+  gestion: {
+    label: 'Sistemas de gestión',
+    coverPrefix: 'Propuesta de sistema de gestión para',
+    coverTags: ['Gestión', 'Módulos', 'Administración'],
+    problem: {
+      main: 'Escribe aquí el desafío operacional del cliente. Por ejemplo: "Tu empresa opera con procesos manuales y planillas, lo que genera errores, duplicación de trabajo y falta de visibilidad en tiempo real."',
+      current: 'Describe cómo se gestiona actualmente: qué herramientas usan, qué falla, dónde se pierde información.',
+      goal: 'Describe el sistema que quieren tener: qué centraliza, qué automatiza, qué control entrega al equipo.'
+    },
+    process: [
+      { step: '01', title: 'Levantamiento', desc: 'Mapeo de procesos actuales, requerimientos por módulo y definición de roles de acceso.' },
+      { step: '02', title: 'Diseño y arquitectura', desc: 'Estructura del sistema, flujo de datos entre módulos y diseño de interfaces.' },
+      { step: '03', title: 'Desarrollo modular', desc: 'Implementación por módulo. Cada uno se valida antes de continuar.' },
+      { step: '04', title: 'Capacitación y entrega', desc: 'Sistema en producción, accesos configurados y sesión de capacitación al equipo.' }
+    ],
+    scope: [
+      { checkbox: true, title: 'Módulo de presupuestos' },
+      { checkbox: true, title: 'Módulo estado de obras' },
+      { checkbox: true, title: 'Módulo ingresos y egresos' },
+      { checkbox: true, title: 'Módulo de revisiones' },
+      { checkbox: true, title: 'Carga y gestión de datos' },
+      { checkbox: true, title: 'Dashboard administrativo' },
+      { checkbox: true, title: 'Gestión de accesos y roles' }
+    ],
+    timeline: [
+      { dot: '1', title: 'Inicio y levantamiento', tag: 'Semana 1', desc: 'Al recibir el primer pago. Mapeo de procesos, definición de módulos y arquitectura del sistema.' },
+      { dot: '2', title: 'Diseño aprobado', tag: 'Semana 2–3', desc: 'Presentación del diseño de todos los módulos para aprobación antes de desarrollar.' },
+      { dot: '3', title: 'Entrega Fase 1', tag: 'Semana 4–6', desc: 'Primeros módulos entregados y validados. Se emite el pago de la Fase 2.' },
+      { dot: '✓', title: 'Sistema completo y capacitación', tag: 'Semana 8–10', desc: 'Sistema en producción, accesos configurados, capacitación completada y documentación entregada.', highlight: true }
+    ],
+    investment: {
+      type: 'phases', p1amount: '$XXX.000', p2amount: '$XXX.000', total: '$XXX.000',
+      suffix: 'Boleta de honorarios · Sin IVA',
+      note: 'La propiedad del sistema y todos los módulos se transfieren al completar el pago final. Los accesos se configuran a nombre del cliente desde el inicio.'
+    }
   }
 };
 
@@ -616,10 +654,27 @@ function renderScope(items) {
   items.forEach(function(item) {
     var d = document.createElement('div');
     d.className = 'slide-card';
-    d.innerHTML =
-      '<div class="card-num">' + item.num + '</div>' +
-      '<div class="card-title" contenteditable="true" spellcheck="false">' + item.title + '</div>' +
-      '<div class="card-desc" contenteditable="true" spellcheck="false">' + item.desc + '</div>';
+    if (item.checkbox) {
+      var lbl = document.createElement('label');
+      lbl.style.cssText = 'display:flex;align-items:center;gap:10px;cursor:pointer;';
+      var chk = document.createElement('input');
+      chk.type = 'checkbox';
+      chk.style.cssText = 'accent-color:var(--blue);width:15px;height:15px;flex-shrink:0;cursor:pointer;';
+      var span = document.createElement('span');
+      span.className = 'card-title';
+      span.style.marginBottom = '0';
+      span.contentEditable = 'true';
+      span.spellcheck = false;
+      span.textContent = item.title;
+      lbl.appendChild(chk);
+      lbl.appendChild(span);
+      d.appendChild(lbl);
+    } else {
+      d.innerHTML =
+        '<div class="card-num">' + item.num + '</div>' +
+        '<div class="card-title" contenteditable="true" spellcheck="false">' + item.title + '</div>' +
+        '<div class="card-desc" contenteditable="true" spellcheck="false">' + item.desc + '</div>';
+    }
     c.appendChild(d);
   });
 }
