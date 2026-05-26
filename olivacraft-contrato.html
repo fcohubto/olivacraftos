@@ -123,9 +123,10 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
 .print-btn:hover { background:var(--blue); transform:translateY(-1px); box-shadow:0 6px 20px rgba(10,126,194,0.28); }
 
 /* PRINT */
+@page { margin: 0; size: A4; }
 @media print {
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
-  body { background:white; font-size:12px; }
+  body { background:white; font-size:12px; margin: 1.5cm; }
   .page { padding:1rem; max-width:100%; }
   .no-print, .print-btn { display:none !important; }
   .clause-body { max-height:none !important; overflow:visible !important; }

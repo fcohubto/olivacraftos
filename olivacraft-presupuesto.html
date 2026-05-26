@@ -230,9 +230,10 @@ body { background: var(--frost); color: var(--ink); font-family: var(--font-b); 
 .del-phase-head + .del-svc-head { margin-top: 4px; }
 
 /* PRINT */
+@page { margin: 0; size: A4; }
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  body { background: white !important; }
+  body { background: white !important; margin: 1.5cm; }
   .page { padding: 1rem 1.5rem !important; }
   .no-print, .print-btn { display: none !important; }
   .meta-val.editable { border-bottom: none !important; }
