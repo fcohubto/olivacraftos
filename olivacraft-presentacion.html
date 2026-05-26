@@ -34,6 +34,14 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
 .nav-print { font-size:11px; color:rgba(255,255,255,0.3); cursor:pointer; padding:4px 8px; border-radius:6px; border:0.5px solid rgba(255,255,255,0.1); transition:all 0.15s; }
 .nav-print:hover { color:rgba(255,255,255,0.7); border-color:rgba(255,255,255,0.3); }
 
+/* TYPE SELECTOR */
+.type-selector { position:fixed; top:1.5rem; right:2rem; z-index:200; display:flex; align-items:center; gap:10px; background:rgba(13,43,74,0.92); backdrop-filter:blur(12px); padding:6px 8px 6px 14px; border-radius:999px; border:0.5px solid rgba(255,255,255,0.1); }
+.type-selector-label { font-size:9.5px; font-weight:600; letter-spacing:0.09em; text-transform:uppercase; color:rgba(255,255,255,0.28); white-space:nowrap; }
+.type-opts { display:flex; gap:2px; }
+.type-opt { padding:4px 10px; border-radius:999px; font-family:var(--font-b); font-size:11px; font-weight:500; cursor:pointer; border:none; background:transparent; color:rgba(255,255,255,0.4); transition:all 0.15s; white-space:nowrap; }
+.type-opt.active { background:rgba(62,198,212,0.18); color:var(--cyan); font-weight:600; }
+.type-opt:hover:not(.active) { color:rgba(255,255,255,0.7); }
+
 /* WORDMARK */
 .wm { display:inline-flex; align-items:baseline; }
 .wm em  { font-family:var(--font-d); font-style:italic; font-weight:300; color:var(--cyan); font-variation-settings:'opsz' 9; }
@@ -48,10 +56,7 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
 .s-cover::after  { content:''; position:absolute; width:400px; height:400px; border-radius:50%; border:1px solid rgba(62,198,212,0.04); bottom:-150px; left:-100px; }
 .s-dark  { background:var(--night); display:flex; flex-direction:column; justify-content:center; align-items:center; padding:5.5rem 2rem 7rem; }
 
-.slide-inner {
-  width: 100%;
-  max-width: 860px;
-}
+.slide-inner { width:100%; max-width:860px; }
 
 /* TYPOGRAPHY */
 .slide-label { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:1rem; opacity:0.8; }
@@ -106,12 +111,17 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
 .deck-logo span { font-family:var(--font-d); font-weight:600; font-size:14px; color:rgba(255,255,255,0.7); font-variation-settings:'opsz' 9; }
 .deck-logo b    { font-family:var(--font-d); font-weight:700; font-size:16px; color:var(--cyan); position:relative; top:-1px; margin-left:1px; font-variation-settings:'opsz' 9; }
 
+/* CONTENTEDITABLE */
+[contenteditable]:focus { outline:none; border-bottom:1px dashed rgba(62,198,212,0.35); }
+[contenteditable]:empty::before { content:attr(placeholder); color:rgba(255,255,255,0.2); font-style:italic; pointer-events:none; }
+
 @media print {
   body { overflow:auto; height:auto; }
   .deck { height:auto; }
   .slide { position:relative; opacity:1; pointer-events:all; min-height:100vh; page-break-after:always; }
   .s-cover, .s-dark { background:var(--night) !important; }
-  .nav { display:none; }
+  .nav, .type-selector, .deck-logo { display:none !important; }
+  [contenteditable]:focus { border-bottom:none; }
 }
 </style>
 </head>
@@ -122,6 +132,17 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
   <em>Oliva</em><span>craft</span><b>·</b>
 </div>
 
+<!-- SELECTOR DE TIPO DE PROYECTO -->
+<div class="type-selector" id="type-selector">
+  <span class="type-selector-label">Tipo</span>
+  <div class="type-opts">
+    <button class="type-opt active" data-type="web" onclick="applyType('web')">Diseño web</button>
+    <button class="type-opt" data-type="sistema" onclick="applyType('sistema')">Sistema / App</button>
+    <button class="type-opt" data-type="ux" onclick="applyType('ux')">UX / Consultoría</button>
+    <button class="type-opt" data-type="ia" onclick="applyType('ia')">IA y Automatización</button>
+  </div>
+</div>
+
 <div class="deck">
 
   <!-- SLIDE 1 — PORTADA -->
@@ -129,16 +150,12 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
     <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:clamp(0.75rem,2vh,1.5rem);width:100%;max-width:700px;margin-top:2rem;margin-bottom:5rem;">
       <div class="wm lg"><em>Oliva</em><span>craft</span><b>·</b></div>
       <div style="width:48px;height:1px;background:rgba(62,198,212,0.3);"></div>
-      <h1 class="slide-title xl" style="color:#fff;max-width:14ch;">
-        Propuesta de diseño web para
+      <h1 class="slide-title xl" style="color:#fff;max-width:16ch;">
+        <span id="cover-prefix">Propuesta de diseño web para</span><br>
         <span style="color:var(--cyan);cursor:pointer;" id="cover-client" title="Clic para editar">[nombre del cliente]</span>
       </h1>
       <p style="font-size:14px;color:rgba(255,255,255,0.4);max-width:36ch;text-align:center;" id="cover-date"></p>
-      <div style="display:flex;gap:10px;margin-top:1rem;flex-wrap:wrap;justify-content:center;">
-        <span style="font-size:12px;padding:5px 14px;border-radius:999px;border:0.5px solid rgba(62,198,212,0.35);color:var(--cyan);">Diseño web</span>
-        <span style="font-size:12px;padding:5px 14px;border-radius:999px;border:0.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);">Desarrollo</span>
-        <span style="font-size:12px;padding:5px 14px;border-radius:999px;border:0.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);">Publicación</span>
-      </div>
+      <div id="cover-tags" style="display:flex;gap:10px;margin-top:1rem;flex-wrap:wrap;justify-content:center;"></div>
     </div>
   </div>
 
@@ -147,21 +164,15 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
     <div class="slide-inner">
       <div class="slide-label">Lo que entendí</div>
       <h2 class="slide-title lg" style="color:#fff;">El problema que necesitas resolver</h2>
-      <div style="margin-top:1.25rem;font-size:15px;color:rgba(255,255,255,0.7);line-height:1.75;border-bottom:1px dashed rgba(255,255,255,0.12);padding-bottom:1rem;outline:none;min-height:50px;width:100%;" contenteditable="true">
-        Escribe aquí el problema principal del cliente en términos concretos. Por ejemplo: "Tu sitio actual no refleja el nivel de tu negocio y está generando dudas antes del primer contacto."
-      </div>
+      <div id="problem-main" style="margin-top:1.25rem;font-size:15px;color:rgba(255,255,255,0.7);line-height:1.75;border-bottom:1px dashed rgba(255,255,255,0.12);padding-bottom:1rem;outline:none;min-height:50px;width:100%;" contenteditable="true" spellcheck="false"></div>
       <div class="card-grid-2">
         <div class="slide-card">
           <div class="card-title" style="color:rgba(255,255,255,0.45);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Situación actual</div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.65);line-height:1.6;outline:none;min-height:40px;" contenteditable="true">
-            Describe brevemente dónde está el cliente hoy.
-          </div>
+          <div id="problem-current" style="font-size:13.5px;color:rgba(255,255,255,0.65);line-height:1.6;outline:none;min-height:40px;" contenteditable="true" spellcheck="false"></div>
         </div>
         <div class="slide-card">
           <div class="card-title" style="color:var(--cyan);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Objetivo del proyecto</div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.65);line-height:1.6;outline:none;min-height:40px;" contenteditable="true">
-            Describe el resultado que se quiere lograr.
-          </div>
+          <div id="problem-goal" style="font-size:13.5px;color:rgba(255,255,255,0.65);line-height:1.6;outline:none;min-height:40px;" contenteditable="true" spellcheck="false"></div>
         </div>
       </div>
     </div>
@@ -173,32 +184,7 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
       <div class="slide-label">Cómo trabajo</div>
       <h2 class="slide-title lg" style="color:#fff;">El proceso. Sin sorpresas.</h2>
       <p style="font-size:14px;color:rgba(255,255,255,0.45);margin-top:0.75rem;">Sabes qué pasa en cada etapa, qué se hace y qué necesito de tu parte.</p>
-      <div class="process-cols">
-        <div class="process-item">
-          <div class="proc-step">01</div>
-          <div class="proc-divider"></div>
-          <div class="proc-title">Brief y estrategia</div>
-          <div class="proc-desc">Entiendo tu negocio, tu audiencia y tus objetivos. Defino la estructura antes de diseñar.</div>
-        </div>
-        <div class="process-item">
-          <div class="proc-step">02</div>
-          <div class="proc-divider"></div>
-          <div class="proc-title">Diseño UI</div>
-          <div class="proc-desc">Diseño visual completo para mobile y desktop. Se presenta para aprobación antes de desarrollar.</div>
-        </div>
-        <div class="process-item">
-          <div class="proc-step">03</div>
-          <div class="proc-divider"></div>
-          <div class="proc-title">Desarrollo</div>
-          <div class="proc-desc">Implementación del diseño aprobado. Sitio funcional, optimizado y responsive.</div>
-        </div>
-        <div class="process-item">
-          <div class="proc-step">04</div>
-          <div class="proc-divider"></div>
-          <div class="proc-title">Entrega</div>
-          <div class="proc-desc">Publicación en tu dominio, traspaso de accesos y guía de uso. El sitio es tuyo desde el segundo pago.</div>
-        </div>
-      </div>
+      <div class="process-cols" id="process-cols"></div>
     </div>
   </div>
 
@@ -207,38 +193,7 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
     <div class="slide-inner">
       <div class="slide-label">Qué incluye</div>
       <h2 class="slide-title lg" style="color:#fff;">Alcance del proyecto</h2>
-      <div class="card-grid-3">
-        <div class="slide-card">
-          <div class="card-num">01</div>
-          <div class="card-title">Estrategia y estructura</div>
-          <div class="card-desc">Arquitectura de navegación y jerarquía de contenidos orientada a conversión.</div>
-        </div>
-        <div class="slide-card">
-          <div class="card-num">02</div>
-          <div class="card-title">Diseño UI responsive</div>
-          <div class="card-desc">Diseño visual completo. Mobile, tablet y desktop.</div>
-        </div>
-        <div class="slide-card">
-          <div class="card-num">03</div>
-          <div class="card-title">Contenido y copy</div>
-          <div class="card-desc">Textos orientados a decisión. Hasta 6 secciones principales.</div>
-        </div>
-        <div class="slide-card">
-          <div class="card-num">04</div>
-          <div class="card-title">Desarrollo y publicación</div>
-          <div class="card-desc">Sitio publicado en tu dominio, optimizado y funcional desde el día uno.</div>
-        </div>
-        <div class="slide-card">
-          <div class="card-num">05</div>
-          <div class="card-title">SEO base</div>
-          <div class="card-desc">Meta tags, sitemap, robots.txt y configuración en Search Console.</div>
-        </div>
-        <div class="slide-card">
-          <div class="card-num">06</div>
-          <div class="card-title">Revisiones post-entrega</div>
-          <div class="card-desc">Hasta 2 rondas de ajustes dentro de los 10 días hábiles posteriores a la entrega.</div>
-        </div>
-      </div>
+      <div class="card-grid-3" id="scope-grid"></div>
     </div>
   </div>
 
@@ -247,36 +202,7 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
     <div class="slide-inner">
       <div class="slide-label">Cuándo</div>
       <h2 class="slide-title lg" style="color:#fff;">Plazos del proyecto</h2>
-      <div class="timeline">
-        <div class="tl-item">
-          <div class="tl-dot">1</div>
-          <div>
-            <div class="tl-title">Inicio oficial <span class="tl-tag">Día 1</span></div>
-            <div class="tl-desc">Al recibir el primer pago (50%) y el brief completo. Comienza la etapa de estrategia y arquitectura.</div>
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot">2</div>
-          <div>
-            <div class="tl-title">Presentación del diseño <span class="tl-tag">Semana 1–2</span></div>
-            <div class="tl-desc">Diseño visual completo para revisión y aprobación. Una ronda de ajustes incluida.</div>
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot">3</div>
-          <div>
-            <div class="tl-title">Desarrollo completado <span class="tl-tag">Semana 3–4</span></div>
-            <div class="tl-desc">Sitio implementado y funcional listo para revisión final antes del deploy.</div>
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-dot" style="background:var(--cyan);">✓</div>
-          <div>
-            <div class="tl-title" style="color:var(--cyan);">Entrega y publicación <span class="tl-tag">Semana 4–5</span></div>
-            <div class="tl-desc">Sitio publicado, accesos transferidos y guía de uso entregada. Segundo pago al confirmar la entrega.</div>
-          </div>
-        </div>
-      </div>
+      <div class="timeline" id="timeline-list"></div>
       <p style="font-size:11.5px;color:rgba(255,255,255,0.25);margin-top:1.5rem;">Los plazos pueden ajustarse según el tiempo de respuesta del cliente en cada etapa de aprobación.</p>
     </div>
   </div>
@@ -286,33 +212,8 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
     <div class="slide-inner">
       <div class="slide-label">Inversión</div>
       <h2 class="slide-title lg" style="color:#fff;">Lo que cuesta y cómo se paga</h2>
-      <div class="invest-box">
-        <div>
-          <div class="invest-label">Valor total del proyecto</div>
-          <div class="invest-amount">$399.000</div>
-          <div class="invest-suffix">Boleta de honorarios · Sin IVA</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:14px;">
-          <div class="ib-item">
-            <div class="ib-pct">50%</div>
-            <div class="ib-text">
-              <strong style="color:#fff;display:block;margin-bottom:2px;">Al inicio</strong>
-              Al aceptar la propuesta. Da inicio oficial al trabajo.
-            </div>
-          </div>
-          <div style="height:0.5px;background:rgba(255,255,255,0.08);"></div>
-          <div class="ib-item">
-            <div class="ib-pct">50%</div>
-            <div class="ib-text">
-              <strong style="color:#fff;display:block;margin-bottom:2px;">A la entrega</strong>
-              Al publicar el sitio con tu aprobación confirmada.
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:10px;border:0.5px solid rgba(255,255,255,0.07);">
-        <p style="font-size:12.5px;color:rgba(255,255,255,0.4);line-height:1.6;">La propiedad del sitio y todos los archivos se transfieren al completar el segundo pago. Hasta entonces, los derechos permanecen con el prestador.</p>
-      </div>
+      <div class="invest-box" id="invest-box"></div>
+      <div id="invest-note" style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:10px;border:0.5px solid rgba(255,255,255,0.07);font-size:12.5px;color:rgba(255,255,255,0.4);line-height:1.6;"></div>
     </div>
   </div>
 
@@ -355,17 +256,324 @@ body { background:var(--night); color:#fff; font-family:var(--font-b); font-size
 </div>
 
 <script>
+// ── DATOS POR TIPO DE PROYECTO ────────────────────────────────
+var PROJECT_TYPES = {
+  web: {
+    label: 'Diseño web',
+    coverPrefix: 'Propuesta de diseño web para',
+    coverTags: ['Diseño web', 'Desarrollo', 'Publicación'],
+    problem: {
+      main: 'Escribe aquí el problema principal del cliente en términos concretos. Por ejemplo: "Tu sitio actual no refleja el nivel de tu negocio y está generando dudas antes del primer contacto."',
+      current: 'Describe brevemente dónde está el cliente hoy.',
+      goal: 'Describe el resultado que se quiere lograr.'
+    },
+    process: [
+      { step: '01', title: 'Brief y estrategia', desc: 'Entiendo tu negocio, tu audiencia y tus objetivos. Defino la estructura antes de diseñar.' },
+      { step: '02', title: 'Diseño UI', desc: 'Diseño visual completo para mobile y desktop. Se presenta para aprobación antes de desarrollar.' },
+      { step: '03', title: 'Desarrollo', desc: 'Implementación del diseño aprobado. Sitio funcional, optimizado y responsive.' },
+      { step: '04', title: 'Entrega', desc: 'Publicación en tu dominio, traspaso de accesos y guía de uso. El sitio es tuyo desde el segundo pago.' }
+    ],
+    scope: [
+      { num: '01', title: 'Estrategia y estructura', desc: 'Arquitectura de navegación y jerarquía de contenidos orientada a conversión.' },
+      { num: '02', title: 'Diseño UI responsive', desc: 'Diseño visual completo. Mobile, tablet y desktop.' },
+      { num: '03', title: 'Contenido y copy', desc: 'Textos orientados a decisión. Hasta 6 secciones principales.' },
+      { num: '04', title: 'Desarrollo y publicación', desc: 'Sitio publicado en tu dominio, optimizado y funcional desde el día uno.' },
+      { num: '05', title: 'SEO base', desc: 'Meta tags, sitemap, robots.txt y configuración en Search Console.' },
+      { num: '06', title: 'Revisiones post-entrega', desc: 'Hasta 2 rondas de ajustes dentro de los 10 días hábiles posteriores a la entrega.' }
+    ],
+    timeline: [
+      { dot: '1', title: 'Inicio oficial', tag: 'Día 1', desc: 'Al recibir el primer pago (50%) y el brief completo. Comienza la etapa de estrategia y arquitectura.' },
+      { dot: '2', title: 'Presentación del diseño', tag: 'Semana 1–2', desc: 'Diseño visual completo para revisión y aprobación. Una ronda de ajustes incluida.' },
+      { dot: '3', title: 'Desarrollo completado', tag: 'Semana 3–4', desc: 'Sitio implementado y funcional listo para revisión final antes del deploy.' },
+      { dot: '✓', title: 'Entrega y publicación', tag: 'Semana 4–5', desc: 'Sitio publicado, accesos transferidos y guía de uso entregada. Segundo pago al confirmar la entrega.', highlight: true }
+    ],
+    investment: {
+      type: 'simple', amount: '$399.000', suffix: 'Boleta de honorarios · Sin IVA',
+      p1label: 'Al inicio', p1desc: 'Al aceptar la propuesta. Da inicio oficial al trabajo.',
+      p2label: 'A la entrega', p2desc: 'Al publicar el sitio con tu aprobación confirmada.',
+      note: 'La propiedad del sitio y todos los archivos se transfieren al completar el segundo pago. Hasta entonces, los derechos permanecen con el prestador.'
+    }
+  },
+
+  sistema: {
+    label: 'Sistema / App',
+    coverPrefix: 'Propuesta de sistema para',
+    coverTags: ['Sistema', 'Desarrollo', 'Entrega por fases'],
+    problem: {
+      main: 'Escribe aquí el reto operacional del cliente. Por ejemplo: "Tu equipo gestiona los proyectos en planillas y el seguimiento se pierde entre emails, generando errores y trabajo duplicado."',
+      current: 'Describe el sistema o proceso actual que genera fricción o ineficiencia.',
+      goal: 'Describe el sistema que quieren tener: qué automatiza, qué resuelve, qué eficiencia genera.'
+    },
+    process: [
+      { step: '01', title: 'Discovery y arquitectura', desc: 'Levantamiento de requerimientos, flujos y estructura del sistema.' },
+      { step: '02', title: 'Diseño de interfaces', desc: 'Diseño UI de cada módulo. Presentación para aprobación antes de desarrollar.' },
+      { step: '03', title: 'Desarrollo por módulos', desc: 'Implementación modular. Cada módulo se entrega y valida por separado.' },
+      { step: '04', title: 'Entrega y traspaso', desc: 'Sistema publicado, accesos transferidos y manual de uso entregado.' }
+    ],
+    scope: [
+      { num: '01', title: 'Módulo 1 — [nombre]', desc: 'Describe el primer módulo del sistema y sus funcionalidades principales.' },
+      { num: '02', title: 'Módulo 2 — [nombre]', desc: 'Describe el segundo módulo del sistema y sus funcionalidades principales.' },
+      { num: '03', title: 'Módulo 3 — [nombre]', desc: 'Describe el tercer módulo del sistema y sus funcionalidades principales.' },
+      { num: '04', title: 'Diseño UI del sistema', desc: 'Diseño visual de todas las pantallas e interfaces. Archivo Figma incluido.' },
+      { num: '05', title: 'Panel de administración', desc: 'Interfaz de gestión para el equipo interno. Permisos y roles configurados.' },
+      { num: '06', title: 'Documentación y entrega', desc: 'Manual de uso, accesos transferidos y sesión de capacitación al equipo.' }
+    ],
+    timeline: [
+      { dot: '1', title: 'Inicio — Fase 1', tag: 'Día 1', desc: 'Al recibir el pago de la Fase 1. Comienza el discovery, arquitectura y diseño de interfaces.' },
+      { dot: '2', title: 'Diseño aprobado', tag: 'Semana 2–3', desc: 'Presentación del diseño de todos los módulos para aprobación del cliente.' },
+      { dot: '3', title: 'Entrega Fase 1', tag: 'Semana 4–5', desc: 'Módulos de la Fase 1 entregados y validados. Se emite el pago de la Fase 2.' },
+      { dot: '✓', title: 'Entrega Fase 2 — Sistema completo', tag: 'Semana 7–9', desc: 'Sistema completo publicado, accesos transferidos y manual de uso entregado.', highlight: true }
+    ],
+    investment: {
+      type: 'phases', p1amount: '$XXX.000', p2amount: '$XXX.000', total: '$XXX.000',
+      suffix: 'Boleta de honorarios · Sin IVA',
+      note: 'La propiedad del sistema y todos los archivos se transfieren al completar el pago final. Hasta entonces, los derechos permanecen con el prestador.'
+    }
+  },
+
+  ux: {
+    label: 'UX / Consultoría',
+    coverPrefix: 'Propuesta de consultoría para',
+    coverTags: ['Research', 'Estrategia', 'Entregables'],
+    problem: {
+      main: 'Escribe aquí el desafío de experiencia del cliente. Por ejemplo: "No sabes con certeza por qué los usuarios abandonan el proceso o dónde está la fricción principal."',
+      current: 'Describe el estado actual del producto o proceso que se quiere mejorar.',
+      goal: 'Describe qué se quiere entender o mejorar al final del proceso de consultoría.'
+    },
+    process: [
+      { step: '01', title: 'Diagnóstico', desc: 'Revisión del estado actual, entrevistas y análisis de datos disponibles.' },
+      { step: '02', title: 'Síntesis', desc: 'Identificación de hallazgos, patrones y oportunidades priorizadas.' },
+      { step: '03', title: 'Recomendaciones', desc: 'Informe con plan de acción, quick wins y mejoras estructurales.' },
+      { step: '04', title: 'Presentación', desc: 'Sesión de presentación de resultados con el equipo del cliente.' }
+    ],
+    scope: [
+      { num: '01', title: 'Informe de diagnóstico', desc: 'Análisis del estado actual con hallazgos documentados y priorizados.' },
+      { num: '02', title: 'Mapa de oportunidades', desc: 'Visualización de áreas de mejora y oportunidades de diseño identificadas.' },
+      { num: '03', title: 'Sesiones de entrevistas', desc: 'Entrevistas con usuarios o stakeholders. Mínimo 3 sesiones documentadas.' },
+      { num: '04', title: 'Prototipos de referencia', desc: 'Wireframes o maquetas de las soluciones recomendadas para validación.' },
+      { num: '05', title: 'Plan de acción', desc: 'Roadmap priorizado con quick wins e iniciativas de mediano plazo.' },
+      { num: '06', title: 'Presentación ejecutiva', desc: 'Sesión de presentación de resultados y recomendaciones al equipo.' }
+    ],
+    timeline: [
+      { dot: '1', title: 'Inicio y diagnóstico', tag: 'Semana 1', desc: 'Al recibir el primer pago. Revisión del estado actual, recolección de datos y entrevistas.' },
+      { dot: '2', title: 'Síntesis y análisis', tag: 'Semana 2', desc: 'Procesamiento de hallazgos, identificación de patrones y mapa de oportunidades.' },
+      { dot: '3', title: 'Informe y recomendaciones', tag: 'Semana 3', desc: 'Elaboración del informe final con plan de acción y quick wins priorizados.' },
+      { dot: '✓', title: 'Presentación de resultados', tag: 'Semana 4', desc: 'Sesión de presentación con el equipo. Entrega de todos los archivos y segundo pago.', highlight: true }
+    ],
+    investment: {
+      type: 'simple', amount: '$XXX.000', suffix: 'Boleta de honorarios · Sin IVA',
+      p1label: 'Al inicio', p1desc: 'Al aceptar la propuesta. Da inicio oficial al trabajo de investigación.',
+      p2label: 'A la entrega', p2desc: 'Al presentar el informe final con todos los entregables.',
+      note: 'Todos los entregables, informes y archivos se transfieren al completar el segundo pago. Los datos de investigación son propiedad del cliente.'
+    }
+  },
+
+  ia: {
+    label: 'IA y Automatización',
+    coverPrefix: 'Propuesta de automatización para',
+    coverTags: ['IA', 'Workflow', 'Automatización'],
+    problem: {
+      main: 'Escribe aquí el proceso que se quiere automatizar. Por ejemplo: "Tu equipo destina horas semanales a tareas repetitivas que podrían ejecutarse automáticamente con IA."',
+      current: 'Describe el proceso manual actual y el tiempo o recursos que consume.',
+      goal: 'Describe qué procesos se quieren automatizar y qué eficiencia se espera ganar.'
+    },
+    process: [
+      { step: '01', title: 'Mapeo de procesos', desc: 'Identificación de flujos actuales y oportunidades de automatización.' },
+      { step: '02', title: 'Diseño del workflow', desc: 'Arquitectura del sistema automatizado y selección de herramientas.' },
+      { step: '03', title: 'Implementación', desc: 'Construcción, pruebas y ajustes del workflow en producción.' },
+      { step: '04', title: 'Traspaso y capacitación', desc: 'Manual de uso, prompts documentados y sesión de capacitación.' }
+    ],
+    scope: [
+      { num: '01', title: 'Mapeo de procesos actuales', desc: 'Documentación de los flujos de trabajo actuales y diagnóstico de automatización.' },
+      { num: '02', title: 'Diseño del workflow', desc: 'Arquitectura del sistema automatizado, herramientas seleccionadas y flujo de datos.' },
+      { num: '03', title: 'Implementación del workflow', desc: 'Construcción, configuración y pruebas del sistema automatizado.' },
+      { num: '04', title: 'Integraciones', desc: 'Conexión con las herramientas existentes del cliente (CRM, email, Drive, etc.).' },
+      { num: '05', title: 'Prompts documentados', desc: 'Biblioteca de prompts optimizados, editables y documentados para el equipo.' },
+      { num: '06', title: 'Manual y capacitación', desc: 'Guía de uso escrita y sesión de capacitación de 60 min con el equipo.' }
+    ],
+    timeline: [
+      { dot: '1', title: 'Inicio y mapeo', tag: 'Semana 1', desc: 'Al recibir el primer pago. Mapeo de procesos actuales y diagnóstico de oportunidades.' },
+      { dot: '2', title: 'Diseño del workflow', tag: 'Semana 2', desc: 'Arquitectura del sistema y selección de herramientas. Presentación para aprobación.' },
+      { dot: '3', title: 'Implementación y pruebas', tag: 'Semana 3–4', desc: 'Construcción del workflow, integraciones y pruebas con datos reales del cliente.' },
+      { dot: '✓', title: 'Entrega y capacitación', tag: 'Semana 4–5', desc: 'Workflow activo en producción, manual entregado y sesión de capacitación completada.', highlight: true }
+    ],
+    investment: {
+      type: 'simple', amount: '$XXX.000', suffix: 'Boleta de honorarios · Sin IVA',
+      p1label: 'Al inicio', p1desc: 'Al aceptar la propuesta. Da inicio al mapeo y diseño del workflow.',
+      p2label: 'A la entrega', p2desc: 'Al activar el workflow en producción con la capacitación completada.',
+      note: 'Los workflows, prompts y documentación se transfieren al completar el segundo pago. Las cuentas de herramientas externas son responsabilidad del cliente.'
+    }
+  }
+};
+
+// ── RENDER FUNCTIONS ──────────────────────────────────────────
+function renderCoverTags(tags) {
+  var c = document.getElementById('cover-tags');
+  c.innerHTML = '';
+  tags.forEach(function(tag, i) {
+    var s = document.createElement('span');
+    s.textContent = tag;
+    s.style.cssText = 'font-size:12px;padding:5px 14px;border-radius:999px;' +
+      (i === 0
+        ? 'border:0.5px solid rgba(62,198,212,0.35);color:var(--cyan);'
+        : 'border:0.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);');
+    c.appendChild(s);
+  });
+}
+
+function renderProblem(problem) {
+  var m = document.getElementById('problem-main');
+  var cu = document.getElementById('problem-current');
+  var g = document.getElementById('problem-goal');
+  if (m) m.textContent = problem.main;
+  if (cu) cu.textContent = problem.current;
+  if (g) g.textContent = problem.goal;
+}
+
+function renderProcess(steps) {
+  var c = document.getElementById('process-cols');
+  c.innerHTML = '';
+  steps.forEach(function(s) {
+    var d = document.createElement('div');
+    d.className = 'process-item';
+    d.innerHTML =
+      '<div class="proc-step">' + s.step + '</div>' +
+      '<div class="proc-divider"></div>' +
+      '<div class="proc-title" contenteditable="true" spellcheck="false">' + s.title + '</div>' +
+      '<div class="proc-desc" contenteditable="true" spellcheck="false">' + s.desc + '</div>';
+    c.appendChild(d);
+  });
+}
+
+function renderScope(items) {
+  var c = document.getElementById('scope-grid');
+  c.innerHTML = '';
+  items.forEach(function(item) {
+    var d = document.createElement('div');
+    d.className = 'slide-card';
+    d.innerHTML =
+      '<div class="card-num">' + item.num + '</div>' +
+      '<div class="card-title" contenteditable="true" spellcheck="false">' + item.title + '</div>' +
+      '<div class="card-desc" contenteditable="true" spellcheck="false">' + item.desc + '</div>';
+    c.appendChild(d);
+  });
+}
+
+function renderTimeline(items) {
+  var c = document.getElementById('timeline-list');
+  c.innerHTML = '';
+  items.forEach(function(item) {
+    var d = document.createElement('div');
+    d.className = 'tl-item';
+    var dotStyle = item.highlight ? 'background:var(--cyan);' : '';
+    var titleStyle = item.highlight ? 'color:var(--cyan);' : '';
+    d.innerHTML =
+      '<div class="tl-dot" style="' + dotStyle + '">' + item.dot + '</div>' +
+      '<div style="flex:1;">' +
+        '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px;">' +
+          '<div class="tl-title" style="' + titleStyle + '" contenteditable="true" spellcheck="false">' + item.title + '</div>' +
+          '<span class="tl-tag">' + item.tag + '</span>' +
+        '</div>' +
+        '<div class="tl-desc" contenteditable="true" spellcheck="false">' + item.desc + '</div>' +
+      '</div>';
+    c.appendChild(d);
+  });
+}
+
+function renderInvestment(inv) {
+  var box = document.getElementById('invest-box');
+  var noteEl = document.getElementById('invest-note');
+  if (!box) return;
+
+  if (inv.type === 'phases') {
+    box.innerHTML =
+      '<div>' +
+        '<div class="invest-label">Fase 1</div>' +
+        '<div class="invest-amount" style="font-size:clamp(2rem,4vw,3.25rem);" contenteditable="true" spellcheck="false">' + inv.p1amount + '</div>' +
+        '<div style="height:0.5px;background:rgba(255,255,255,0.08);margin:14px 0;"></div>' +
+        '<div class="invest-label">Fase 2</div>' +
+        '<div class="invest-amount" style="font-size:clamp(2rem,4vw,3.25rem);" contenteditable="true" spellcheck="false">' + inv.p2amount + '</div>' +
+        '<div style="height:0.5px;background:rgba(255,255,255,0.08);margin:14px 0;"></div>' +
+        '<div class="invest-label">Total del proyecto</div>' +
+        '<div class="invest-amount" contenteditable="true" spellcheck="false">' + inv.total + '</div>' +
+        '<div class="invest-suffix" contenteditable="true" spellcheck="false">' + inv.suffix + '</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:14px;">' +
+        '<div class="ib-item">' +
+          '<div style="font-family:var(--font-b);font-size:14px;font-weight:700;color:var(--cyan);min-width:60px;">Fase 1</div>' +
+          '<div class="ib-text">' +
+            '<strong style="color:#fff;display:block;margin-bottom:2px;">Al iniciar la Fase 1</strong>' +
+            '<span contenteditable="true" spellcheck="false">Al confirmar inicio. Da comienzo al discovery y diseño.</span>' +
+          '</div>' +
+        '</div>' +
+        '<div style="height:0.5px;background:rgba(255,255,255,0.08);"></div>' +
+        '<div class="ib-item">' +
+          '<div style="font-family:var(--font-b);font-size:14px;font-weight:700;color:var(--cyan);min-width:60px;">Fase 2</div>' +
+          '<div class="ib-text">' +
+            '<strong style="color:#fff;display:block;margin-bottom:2px;">Al iniciar la Fase 2</strong>' +
+            '<span contenteditable="true" spellcheck="false">Al completar la Fase 1 y confirmar continuación.</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  } else {
+    box.innerHTML =
+      '<div>' +
+        '<div class="invest-label">Valor total del proyecto</div>' +
+        '<div class="invest-amount" contenteditable="true" spellcheck="false">' + inv.amount + '</div>' +
+        '<div class="invest-suffix" contenteditable="true" spellcheck="false">' + inv.suffix + '</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:14px;">' +
+        '<div class="ib-item">' +
+          '<div class="ib-pct">50%</div>' +
+          '<div class="ib-text">' +
+            '<strong style="color:#fff;display:block;margin-bottom:2px;">' + inv.p1label + '</strong>' +
+            '<span contenteditable="true" spellcheck="false">' + inv.p1desc + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div style="height:0.5px;background:rgba(255,255,255,0.08);"></div>' +
+        '<div class="ib-item">' +
+          '<div class="ib-pct">50%</div>' +
+          '<div class="ib-text">' +
+            '<strong style="color:#fff;display:block;margin-bottom:2px;">' + inv.p2label + '</strong>' +
+            '<span contenteditable="true" spellcheck="false">' + inv.p2desc + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  if (noteEl) noteEl.textContent = inv.note;
+}
+
+// ── APPLY TYPE ────────────────────────────────────────────────
+var currentType = 'web';
+
+function applyType(typeId) {
+  currentType = typeId;
+  var t = PROJECT_TYPES[typeId];
+
+  document.querySelectorAll('.type-opt').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.type === typeId);
+  });
+
+  document.getElementById('cover-prefix').textContent = t.coverPrefix;
+  renderCoverTags(t.coverTags);
+  renderProblem(t.problem);
+  renderProcess(t.process);
+  renderScope(t.scope);
+  renderTimeline(t.timeline);
+  renderInvestment(t.investment);
+}
+
+// ── NAV ───────────────────────────────────────────────────────
 var slides = document.querySelectorAll('.slide');
 var dotsEl = document.getElementById('nav-dots');
 var countEl = document.getElementById('nav-count');
 var cur = 0;
 
-// Init logo state — hidden on cover
 var logo = document.getElementById('deck-logo');
-if (logo) logo.style.opacity = '0';
+logo.style.opacity = '0';
 logo.style.transition = 'opacity 0.3s ease';
 
-// Build dots
 slides.forEach(function(_, i) {
   var d = document.createElement('div');
   d.className = 'nav-dot' + (i === 0 ? ' active' : '');
@@ -382,35 +590,28 @@ function goTo(n) {
   document.getElementById('btn-prev').disabled = cur === 0;
   document.getElementById('btn-next').disabled = cur === slides.length - 1;
   countEl.textContent = (cur + 1) + ' / ' + slides.length;
-  // Ocultar logo en portada (0) y cierre (último slide)
-  var logo = document.getElementById('deck-logo');
-  if (logo) {
-    logo.style.opacity = (cur === 0 || cur === slides.length - 1) ? '0' : '1';
-  }
+  logo.style.opacity = (cur === 0 || cur === slides.length - 1) ? '0' : '1';
 }
 
 function go(dir) {
-  var next = Math.max(0, Math.min(slides.length - 1, cur + dir));
-  goTo(next);
+  goTo(Math.max(0, Math.min(slides.length - 1, cur + dir)));
 }
 
-// Keyboard
 document.addEventListener('keydown', function(e) {
+  if (document.activeElement && document.activeElement.contentEditable === 'true') return;
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
   if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
 });
 
-// Dates
+// ── DATES ─────────────────────────────────────────────────────
 var today = new Date();
-var fmt = function(d) {
-  return d.toLocaleDateString('es-CL', { day:'2-digit', month:'long', year:'numeric' });
-};
+var fmt = function(d) { return d.toLocaleDateString('es-CL', { day:'2-digit', month:'long', year:'numeric' }); };
 var validity = new Date(today);
 validity.setDate(validity.getDate() + 15);
 document.getElementById('cover-date').textContent = 'Propuesta preparada el ' + fmt(today);
 document.getElementById('closing-validity').textContent = '15 días — hasta el ' + fmt(validity);
 
-// Editable client name
+// ── EDITABLE CLIENT NAME ──────────────────────────────────────
 document.getElementById('cover-client').addEventListener('click', function() {
   var current = this.textContent.trim();
   var val = prompt('Nombre del cliente:', current === '[nombre del cliente]' ? '' : current);
@@ -418,6 +619,9 @@ document.getElementById('cover-client').addEventListener('click', function() {
     this.textContent = val.trim() || '[nombre del cliente]';
   }
 });
+
+// ── INIT ──────────────────────────────────────────────────────
+applyType('web');
 </script>
 </body>
 </html>
