@@ -189,6 +189,10 @@ body { background: var(--night); color: #fff; font-family: var(--font-body); fon
 .slide-light [contenteditable]:empty::before, .slide-light-alt [contenteditable]:empty::before { color: rgba(10,43,74,0.2); }
 .slide-light [contenteditable]:focus, .slide-light-alt [contenteditable]:focus { border-bottom-color: rgba(10,126,194,0.35); }
 
+.save-toast-pres { position: fixed; top: 1.5rem; right: 2rem; font-size: 11px; color: rgba(255,255,255,0.6); opacity: 0; transition: opacity 0.3s ease; background: rgba(13,43,74,0.9); backdrop-filter: blur(8px); padding: 5px 12px; border-radius: 999px; border: 0.5px solid rgba(255,255,255,0.1); pointer-events: none; z-index: 200; }
+.clear-btn-pres { position: fixed; bottom: 2rem; left: 2rem; padding: 7px 14px; background: rgba(13,43,74,0.85); backdrop-filter: blur(8px); color: rgba(255,255,255,0.4); border: 0.5px solid rgba(255,255,255,0.1); border-radius: 999px; font-family: var(--font-body); font-size: 11px; cursor: pointer; transition: all 0.15s; z-index: 100; }
+.clear-btn-pres:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.25); }
+
 /* ── PRINT ── */
 @media print {
   *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -200,7 +204,7 @@ body { background: var(--night); color: #fff; font-family: var(--font-body); fon
   .slide-light { background: #fff !important; color: var(--ink) !important; }
   .slide-light-alt { background: #F2F7FC !important; color: var(--ink) !important; }
   .slide-dark { background: var(--night) !important; color: #fff !important; }
-  .nav, .type-selector, .deck-logo { display: none !important; }
+  .nav, .type-selector, .deck-logo, .save-toast-pres, .clear-btn-pres { display: none !important; }
   [contenteditable]:focus { border-bottom: none; }
 }
 </style>
@@ -662,6 +666,7 @@ function applyType(typeId) {
   renderScope(t.scope);
   renderTimeline(t.timeline);
   renderInvestment(t.investment);
+  if (typeof scheduleSavePresentation === 'function') scheduleSavePresentation();
 }
 
 // ── NAV ───────────────────────────────────────────────────────
@@ -717,11 +722,69 @@ document.getElementById('cover-client').addEventListener('click', function() {
   var val = prompt('Nombre del cliente:', current === '[nombre del cliente]' ? '' : current);
   if (val !== null) {
     this.textContent = val.trim() || '[nombre del cliente]';
+    scheduleSavePresentation();
   }
 });
 
+// ── AUTOGUARDADO ──────────────────────────────────────────────
+var _presTimer = null;
+function scheduleSavePresentation() {
+  clearTimeout(_presTimer);
+  _presTimer = setTimeout(savePresState, 1000);
+}
+function showPresToast() {
+  var t = document.getElementById('save-toast-pres');
+  t.style.opacity = '1';
+  setTimeout(function() { t.style.opacity = '0'; }, 2000);
+}
+function savePresState() {
+  var state = {
+    v: 1,
+    type: currentType,
+    coverClient: document.getElementById('cover-client').textContent,
+    problemMain: document.getElementById('problem-main').innerHTML,
+    problemCurrent: document.getElementById('problem-current').innerHTML,
+    problemGoal: document.getElementById('problem-goal').innerHTML,
+    processCols: document.getElementById('process-cols').innerHTML,
+    scopeGrid: document.getElementById('scope-grid').innerHTML,
+    timelineList: document.getElementById('timeline-list').innerHTML,
+    investBox: document.getElementById('invest-box').innerHTML,
+    investNote: document.getElementById('invest-note').innerHTML
+  };
+  localStorage.setItem('oc-presentacion-v1', JSON.stringify(state));
+  showPresToast();
+}
+function loadPresState() {
+  try {
+    var raw = localStorage.getItem('oc-presentacion-v1');
+    if (!raw) return false;
+    var s = JSON.parse(raw);
+    if (s.v !== 1) return false;
+    applyType(s.type || 'web');
+    if (s.coverClient) document.getElementById('cover-client').textContent = s.coverClient;
+    if (s.problemMain) document.getElementById('problem-main').innerHTML = s.problemMain;
+    if (s.problemCurrent) document.getElementById('problem-current').innerHTML = s.problemCurrent;
+    if (s.problemGoal) document.getElementById('problem-goal').innerHTML = s.problemGoal;
+    if (s.processCols) document.getElementById('process-cols').innerHTML = s.processCols;
+    if (s.scopeGrid) document.getElementById('scope-grid').innerHTML = s.scopeGrid;
+    if (s.timelineList) document.getElementById('timeline-list').innerHTML = s.timelineList;
+    if (s.investBox) document.getElementById('invest-box').innerHTML = s.investBox;
+    if (s.investNote) document.getElementById('invest-note').innerHTML = s.investNote;
+    return true;
+  } catch(e) { return false; }
+}
+function clearPresState() {
+  if (!confirm('¿Borrar esta presentación y empezar de nuevo?')) return;
+  localStorage.removeItem('oc-presentacion-v1');
+  location.reload();
+}
+
 // ── INIT ──────────────────────────────────────────────────────
-applyType('web');
+if (!loadPresState()) applyType('web');
+document.addEventListener('input', scheduleSavePresentation);
 </script>
+
+<div id="save-toast-pres" class="save-toast-pres">✓ Guardado automáticamente</div>
+<button class="clear-btn-pres" onclick="clearPresState()">Nuevo documento</button>
 </body>
 </html>

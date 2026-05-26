@@ -47,6 +47,21 @@ body { background: var(--frost); color: var(--ink); font-family: var(--font-b); 
 .status-borrador { background: #FEF3CD; color: #7A5500; }
 .status-enviado  { background: var(--surface); color: var(--blue); }
 .status-aprobado { background: var(--success-soft); color: var(--success); }
+.status-rechazado { background: #FDE8E8; color: #B91C1C; }
+
+/* STATUS SELECT */
+.status-select { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; border: none; cursor: pointer; outline: none; font-family: var(--font-b); -webkit-appearance: none; appearance: none; }
+.status-select:focus { box-shadow: 0 0 0 2px rgba(10,126,194,0.18); }
+
+/* DATE INPUT */
+.date-input { font-family: var(--font-b); font-size: 12px; font-weight: 500; color: var(--ink); text-align: right; background: transparent; border: none; border-bottom: 1px dashed var(--border-mid); outline: none; cursor: pointer; width: 140px; }
+.date-input:focus { border-bottom-color: var(--blue); color: var(--blue); }
+.date-display { font-size: 12px; font-weight: 500; color: var(--ink); display: none; }
+
+/* AUTOGUARDADO */
+.save-toast { position: fixed; bottom: 5rem; left: 2rem; font-size: 11px; color: var(--ink-muted); opacity: 0; transition: opacity 0.3s ease; background: #fff; padding: 5px 12px; border-radius: 999px; border: 0.5px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.06); pointer-events: none; z-index: 200; }
+.clear-btn { position: fixed; bottom: 2rem; right: 12rem; padding: 11px 18px; background: transparent; color: var(--ink-muted); border: 0.5px solid var(--border-mid); border-radius: 999px; font-family: var(--font-b); font-size: 12px; cursor: pointer; transition: all 0.15s; z-index: 100; }
+.clear-btn:hover { background: var(--frost); color: var(--ink); }
 
 /* SECTION */
 .section { margin-bottom: 2px; }
@@ -238,6 +253,9 @@ body { background: var(--frost); color: var(--ink); font-family: var(--font-b); 
   .phase-cond-edit { display: none !important; }
   .phase-cond-print { display: block !important; }
   .del-phase-head { background: #f2f6fa !important; }
+  .date-input { display: none !important; }
+  .date-display { display: inline !important; }
+  .save-toast, .clear-btn { display: none !important; }
 }
 </style>
 </head>
@@ -269,15 +287,22 @@ body { background: var(--frost); color: var(--ink); font-family: var(--font-b); 
       </div>
       <div class="meta-row">
         <span class="meta-key">Fecha de emisión</span>
-        <input class="meta-val editable" value="" id="fecha-emision" placeholder="DD/MM/AAAA">
+        <input type="date" class="date-input no-print" id="fecha-emision" onchange="onDateChange('fecha-emision','fecha-emision-display')">
+        <span class="date-display" id="fecha-emision-display"></span>
       </div>
       <div class="meta-row">
         <span class="meta-key">Válido hasta</span>
-        <input class="meta-val editable" value="" id="fecha-validez" placeholder="DD/MM/AAAA">
+        <input type="date" class="date-input no-print" id="fecha-validez" onchange="onDateChange('fecha-validez','fecha-validez-display')">
+        <span class="date-display" id="fecha-validez-display"></span>
       </div>
-      <div class="meta-row">
+      <div class="meta-row no-print">
         <span class="meta-key">Estado</span>
-        <span class="status-badge status-borrador" id="estado-badge">Borrador</span>
+        <select class="status-select status-borrador" id="estado-select" onchange="updateEstado(this)">
+          <option value="borrador">Borrador</option>
+          <option value="enviado">Enviado</option>
+          <option value="aprobado">Aprobado</option>
+          <option value="rechazado">Rechazado</option>
+        </select>
       </div>
       <div class="meta-row no-print" style="align-items:center;">
         <span class="meta-key">Tipo de documento</span>
@@ -441,16 +466,21 @@ body { background: var(--frost); color: var(--ink); font-family: var(--font-b); 
 
 </div>
 
+<div id="save-toast" class="save-toast no-print">✓ Guardado automáticamente</div>
+<button class="clear-btn no-print" onclick="clearDocState()">Nuevo documento</button>
 <button class="print-btn no-print" onclick="printDoc()">⎙ Exportar / Imprimir</button>
 
 <script>
 // ── DATES ───────────────────────────────────────────────────
 const today = new Date();
-const fmtDate = d => d.toLocaleDateString('es-CL', {day:'2-digit', month:'2-digit', year:'numeric'});
+const isoDate = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const fmtDDMMYYYY = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}-${m}-${y}`; };
+function onDateChange(inputId, displayId) {
+  const val = document.getElementById(inputId).value;
+  document.getElementById(displayId).textContent = fmtDDMMYYYY(val);
+  scheduleSave();
+}
 const validity = new Date(today); validity.setDate(validity.getDate() + 15);
-document.getElementById('fecha-emision').value = fmtDate(today);
-document.getElementById('fecha-validez').value = fmtDate(validity);
-document.getElementById('num-presupuesto').value = `OC-${today.getFullYear()}-001`;
 
 // ── CATALOG ─────────────────────────────────────────────────
 const CATALOG = [
@@ -472,9 +502,9 @@ const CATALOG = [
     { id: 'mentoria',      label: 'Mentoría',                  desc: 'Sesiones de mentoría para diseñadores o founders. Foco en craft y proceso.', price: 80000 },
   ]},
   { cat: 'IA y Automatización', items: [
-    { id: 'workflow',        label: 'IA Workflow',                  desc: 'Diseño e implementación de flujos con IA integrada a herramientas existentes.', price: 380000 },
-    { id: 'automatizacion',  label: 'Automatización de procesos',   desc: 'Automatización de tareas repetitivas para reducir errores y ganar tiempo.', price: 300000 },
-    { id: 'integracion',     label: 'Integración IA',               desc: 'Integración de capacidades IA en un producto o sitio web existente.', price: 250000 },
+    { id: 'workflow',        label: 'IA Workflow',                  desc: 'Diseño y configuración de flujos de trabajo asistidos por IA para tareas repetitivas o de alto volumen. Resultado: proceso documentado, probado y listo para operar.', price: 380000 },
+    { id: 'automatizacion',  label: 'Automatización de procesos',   desc: 'Identificación y automatización de procesos manuales usando herramientas accesibles (Make, Zapier, scripts). Sin infraestructura compleja.', price: 300000 },
+    { id: 'integracion',     label: 'Integración IA',               desc: 'Incorporación de funcionalidades de IA (resumen, clasificación, generación de texto) a productos digitales existentes. Alcance acotado y definido.', price: 250000 },
   ]},
 ];
 
@@ -513,6 +543,7 @@ function setProjectMode(mode) {
     updateTotals();
     renderDeliverables();
   }
+  scheduleSave();
 }
 
 // ── PHASE MANAGEMENT ──────────────────────────────────────────
@@ -523,6 +554,7 @@ function addPhase() {
   renderPhasesSummary();
   renderPhasesPayments();
   renderPhasesDeliverables();
+  scheduleSave();
 }
 
 function removePhase(phaseId) {
@@ -537,6 +569,7 @@ function removePhase(phaseId) {
   renderPhasesSummary();
   renderPhasesPayments();
   renderPhasesDeliverables();
+  scheduleSave();
 }
 
 function getPhaseAutoTotal(phase) {
@@ -570,6 +603,7 @@ function togglePhaseItem(phaseId, itemId) {
   renderPhasesSummary();
   renderPhasesPayments();
   renderPhasesDeliverables();
+  scheduleSave();
 }
 
 function updatePhasePriceDisplay(phaseId) {
@@ -585,6 +619,7 @@ function updatePhaseMeta(phaseId, field, value) {
   phase[field] = value;
   if (field === 'name') renderPhasesPayments();
   if (field === 'desc') { renderPhasesSummary(); renderPhasesPayments(); }
+  scheduleSave();
 }
 
 function updatePhaseCondition(phaseId, value) {
@@ -593,6 +628,7 @@ function updatePhaseCondition(phaseId, value) {
     phase.condition = value;
     const printEl = document.getElementById('cond-print-' + phaseId);
     if (printEl) printEl.textContent = value;
+    scheduleSave();
   }
 }
 
@@ -612,6 +648,7 @@ function togglePhasePriceMode(phaseId) {
   }
   renderPhasesSummary();
   renderPhasesPayments();
+  scheduleSave();
 }
 
 function savePhaseManualPrice(phaseId, value) {
@@ -620,6 +657,7 @@ function savePhaseManualPrice(phaseId, value) {
   phase.manualPrice = parseInt(value.replace(/[^0-9]/g, '')) || 0;
   renderPhasesSummary();
   renderPhasesPayments();
+  scheduleSave();
 }
 
 function buildPriceRightHtml(phase) {
@@ -864,6 +902,7 @@ function toggleItem(id) {
   }
   updateTotals();
   renderDeliverables();
+  scheduleSave();
 }
 
 // ── DOC TYPE ─────────────────────────────────────────────────
@@ -880,6 +919,7 @@ function setDocType(type, btn) {
     renderPhasesSummary();
     renderPhasesPayments();
   }
+  scheduleSave();
 }
 
 // ── UPDATE TOTALS (simple mode) ───────────────────────────────
@@ -1068,10 +1108,98 @@ function renderDeliverables() {
   });
 }
 
+// ── AUTOGUARDADO ──────────────────────────────────────────────
+let _saveTimer = null;
+function scheduleSave() {
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveDocState, 1000);
+}
+function showSaveToast() {
+  const t = document.getElementById('save-toast');
+  t.style.opacity = '1';
+  setTimeout(() => { t.style.opacity = '0'; }, 2000);
+}
+function updateEstado(sel) {
+  sel.className = 'status-select status-' + sel.value;
+  scheduleSave();
+}
+function saveDocState() {
+  const state = {
+    v: 1,
+    numPres: document.getElementById('num-presupuesto')?.value || '',
+    fechaEmision: document.getElementById('fecha-emision')?.value || '',
+    fechaValidez: document.getElementById('fecha-validez')?.value || '',
+    estado: document.getElementById('estado-select')?.value || 'borrador',
+    metaEditable: {},
+    docType,
+    projectMode,
+    phases: phases.map(p => ({
+      id: p.id, name: p.name, items: [...p.items],
+      condition: p.condition, priceMode: p.priceMode, manualPrice: p.manualPrice
+    })),
+    phaseCounter,
+    selectedItems: [...selectedItems],
+    uncheckedDeliverables: [...uncheckedDeliverables]
+  };
+  document.querySelectorAll('.meta-val.editable').forEach(el => {
+    if (el.id) state.metaEditable[el.id] = el.textContent;
+  });
+  localStorage.setItem('oc-presupuesto-v1', JSON.stringify(state));
+  showSaveToast();
+}
+function loadDocState() {
+  try {
+    const raw = localStorage.getItem('oc-presupuesto-v1');
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    if (s.v !== 1) return false;
+    if (s.numPres) document.getElementById('num-presupuesto').value = s.numPres;
+    if (s.fechaEmision) {
+      document.getElementById('fecha-emision').value = s.fechaEmision;
+      onDateChange('fecha-emision', 'fecha-emision-display');
+    }
+    if (s.fechaValidez) {
+      document.getElementById('fecha-validez').value = s.fechaValidez;
+      onDateChange('fecha-validez', 'fecha-validez-display');
+    }
+    if (s.estado) {
+      const sel = document.getElementById('estado-select');
+      sel.value = s.estado;
+      sel.className = 'status-select status-' + s.estado;
+    }
+    if (s.metaEditable) {
+      Object.entries(s.metaEditable).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      });
+    }
+    if (s.docType) docType = s.docType;
+    if (s.projectMode) projectMode = s.projectMode;
+    if (s.phases) phases = s.phases.map(p => ({ ...p, items: p.items || [] }));
+    if (s.phaseCounter != null) phaseCounter = s.phaseCounter;
+    if (s.selectedItems) selectedItems = new Set(s.selectedItems);
+    if (s.uncheckedDeliverables) uncheckedDeliverables = new Set(s.uncheckedDeliverables);
+    return true;
+  } catch(e) { return false; }
+}
+function clearDocState() {
+  if (!confirm('¿Borrar este documento y empezar uno nuevo?')) return;
+  localStorage.removeItem('oc-presupuesto-v1');
+  location.reload();
+}
+
 // ── INIT ──────────────────────────────────────────────────────
+const loaded = loadDocState();
+if (!loaded) {
+  document.getElementById('fecha-emision').value = isoDate(today);
+  document.getElementById('fecha-validez').value = isoDate(validity);
+  onDateChange('fecha-emision', 'fecha-emision-display');
+  onDateChange('fecha-validez', 'fecha-validez-display');
+}
 renderScopeList();
 updateTotals();
 renderDeliverables();
+document.querySelectorAll('.meta-val.editable, #num-presupuesto').forEach(el => el.addEventListener('input', scheduleSave));
 </script>
 </body>
 </html>
