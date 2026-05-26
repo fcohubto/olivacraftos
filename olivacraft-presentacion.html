@@ -146,31 +146,18 @@ body { background: var(--night); color: #fff; font-family: var(--font-body); fon
 .slide-light .tl-title { color: var(--ink); }
 .slide-light .tl-desc { color: var(--ink-soft); }
 .slide-light .tl-tag { background: rgba(10,126,194,0.1); color: var(--blue); }
-/* ── PLAZOS TOGGLE ── */
+/* ── PLAZOS EDITABLES ── */
 .plazos-toggle { display: flex; gap: 0; margin-bottom: 1.25rem; border-radius: 8px; overflow: hidden; border: 1px solid rgba(10,126,194,0.2); width: fit-content; }
 .plazos-toggle button { font-family: var(--font-body); font-size: 11px; font-weight: 500; padding: 5px 14px; border: none; cursor: pointer; background: transparent; color: var(--ink-soft); transition: background 0.15s, color 0.15s; }
 .plazos-toggle button.active { background: var(--blue); color: #fff; }
-.plazos-hito-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; }
-.plazos-hito-row input { font-family: var(--font-body); font-size: 12px; border: 1px solid rgba(10,126,194,0.18); border-radius: 5px; padding: 4px 8px; color: var(--ink); background: #fff; outline: none; }
-.plazos-hito-row input:focus { border-color: var(--blue); }
-.plazos-hito-row input.ph-name { flex: 2; }
-.plazos-hito-row input.ph-dur { flex: 1; min-width: 80px; }
-.plazos-fase-block { border: 1px solid rgba(10,126,194,0.15); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
-.plazos-fase-block .pf-header { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-.plazos-fase-block .pf-header input { font-family: var(--font-title); font-size: 13px; font-weight: 600; border: 1px solid rgba(10,126,194,0.18); border-radius: 5px; padding: 4px 8px; color: var(--ink); background: #fff; outline: none; flex: 1; }
-.plazos-fase-block .pf-header input:focus { border-color: var(--blue); }
-.plazos-fase-block .pf-dates { display: flex; gap: 8px; flex-wrap: wrap; }
-.plazos-fase-block .pf-dates input { font-family: var(--font-body); font-size: 11px; border: 1px solid rgba(10,126,194,0.18); border-radius: 5px; padding: 4px 8px; color: var(--ink); background: #fff; outline: none; }
-.plazos-fase-block .pf-dates input:focus { border-color: var(--blue); }
-.plazos-fase-block .pf-dates input.pf-dur { width: 100px; }
-.plazos-fase-block .pf-dates input[type="date"] { width: 130px; }
-.btn-plazos-add { font-family: var(--font-body); font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 6px; border: 1px dashed rgba(10,126,194,0.35); background: transparent; color: var(--blue); cursor: pointer; margin-top: 4px; }
-.btn-plazos-add:hover { background: rgba(10,126,194,0.07); }
-.btn-plazos-del { font-family: var(--font-body); font-size: 11px; padding: 3px 8px; border-radius: 5px; border: none; background: rgba(200,50,50,0.08); color: #c03333; cursor: pointer; flex-shrink: 0; }
-.btn-plazos-del:hover { background: rgba(200,50,50,0.16); }
-@media print {
-  .plazos-toggle, .btn-plazos-add, .btn-plazos-del { display: none !important; }
-}
+.btn-plazos-del { font-family: var(--font-body); font-size: 10px; padding: 2px 6px; border-radius: 4px; border: none; background: transparent; color: rgba(10,126,194,0.3); cursor: pointer; flex-shrink: 0; line-height: 1; }
+.btn-plazos-del:hover { background: rgba(200,50,50,0.08); color: #c03333; }
+.btn-plazos-add { font-family: var(--font-body); font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 6px; border: 1px dashed rgba(10,126,194,0.3); background: transparent; color: var(--blue); cursor: pointer; margin-top: 6px; display: inline-block; }
+.btn-plazos-add:hover { background: rgba(10,126,194,0.05); }
+.tl-dates-row { font-family: var(--font-body); font-size: 10px; color: var(--ink-soft); margin-top: 3px; display: flex; gap: 14px; }
+.tl-dates-row [contenteditable] { outline: none; border-bottom: 1px dashed rgba(10,126,194,0.2); min-width: 40px; }
+.tl-dates-row [contenteditable]:focus { border-bottom-color: var(--blue); color: var(--ink); }
+@media print { .plazos-toggle, .btn-plazos-add, .btn-plazos-del { display: none !important; } }
 
 /* ── SPLIT LAYOUT ── */
 .sp-split { display: flex; gap: 4rem; align-items: flex-start; width: 100%; }
@@ -665,95 +652,115 @@ function setPlazosMode(mode) {
   btns[1].classList.toggle('active', mode === 'fases');
 }
 
+function buildTimelineItem(dot, title, tag, onTitleInput, onTagInput, onDel, extraContent) {
+  var item = document.createElement('div');
+  item.className = 'tl-item';
+  var dotEl = document.createElement('div');
+  dotEl.className = 'tl-dot';
+  dotEl.textContent = dot;
+  item.appendChild(dotEl);
+  var content = document.createElement('div');
+  content.style.flex = '1';
+  var row = document.createElement('div');
+  row.style.cssText = 'display:flex;align-items:baseline;gap:8px;margin-bottom:3px;flex-wrap:wrap;';
+  var titleEl = document.createElement('div');
+  titleEl.className = 'tl-title';
+  titleEl.contentEditable = 'true';
+  titleEl.spellcheck = false;
+  titleEl.textContent = title;
+  titleEl.addEventListener('input', onTitleInput);
+  var tagEl = document.createElement('span');
+  tagEl.className = 'tl-tag';
+  tagEl.contentEditable = 'true';
+  tagEl.spellcheck = false;
+  tagEl.textContent = tag;
+  tagEl.addEventListener('input', onTagInput);
+  var del = document.createElement('button');
+  del.className = 'btn-plazos-del';
+  del.textContent = '×';
+  del.addEventListener('click', onDel);
+  row.appendChild(titleEl);
+  row.appendChild(tagEl);
+  row.appendChild(del);
+  content.appendChild(row);
+  if (extraContent) content.appendChild(extraContent);
+  item.appendChild(content);
+  return item;
+}
+
 function renderPlazosUnica(items) {
   var c = document.getElementById('plazos-unica');
-  c.innerHTML = '';
-  var hitos = (items && items.length) ? items.map(function(i) { return { nombre: i.title || '', duracion: i.tag || '' }; }) : [{ nombre: '', duracion: '' }];
-  function buildRows() {
+  c.className = 'timeline';
+  var hitos = (items && items.length)
+    ? items.map(function(i) { return { nombre: i.title || '', duracion: i.tag || '' }; })
+    : [{ nombre: 'Hito 1', duracion: 'Semana 1' }];
+  function build() {
     c.innerHTML = '';
     hitos.forEach(function(h, idx) {
-      var row = document.createElement('div');
-      row.className = 'plazos-hito-row';
-      var inpN = document.createElement('input');
-      inpN.className = 'ph-name';
-      inpN.placeholder = 'Nombre del hito';
-      inpN.value = h.nombre;
-      inpN.addEventListener('input', function() { hitos[idx].nombre = this.value; });
-      var inpD = document.createElement('input');
-      inpD.className = 'ph-dur';
-      inpD.placeholder = 'Duración';
-      inpD.value = h.duracion;
-      inpD.addEventListener('input', function() { hitos[idx].duracion = this.value; });
-      var del = document.createElement('button');
-      del.className = 'btn-plazos-del';
-      del.textContent = '✕';
-      del.addEventListener('click', function() { hitos.splice(idx, 1); buildRows(); });
-      row.appendChild(inpN);
-      row.appendChild(inpD);
-      row.appendChild(del);
-      c.appendChild(row);
+      var el = buildTimelineItem(
+        idx + 1,
+        h.nombre || ('Hito ' + (idx + 1)),
+        h.duracion || 'Semana —',
+        function() { hitos[idx].nombre = this.textContent; },
+        function() { hitos[idx].duracion = this.textContent; },
+        function() { hitos.splice(idx, 1); build(); }
+      );
+      c.appendChild(el);
     });
     var add = document.createElement('button');
     add.className = 'btn-plazos-add';
     add.textContent = '+ Agregar hito';
-    add.addEventListener('click', function() { hitos.push({ nombre: '', duracion: '' }); buildRows(); });
+    add.addEventListener('click', function() { hitos.push({ nombre: '', duracion: '' }); build(); });
     c.appendChild(add);
   }
-  buildRows();
+  build();
 }
 
 function renderPlazosFases(items) {
   var c = document.getElementById('plazos-fases');
-  c.innerHTML = '';
-  var fases = (items && items.length) ? items.map(function(i) { return { nombre: i.title || '', duracion: i.tag || '', inicio: '', fin: '' }; }) : [{ nombre: '', duracion: '', inicio: '', fin: '' }];
-  function buildFases() {
+  c.className = 'timeline';
+  var fases = (items && items.length)
+    ? items.map(function(i) { return { nombre: i.title || '', duracion: i.tag || '', inicio: '—', fin: '—' }; })
+    : [{ nombre: 'Fase 1', duracion: 'Semana 1–2', inicio: '—', fin: '—' }];
+  function build() {
     c.innerHTML = '';
     fases.forEach(function(f, idx) {
-      var block = document.createElement('div');
-      block.className = 'plazos-fase-block';
-      var header = document.createElement('div');
-      header.className = 'pf-header';
-      var inpN = document.createElement('input');
-      inpN.placeholder = 'Nombre de la fase';
-      inpN.value = f.nombre;
-      inpN.addEventListener('input', function() { fases[idx].nombre = this.value; });
-      var del = document.createElement('button');
-      del.className = 'btn-plazos-del';
-      del.textContent = '✕';
-      del.addEventListener('click', function() { fases.splice(idx, 1); buildFases(); });
-      header.appendChild(inpN);
-      header.appendChild(del);
-      var dates = document.createElement('div');
-      dates.className = 'pf-dates';
-      var inpD = document.createElement('input');
-      inpD.className = 'pf-dur';
-      inpD.placeholder = 'Duración (ej: 2 sem)';
-      inpD.value = f.duracion;
-      inpD.addEventListener('input', function() { fases[idx].duracion = this.value; });
-      var inpI = document.createElement('input');
-      inpI.type = 'date';
-      inpI.title = 'Fecha inicio';
-      inpI.value = f.inicio;
-      inpI.addEventListener('change', function() { fases[idx].inicio = this.value; });
-      var inpF = document.createElement('input');
-      inpF.type = 'date';
-      inpF.title = 'Fecha fin';
-      inpF.value = f.fin;
-      inpF.addEventListener('change', function() { fases[idx].fin = this.value; });
-      dates.appendChild(inpD);
-      dates.appendChild(inpI);
-      dates.appendChild(inpF);
-      block.appendChild(header);
-      block.appendChild(dates);
-      c.appendChild(block);
+      var datesRow = document.createElement('div');
+      datesRow.className = 'tl-dates-row';
+      var lblI = document.createElement('span');
+      lblI.style.cssText = 'color:rgba(10,126,194,0.4);text-transform:uppercase;letter-spacing:0.05em;font-size:9px;';
+      lblI.textContent = 'Inicio ';
+      var spI = document.createElement('span');
+      spI.contentEditable = 'true'; spI.spellcheck = false;
+      spI.textContent = f.inicio || '—';
+      spI.addEventListener('input', function() { fases[idx].inicio = this.textContent; });
+      var lblF = document.createElement('span');
+      lblF.style.cssText = 'color:rgba(10,126,194,0.4);text-transform:uppercase;letter-spacing:0.05em;font-size:9px;';
+      lblF.textContent = 'Fin ';
+      var spF = document.createElement('span');
+      spF.contentEditable = 'true'; spF.spellcheck = false;
+      spF.textContent = f.fin || '—';
+      spF.addEventListener('input', function() { fases[idx].fin = this.textContent; });
+      datesRow.appendChild(lblI); datesRow.appendChild(spI);
+      datesRow.appendChild(lblF); datesRow.appendChild(spF);
+      var el = buildTimelineItem(
+        idx + 1,
+        f.nombre || ('Fase ' + (idx + 1)),
+        f.duracion || 'Semana —',
+        function() { fases[idx].nombre = this.textContent; },
+        function() { fases[idx].duracion = this.textContent; },
+        function() { fases.splice(idx, 1); build(); },
+        datesRow
+      );
+      c.appendChild(el);
     });
     var add = document.createElement('button');
     add.className = 'btn-plazos-add';
     add.textContent = '+ Agregar fase';
-    add.addEventListener('click', function() { fases.push({ nombre: '', duracion: '', inicio: '', fin: '' }); buildFases(); });
+    add.addEventListener('click', function() { fases.push({ nombre: '', duracion: '', inicio: '—', fin: '—' }); build(); });
     c.appendChild(add);
   }
-  buildFases();
+  build();
 }
 
 function renderTimeline(items) {
