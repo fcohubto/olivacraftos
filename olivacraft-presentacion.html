@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -150,13 +150,14 @@ body { background: var(--night); color: #fff; font-family: var(--font-body); fon
 .plazos-toggle { display: flex; gap: 0; margin-bottom: 1.25rem; border-radius: 8px; overflow: hidden; border: 1px solid rgba(10,126,194,0.2); width: fit-content; }
 .plazos-toggle button { font-family: var(--font-body); font-size: 11px; font-weight: 500; padding: 5px 14px; border: none; cursor: pointer; background: transparent; color: var(--ink-soft); transition: background 0.15s, color 0.15s; }
 .plazos-toggle button.active { background: var(--blue); color: #fff; }
-.btn-plazos-del { font-family: var(--font-body); font-size: 10px; padding: 2px 6px; border-radius: 4px; border: none; background: transparent; color: rgba(10,126,194,0.3); cursor: pointer; flex-shrink: 0; line-height: 1; }
-.btn-plazos-del:hover { background: rgba(200,50,50,0.08); color: #c03333; }
-.btn-plazos-add { font-family: var(--font-body); font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 6px; border: 1px dashed rgba(10,126,194,0.3); background: transparent; color: var(--blue); cursor: pointer; margin-top: 6px; display: inline-block; }
+.btn-plazos-del { font-size: 10px; padding: 1px 5px; border-radius: 3px; border: none; background: transparent; color: rgba(10,126,194,0.25); cursor: pointer; flex-shrink: 0; line-height: 1; font-family: var(--font-body); }
+.btn-plazos-del:hover { background: rgba(200,50,50,0.07); color: #c03333; }
+.btn-plazos-add { font-family: var(--font-body); font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 6px; border: 1px dashed rgba(10,126,194,0.25); background: transparent; color: var(--blue); cursor: pointer; margin-top: 8px; display: inline-block; }
 .btn-plazos-add:hover { background: rgba(10,126,194,0.05); }
-.tl-dates-row { font-family: var(--font-body); font-size: 10px; color: var(--ink-soft); margin-top: 3px; display: flex; gap: 14px; }
-.tl-dates-row [contenteditable] { outline: none; border-bottom: 1px dashed rgba(10,126,194,0.2); min-width: 40px; }
-.tl-dates-row [contenteditable]:focus { border-bottom-color: var(--blue); color: var(--ink); }
+.timeline [contenteditable] { outline: none; cursor: text; }
+.timeline .tl-title[contenteditable]:focus { background: rgba(10,126,194,0.05); border-radius: 3px; padding: 0 2px; margin: 0 -2px; }
+.timeline .tl-desc[contenteditable]:focus { background: rgba(10,126,194,0.04); border-radius: 3px; padding: 0 2px; margin: 0 -2px; }
+.timeline .tl-tag[contenteditable]:focus { opacity: 0.8; }
 @media print { .plazos-toggle, .btn-plazos-add, .btn-plazos-del { display: none !important; } }
 
 /* ── SPLIT LAYOUT ── */
@@ -652,122 +653,100 @@ function setPlazosMode(mode) {
   btns[1].classList.toggle('active', mode === 'fases');
 }
 
-function buildTimelineItem(dot, title, tag, onTitleInput, onTagInput, onDel, extraContent) {
-  var item = document.createElement('div');
-  item.className = 'tl-item';
-  var dotEl = document.createElement('div');
-  dotEl.className = 'tl-dot';
-  dotEl.textContent = dot;
-  item.appendChild(dotEl);
+function buildTLItem(num, item, isLast, onDel) {
+  var tlItem = document.createElement('div');
+  tlItem.className = 'tl-item';
+
+  var dot = document.createElement('div');
+  dot.className = 'tl-dot';
+  if (isLast) dot.style.background = 'var(--cyan)';
+  dot.textContent = isLast ? '✓' : num;
+  tlItem.appendChild(dot);
+
   var content = document.createElement('div');
   content.style.flex = '1';
+
   var row = document.createElement('div');
   row.style.cssText = 'display:flex;align-items:baseline;gap:8px;margin-bottom:3px;flex-wrap:wrap;';
+
   var titleEl = document.createElement('div');
   titleEl.className = 'tl-title';
+  if (isLast) titleEl.style.color = 'var(--cyan)';
   titleEl.contentEditable = 'true';
   titleEl.spellcheck = false;
-  titleEl.textContent = title;
-  titleEl.addEventListener('input', onTitleInput);
+  titleEl.textContent = item.titulo;
+  titleEl.addEventListener('input', function() { item.titulo = this.textContent; });
+
   var tagEl = document.createElement('span');
   tagEl.className = 'tl-tag';
   tagEl.contentEditable = 'true';
   tagEl.spellcheck = false;
-  tagEl.textContent = tag;
-  tagEl.addEventListener('input', onTagInput);
+  tagEl.textContent = item.duracion;
+  tagEl.addEventListener('input', function() { item.duracion = this.textContent; });
+
   var del = document.createElement('button');
   del.className = 'btn-plazos-del';
   del.textContent = '×';
   del.addEventListener('click', onDel);
+
   row.appendChild(titleEl);
   row.appendChild(tagEl);
   row.appendChild(del);
   content.appendChild(row);
-  if (extraContent) content.appendChild(extraContent);
-  item.appendChild(content);
-  return item;
+
+  var descEl = document.createElement('div');
+  descEl.className = 'tl-desc';
+  descEl.contentEditable = 'true';
+  descEl.spellcheck = false;
+  descEl.textContent = item.desc;
+  descEl.addEventListener('input', function() { item.desc = this.textContent; });
+  content.appendChild(descEl);
+
+  tlItem.appendChild(content);
+  return tlItem;
+}
+
+function buildPlazosTimeline(containerId, items, addLabel) {
+  var c = document.getElementById(containerId);
+  c.className = 'timeline';
+  function build() {
+    c.innerHTML = '';
+    items.forEach(function(item, idx) {
+      c.appendChild(buildTLItem(idx + 1, item, idx === items.length - 1, function() {
+        items.splice(idx, 1);
+        build();
+      }));
+    });
+    var add = document.createElement('button');
+    add.className = 'btn-plazos-add';
+    add.textContent = addLabel;
+    add.addEventListener('click', function() {
+      items.push({ titulo: '', duracion: 'Semana —', desc: '' });
+      build();
+    });
+    c.appendChild(add);
+  }
+  build();
 }
 
 function renderPlazosUnica(items) {
-  var c = document.getElementById('plazos-unica');
-  c.className = 'timeline';
   var hitos = (items && items.length)
-    ? items.map(function(i) { return { nombre: i.title || '', duracion: i.tag || '' }; })
-    : [{ nombre: 'Hito 1', duracion: 'Semana 1' }];
-  function build() {
-    c.innerHTML = '';
-    hitos.forEach(function(h, idx) {
-      var el = buildTimelineItem(
-        idx + 1,
-        h.nombre || ('Hito ' + (idx + 1)),
-        h.duracion || 'Semana —',
-        function() { hitos[idx].nombre = this.textContent; },
-        function() { hitos[idx].duracion = this.textContent; },
-        function() { hitos.splice(idx, 1); build(); }
-      );
-      c.appendChild(el);
-    });
-    var add = document.createElement('button');
-    add.className = 'btn-plazos-add';
-    add.textContent = '+ Agregar hito';
-    add.addEventListener('click', function() { hitos.push({ nombre: '', duracion: '' }); build(); });
-    c.appendChild(add);
-  }
-  build();
+    ? items.map(function(i) { return { titulo: i.title || '', duracion: i.tag || 'Semana —', desc: i.desc || '' }; })
+    : [{ titulo: 'Hito 1', duracion: 'Semana 1', desc: '' }];
+  buildPlazosTimeline('plazos-unica', hitos, '+ Agregar hito');
 }
 
 function renderPlazosFases(items) {
-  var c = document.getElementById('plazos-fases');
-  c.className = 'timeline';
   var fases = (items && items.length)
-    ? items.map(function(i) { return { nombre: i.title || '', duracion: i.tag || '', inicio: '—', fin: '—' }; })
-    : [{ nombre: 'Fase 1', duracion: 'Semana 1–2', inicio: '—', fin: '—' }];
-  function build() {
-    c.innerHTML = '';
-    fases.forEach(function(f, idx) {
-      var datesRow = document.createElement('div');
-      datesRow.className = 'tl-dates-row';
-      var lblI = document.createElement('span');
-      lblI.style.cssText = 'color:rgba(10,126,194,0.4);text-transform:uppercase;letter-spacing:0.05em;font-size:9px;';
-      lblI.textContent = 'Inicio ';
-      var spI = document.createElement('span');
-      spI.contentEditable = 'true'; spI.spellcheck = false;
-      spI.textContent = f.inicio || '—';
-      spI.addEventListener('input', function() { fases[idx].inicio = this.textContent; });
-      var lblF = document.createElement('span');
-      lblF.style.cssText = 'color:rgba(10,126,194,0.4);text-transform:uppercase;letter-spacing:0.05em;font-size:9px;';
-      lblF.textContent = 'Fin ';
-      var spF = document.createElement('span');
-      spF.contentEditable = 'true'; spF.spellcheck = false;
-      spF.textContent = f.fin || '—';
-      spF.addEventListener('input', function() { fases[idx].fin = this.textContent; });
-      datesRow.appendChild(lblI); datesRow.appendChild(spI);
-      datesRow.appendChild(lblF); datesRow.appendChild(spF);
-      var el = buildTimelineItem(
-        idx + 1,
-        f.nombre || ('Fase ' + (idx + 1)),
-        f.duracion || 'Semana —',
-        function() { fases[idx].nombre = this.textContent; },
-        function() { fases[idx].duracion = this.textContent; },
-        function() { fases.splice(idx, 1); build(); },
-        datesRow
-      );
-      c.appendChild(el);
-    });
-    var add = document.createElement('button');
-    add.className = 'btn-plazos-add';
-    add.textContent = '+ Agregar fase';
-    add.addEventListener('click', function() { fases.push({ nombre: '', duracion: '', inicio: '—', fin: '—' }); build(); });
-    c.appendChild(add);
-  }
-  build();
+    ? items.map(function(i) { return { titulo: i.title || '', duracion: i.tag || 'Semana —', desc: i.desc || '' }; })
+    : [{ titulo: 'Fase 1', duracion: 'Semana 1–2', desc: '' }];
+  buildPlazosTimeline('plazos-fases', fases, '+ Agregar fase');
 }
 
 function renderTimeline(items) {
   renderPlazosUnica(items);
   renderPlazosFases(items);
 }
-
 
 /* ── INVESTMENT EDITABLE ── */
 var investState = {
