@@ -122,13 +122,61 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
 .print-btn { position:fixed; bottom:2rem; right:2rem; display:flex; align-items:center; gap:8px; padding:11px 22px; background:var(--night); color:#fff; border:none; border-radius:999px; font-family:var(--font-b); font-size:13px; font-weight:500; cursor:pointer; box-shadow:0 4px 16px rgba(13,43,74,0.2); transition:all 0.15s; z-index:100; }
 .print-btn:hover { background:var(--blue); transform:translateY(-1px); box-shadow:0 6px 20px rgba(10,126,194,0.28); }
 
+/* SAVE & HISTORY BUTTONS */
+.save-btn { position:fixed; bottom:2rem; left:2rem; display:flex; align-items:center; gap:7px; padding:11px 20px; background:var(--blue); color:#fff; border:none; border-radius:999px; font-family:var(--font-b); font-size:13px; font-weight:500; cursor:pointer; box-shadow:0 4px 14px rgba(10,126,194,0.25); transition:all 0.15s; z-index:100; }
+.save-btn:hover { background:var(--night); transform:translateY(-1px); }
+.history-btn { position:fixed; bottom:2rem; left:10.5rem; display:flex; align-items:center; gap:7px; padding:11px 20px; background:#fff; color:var(--ink); border:0.5px solid var(--border-mid); border-radius:999px; font-family:var(--font-b); font-size:13px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.06); transition:all 0.15s; z-index:100; }
+.history-btn:hover { border-color:var(--blue); color:var(--blue); }
+
+/* SAVE TOAST */
+.save-toast { position:fixed; bottom:5rem; left:2rem; font-size:11px; color:var(--ink-muted); opacity:0; transition:opacity 0.3s ease; background:#fff; padding:5px 12px; border-radius:999px; border:0.5px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.06); pointer-events:none; z-index:200; }
+
+/* HISTORY PANEL */
+.history-overlay { position:fixed; inset:0; background:rgba(13,43,74,0.3); z-index:300; opacity:0; pointer-events:none; transition:opacity 0.25s; }
+.history-overlay.open { opacity:1; pointer-events:all; }
+.history-panel { position:fixed; top:0; right:-420px; width:400px; height:100vh; background:#fff; border-left:0.5px solid var(--border-mid); box-shadow:-8px 0 40px rgba(13,43,74,0.12); z-index:400; transition:right 0.3s cubic-bezier(.4,0,.2,1); display:flex; flex-direction:column; }
+.history-panel.open { right:0; }
+.history-panel-head { padding:1.5rem 1.5rem 1.25rem; border-bottom:0.5px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.history-panel-title { font-family:var(--font-d); font-style:italic; font-size:20px; font-weight:300; color:var(--night); line-height:1; font-variation-settings:'opsz' 9; }
+.history-close-btn { background:none; border:0.5px solid var(--border-mid); border-radius:6px; padding:5px 12px; font-family:var(--font-b); font-size:12px; color:var(--ink-muted); cursor:pointer; transition:all 0.15s; }
+.history-close-btn:hover { color:var(--ink); border-color:var(--ink-muted); }
+.history-list { flex:1; overflow-y:auto; padding:1rem; display:flex; flex-direction:column; gap:8px; }
+.history-empty { padding:3rem 1rem; text-align:center; font-size:13px; color:var(--ink-faint); font-style:italic; line-height:1.6; }
+.history-entry { background:var(--frost); border:0.5px solid var(--border); border-radius:10px; padding:1rem 1.25rem; }
+.history-entry-num { font-size:10px; font-weight:700; letter-spacing:0.09em; color:var(--blue); text-transform:uppercase; margin-bottom:4px; }
+.history-entry-client { font-size:14px; font-weight:500; color:var(--ink); margin-bottom:6px; }
+.history-entry-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+.history-entry-date { font-size:11px; color:var(--ink-muted); }
+.history-entry-total { font-size:16px; font-weight:600; color:var(--night); font-family:var(--font-d); font-variation-settings:'opsz' 9; }
+.history-entry-actions { display:flex; gap:6px; }
+.history-load-btn { flex:1; padding:8px 14px; background:var(--night); color:#fff; border:none; border-radius:7px; font-family:var(--font-b); font-size:12px; font-weight:500; cursor:pointer; transition:background 0.15s; }
+.history-load-btn:hover { background:var(--blue); }
+.history-delete-btn { padding:8px 14px; background:transparent; color:var(--ink-faint); border:0.5px solid var(--border-mid); border-radius:7px; font-family:var(--font-b); font-size:12px; cursor:pointer; transition:all 0.15s; }
+.history-delete-btn:hover { color:#B91C1C; border-color:#B91C1C; background:#FDE8E8; }
+
+/* SAVE MODAL */
+.save-modal-overlay { position:fixed; inset:0; background:rgba(13,43,74,0.45); z-index:500; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+.save-modal-overlay.open { opacity:1; pointer-events:all; }
+.save-modal { background:#fff; border-radius:14px; padding:2rem; width:380px; max-width:calc(100vw - 2rem); box-shadow:0 24px 64px rgba(13,43,74,0.2); }
+.save-modal-title { font-family:var(--font-d); font-style:italic; font-size:22px; font-weight:300; color:var(--night); margin-bottom:4px; font-variation-settings:'opsz' 9; line-height:1.2; }
+.save-modal-sub { font-size:12px; color:var(--ink-muted); margin-bottom:1.25rem; }
+.save-modal-num { font-size:11px; font-weight:700; letter-spacing:0.09em; color:var(--blue); text-transform:uppercase; background:rgba(10,126,194,0.09); padding:5px 12px; border-radius:999px; display:inline-block; margin-bottom:1.25rem; }
+.save-modal-label { font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:6px; }
+.save-modal-input { width:100%; border:0.5px solid var(--border-mid); border-radius:8px; padding:10px 14px; font-family:var(--font-b); font-size:14px; color:var(--ink); outline:none; box-sizing:border-box; }
+.save-modal-input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(10,126,194,0.1); }
+.save-modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:1.25rem; }
+.save-modal-cancel { padding:9px 18px; background:transparent; color:var(--ink-muted); border:0.5px solid var(--border-mid); border-radius:8px; font-family:var(--font-b); font-size:13px; cursor:pointer; transition:background 0.15s; }
+.save-modal-cancel:hover { background:var(--frost); }
+.save-modal-confirm { padding:9px 22px; background:var(--night); color:#fff; border:none; border-radius:8px; font-family:var(--font-b); font-size:13px; font-weight:500; cursor:pointer; transition:background 0.15s; }
+.save-modal-confirm:hover { background:var(--blue); }
+
 /* PRINT */
 @page { margin: 0; size: A4; }
 @media print {
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   body { background:white; font-size:12px; margin: 1.5cm; }
   .page { padding:1rem; max-width:100%; }
-  .no-print, .print-btn { display:none !important; }
+  .no-print, .print-btn, .save-btn, .history-btn, .save-toast, .history-overlay, .history-panel, .save-modal-overlay { display:none !important; }
   .clause-body { max-height:none !important; overflow:visible !important; }
   .clause.closed .clause-body { padding:1.25rem 1.5rem !important; }
   .clause-arrow { display:none; }
@@ -400,6 +448,34 @@ body { background:var(--frost); color:var(--ink); font-family:var(--font-b); fon
 </div>
 
 <button class="print-btn no-print" onclick="printDoc()">⎙ Exportar / Imprimir</button>
+<button class="save-btn no-print" onclick="openSaveModal()">↓ Guardar</button>
+<button class="history-btn no-print" onclick="openHistory()">≡ Historial</button>
+
+<div id="save-toast" class="save-toast"></div>
+
+<div id="history-overlay" class="history-overlay" onclick="closeHistory()"></div>
+<div id="history-panel" class="history-panel">
+  <div class="history-panel-head">
+    <span class="history-panel-title">Historial</span>
+    <button class="history-close-btn" onclick="closeHistory()">Cerrar ×</button>
+  </div>
+  <div id="history-list" class="history-list"></div>
+</div>
+
+<div id="save-modal-overlay" class="save-modal-overlay" onclick="if(event.target===this)closeSaveModal()">
+  <div class="save-modal">
+    <div class="save-modal-title">Guardar contrato</div>
+    <div class="save-modal-sub">Copia del estado actual guardada en el historial local.</div>
+    <div id="save-modal-num" class="save-modal-num">OC-CONT-2026-001</div>
+    <div class="save-modal-label">Nombre del documento</div>
+    <input id="save-modal-input" class="save-modal-input" type="text" placeholder="Nombre del cliente o proyecto"
+      onkeydown="if(event.key==='Enter')confirmSave();if(event.key==='Escape')closeSaveModal()">
+    <div class="save-modal-actions">
+      <button class="save-modal-cancel" onclick="closeSaveModal()">Cancelar</button>
+      <button class="save-modal-confirm" onclick="confirmSave()">Guardar</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ── DATES ────────────────────────────────────────────────────
@@ -723,6 +799,164 @@ function tog(id) {
 renderScopeList();
 updateTotals();
 renderDeliverables();
+
+// ── HELPERS ───────────────────────────────────────────────────
+function escapeHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── HISTORY ───────────────────────────────────────────────────
+const HISTORY_KEY = 'oc-contrato-history';
+const SEQ_KEY     = 'oc-contrato-seq';
+
+function getNextCorrelativo() {
+  const year = new Date().getFullYear();
+  const seq  = parseInt(localStorage.getItem(SEQ_KEY) || '0') + 1;
+  localStorage.setItem(SEQ_KEY, String(seq));
+  return `OC-CONT-${year}-${String(seq).padStart(3, '0')}`;
+}
+
+function peekNextCorrelativo() {
+  const year = new Date().getFullYear();
+  const seq  = parseInt(localStorage.getItem(SEQ_KEY) || '0') + 1;
+  return `OC-CONT-${year}-${String(seq).padStart(3, '0')}`;
+}
+
+function getCurrentTotal() {
+  let sub = 0;
+  selectedItems.forEach(id => { const item = allItems.find(i => i.id === id); if (item) sub += item.price; });
+  return sub + (docType === 'factura' ? Math.round(sub * 0.19) : 0);
+}
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function captureEditableFields() {
+  const fields = {};
+  document.querySelectorAll('.pf-val.editable[id], .editable-inline[id], .sig-input[id]').forEach(el => {
+    fields[el.id] = el.value !== undefined ? el.value : el.textContent;
+  });
+  return fields;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('save-toast');
+  t.textContent = msg;
+  t.style.opacity = '1';
+  setTimeout(() => { t.style.opacity = '0'; }, 2500);
+}
+
+function openSaveModal() {
+  document.getElementById('save-modal-num').textContent = peekNextCorrelativo();
+  const clientName = document.getElementById('cl-nombre')?.value?.trim() || '';
+  document.getElementById('save-modal-input').value = clientName;
+  document.getElementById('save-modal-overlay').classList.add('open');
+  setTimeout(() => { const inp = document.getElementById('save-modal-input'); inp.focus(); inp.select(); }, 80);
+}
+
+function closeSaveModal() {
+  document.getElementById('save-modal-overlay').classList.remove('open');
+}
+
+function confirmSave() {
+  const name       = document.getElementById('save-modal-input').value.trim() || 'Sin nombre';
+  const correlativo = getNextCorrelativo();
+  const total      = getCurrentTotal();
+  const now        = new Date();
+  const fecha      = `${String(now.getDate()).padStart(2,'0')}-${String(now.getMonth()+1).padStart(2,'0')}-${now.getFullYear()}`;
+
+  const state = {
+    v: 1,
+    docType,
+    selectedItems: [...selectedItems],
+    uncheckedDeliverables: [...uncheckedDeliverables],
+    fields: captureEditableFields()
+  };
+
+  const history = getHistory();
+  history.unshift({ correlativo, name, fecha, total, state });
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+
+  closeSaveModal();
+  showToast(`✓ ${correlativo} guardado`);
+}
+
+function openHistory() {
+  renderHistoryPanel();
+  document.getElementById('history-overlay').classList.add('open');
+  document.getElementById('history-panel').classList.add('open');
+}
+
+function closeHistory() {
+  document.getElementById('history-overlay').classList.remove('open');
+  document.getElementById('history-panel').classList.remove('open');
+}
+
+function renderHistoryPanel() {
+  const list    = document.getElementById('history-list');
+  const history = getHistory();
+  if (!history.length) {
+    list.innerHTML = '<div class="history-empty">No hay contratos guardados aún.<br>Usa el botón "Guardar" para crear una entrada.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  history.forEach((entry, idx) => {
+    const div = document.createElement('div');
+    div.className = 'history-entry';
+    div.innerHTML = `
+      <div class="history-entry-num">${escapeHtml(entry.correlativo)}</div>
+      <div class="history-entry-client">${escapeHtml(entry.name)}</div>
+      <div class="history-entry-row">
+        <span class="history-entry-date">${escapeHtml(entry.fecha)}</span>
+        <span class="history-entry-total">${entry.total > 0 ? formatCLP(entry.total) : '—'}</span>
+      </div>
+      <div class="history-entry-actions">
+        <button class="history-load-btn" onclick="loadFromHistory(${idx})">Cargar</button>
+        <button class="history-delete-btn" onclick="deleteFromHistory(${idx})">Eliminar</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function loadFromHistory(idx) {
+  const history = getHistory();
+  const entry   = history[idx];
+  if (!entry || !entry.state) return;
+  if (!confirm(`¿Cargar "${entry.name}"?\nEl documento actual se perderá si no fue guardado.`)) return;
+  const s = entry.state;
+  closeHistory();
+
+  if (s.fields) Object.entries(s.fields).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  });
+
+  if (s.docType) {
+    docType = s.docType;
+    const btn = document.querySelector(`.dt-opt[onclick*="'${s.docType}'"]`);
+    if (btn) setDocType(s.docType, btn);
+  }
+
+  selectedItems.clear();
+  if (Array.isArray(s.selectedItems)) s.selectedItems.forEach(id => selectedItems.add(id));
+  uncheckedDeliverables.clear();
+  if (Array.isArray(s.uncheckedDeliverables)) s.uncheckedDeliverables.forEach(k => uncheckedDeliverables.add(k));
+
+  renderScopeList();
+  updateTotals();
+  renderDeliverables();
+  showToast(`✓ ${entry.correlativo} cargado`);
+}
+
+function deleteFromHistory(idx) {
+  const history = getHistory();
+  if (!history[idx]) return;
+  if (!confirm(`¿Eliminar "${history[idx].name}"?`)) return;
+  history.splice(idx, 1);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  renderHistoryPanel();
+}
 </script>
 </body>
 </html>
