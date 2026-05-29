@@ -350,31 +350,32 @@ section{scroll-margin-top:2rem;}
         <div class="wf-right"><div class="wf-outcome-label">Resultado.</div><p class="wf-outcome-text">Se cargan workflows, reglas, arquitectura y filosofía operacional.</p></div>
       </div>
 
-      <!-- FASE 03 — PRE review con checklist dinámico -->
-      <div class="wf-card">
-        <div class="wf-left">
-          <div class="wf-icon">🔍</div>
-          <div><div class="wf-phase">FASE 03</div><div class="wf-title">Revisión Estratégica PRE ejecución</div></div>
-        </div>
-        <div>
-          <p class="wf-action" id="f03action">Seleccioná un perfil para ver el análisis PRE adaptado a tu rol de hoy.</p>
-          <div class="wf-code"><code id="f03code">— Seleccioná un perfil arriba —</code><button class="copy-btn" title="Copiar">⎘</button></div>
-          <div class="wf-pre"><div class="wf-pre-label">OLIVA revisa.</div><ul class="wf-checklist" id="preChecklist"><li>Seleccioná un perfil para ver el checklist</li></ul></div>
-        </div>
-        <div class="wf-right"><div class="wf-outcome-label">Resultado.</div><p class="wf-outcome-text" id="f03outcome">El análisis PRE se adapta según el perfil seleccionado.</p></div>
-      </div>
-
+      <!-- FASE 03 — Definir Micro Objetivo -->
       <div class="wf-card">
         <div class="wf-left">
           <div class="wf-icon">🎯</div>
-          <div><div class="wf-phase">FASE 04</div><div class="wf-title">Definir Micro Objetivo</div></div>
+          <div><div class="wf-phase">FASE 03</div><div class="wf-title">Definir Micro Objetivo</div></div>
         </div>
         <div>
-          <p class="wf-action" id="f04action">Trabajar una mejora específica y controlada.</p>
-          <div class="wf-code"><code id="f04code">"Definir el micro objetivo del sprint."</code><button class="copy-btn" title="Copiar">⎘</button></div>
-          <div class="wf-role"><div class="wf-role-label">Rol de OLIVA.</div><p class="wf-role-text" id="f04role">OLIVA limita scope creep y mantiene foco operacional.</p></div>
+          <p class="wf-action" id="f03action">Trabajar una mejora específica y controlada.</p>
+          <div class="wf-code"><code id="f03code">"Definir el micro objetivo del sprint."</code><button class="copy-btn" title="Copiar">⎘</button></div>
+          <div class="wf-role"><div class="wf-role-label">Rol de OLIVA.</div><p class="wf-role-text" id="f03role">OLIVA limita scope creep y mantiene foco operacional.</p></div>
         </div>
-        <div class="wf-right"><div class="wf-outcome-label">Resultado.</div><p class="wf-outcome-text" id="f04outcome">Micro objetivo claro y verificable.</p></div>
+        <div class="wf-right"><div class="wf-outcome-label">Resultado.</div><p class="wf-outcome-text" id="f03outcome">Micro objetivo claro y verificable.</p></div>
+      </div>
+
+      <!-- FASE 04 — PRE review con checklist dinámico -->
+      <div class="wf-card">
+        <div class="wf-left">
+          <div class="wf-icon">🔍</div>
+          <div><div class="wf-phase">FASE 04</div><div class="wf-title">Revisión Estratégica PRE ejecución</div></div>
+        </div>
+        <div>
+          <p class="wf-action" id="f04action">Seleccioná un perfil para ver el análisis PRE adaptado a tu rol de hoy.</p>
+          <div class="wf-code"><code id="f04code">— Seleccioná un perfil arriba —</code><button class="copy-btn" title="Copiar">⎘</button></div>
+          <div class="wf-pre"><div class="wf-pre-label">OLIVA revisa.</div><ul class="wf-checklist" id="preChecklist"><li>Seleccioná un perfil para ver el checklist</li></ul></div>
+        </div>
+        <div class="wf-right"><div class="wf-outcome-label">Resultado.</div><p class="wf-outcome-text" id="f04outcome">El análisis PRE se adapta según el perfil seleccionado.</p></div>
       </div>
 
       <div class="wf-card">
@@ -526,8 +527,8 @@ const ROLES = {
     label:'Estrategia',
     heroBadge: obj => `OLIVA × ${obj} · Estrategia`,
     preChecks:['Objetivo del sprint claramente definido','Alineación con el propósito del producto','Scope acotado y sin ambigüedad','Riesgos de negocio identificados','Criterios de éxito definidos','Prioridades ordenadas por impacto'],
-    f03:{action:'OLIVA revisa el estado estratégico antes de ejecutar.',code:'"Revisa alcance, objetivos, alineación comercial y riesgos antes de ejecutar."',outcome:'Decisión estratégica informada. Ejecutás en la dirección correcta.'},
-    f04:{action:'Definir la decisión estratégica o cambio de dirección a ejecutar.',code:'"Define el alcance exacto de este sprint: qué se construye, qué no, y por qué."',role:'OLIVA valida que el micro objetivo sirva al objetivo estratégico.',outcome:'Sprint con criterios de entrada y salida claros. Sin scope creep.'},
+    f03:{action:'Definir la decisión estratégica o cambio de dirección a ejecutar.',code:'"Define el alcance exacto de este sprint: qué se construye, qué no, y por qué."',role:'OLIVA valida que el micro objetivo sirva al objetivo estratégico.',outcome:'Sprint con criterios de entrada y salida claros. Sin scope creep.'},
+    f04:{action:'OLIVA revisa el estado estratégico antes de ejecutar.',code:'"Revisa alcance, objetivos, alineación comercial y riesgos antes de ejecutar."',outcome:'Decisión estratégica informada. Ejecutás en la dirección correcta.'},
     f05:{action:'Documentar la decisión y su impacto en el sistema.',code:'Mapa de decisiones · criterios de éxito · impacto en el producto',role:'OLIVA documenta la decisión como parte de la memoria estratégica del sistema.',outcome:'Decisión documentada. El próximo sprint parte de aquí.'},
     f06:{action:'OLIVA valida que el resultado esté alineado al objetivo estratégico.',code:'"¿El resultado sirve al objetivo del sprint? ¿Introdujo scope creep o deuda estratégica?"',role:'OLIVA actúa como validador estratégico — ¿el resultado sirve al objetivo?',outcome:'Validación estratégica. El trabajo fue en la dirección correcta.'}
   },
@@ -535,8 +536,8 @@ const ROLES = {
     label:'UX',
     heroBadge: obj => `OLIVA × ${obj} · UX`,
     preChecks:['Flujos de usuario mapeados','Puntos de fricción detectados','Jerarquía de información definida','Criterios de usabilidad establecidos','Patrones de navegación revisados','Accesibilidad considerada desde el inicio'],
-    f03:{action:'OLIVA revisa flujos, fricción y criterios de usabilidad antes de diseñar.',code:'"Revisa flujos de usuario, puntos de fricción, jerarquía y criterios de usabilidad."',outcome:'Diseño fundamentado en comportamiento real del usuario.'},
-    f04:{action:'Definir el flujo o componente de experiencia a mejorar.',code:'"Identificar el punto de fricción más crítico y diseñar la solución más simple."',role:'OLIVA valida que la mejora reduzca fricción real del usuario.',outcome:'Mejora de experiencia acotada, testeable y medible.'},
+    f03:{action:'Definir el flujo o componente de experiencia a mejorar.',code:'"Identificar el punto de fricción más crítico y diseñar la solución más simple."',role:'OLIVA valida que la mejora reduzca fricción real del usuario.',outcome:'Mejora de experiencia acotada, testeable y medible.'},
+    f04:{action:'OLIVA revisa flujos, fricción y criterios de usabilidad antes de diseñar.',code:'"Revisa flujos de usuario, puntos de fricción, jerarquía y criterios de usabilidad."',outcome:'Diseño fundamentado en comportamiento real del usuario.'},
     f05:{action:'Diseñar el flujo con foco en comprensión y reducción de fricción.',code:'flujo validado · sin fricción innecesaria · criterios de usabilidad integrados',role:'OLIVA guía el diseño del flujo con criterio de usabilidad persistente.',outcome:'Flujo que el usuario entiende sin esfuerzo.'},
     f06:{action:'OLIVA revisa usabilidad, claridad y reducción de fricción del resultado.',code:'"Audita usabilidad, flujo de usuario, claridad de la información y accesibilidad."',role:'OLIVA actúa como auditor de experiencia — usabilidad, claridad y accesibilidad.',outcome:'Experiencia validada antes de llegar al usuario real.'}
   },
@@ -544,8 +545,8 @@ const ROLES = {
     label:'UI',
     heroBadge: obj => `OLIVA × ${obj} · UI`,
     preChecks:['Sistema visual coherente con la marca','Componentes existentes inventariados','Tipografía y escala definidas','Paleta de color aplicada correctamente','Espaciado y ritmo visual revisados','Estados de interacción contemplados'],
-    f03:{action:'OLIVA revisa coherencia visual, sistema de diseño y componentes antes de diseñar.',code:'"Revisa sistema visual, consistencia de componentes, tipografía y jerarquía visual."',outcome:'Diseño coherente con el sistema desde el primer componente.'},
-    f04:{action:'Definir el componente o sección visual a diseñar o refinar.',code:'"Diseñar [componente] alineado al sistema visual. Definir estados, variantes y responsivo."',role:'OLIVA valida que el componente esté alineado al sistema de diseño.',outcome:'Componente con scope visual claro: estados, variantes y responsivo definidos.'},
+    f03:{action:'Definir el componente o sección visual a diseñar o refinar.',code:'"Diseñar [componente] alineado al sistema visual. Definir estados, variantes y responsivo."',role:'OLIVA valida que el componente esté alineado al sistema de diseño.',outcome:'Componente con scope visual claro: estados, variantes y responsivo definidos.'},
+    f04:{action:'OLIVA revisa coherencia visual, sistema de diseño y componentes antes de diseñar.',code:'"Revisa sistema visual, consistencia de componentes, tipografía y jerarquía visual."',outcome:'Diseño coherente con el sistema desde el primer componente.'},
     f05:{action:'Construir el componente visual con fidelidad al sistema de diseño.',code:'sistema visual · componentes reutilizables · estados completos · mobile-first',role:'OLIVA guía la implementación visual con criterio de sistema de diseño.',outcome:'Componente implementado que refuerza la identidad visual del producto.'},
     f06:{action:'OLIVA revisa coherencia visual, sistema de diseño y estados de interacción.',code:'"Audita consistencia visual, tipografía, color, espaciado y estados del componente."',role:'OLIVA actúa como auditor visual — coherencia, tipografía, color y estados.',outcome:'Componente visualmente correcto antes de integrarlo al producto.'}
   },
@@ -553,8 +554,8 @@ const ROLES = {
     label:'Frontend',
     heroBadge: obj => `OLIVA × ${obj} · Frontend`,
     preChecks:['Arquitectura de archivos revisada','Deuda técnica identificada','Responsive y breakpoints planificados','Accesibilidad semántica considerada','Performance y optimización evaluadas','Patrones de código documentados'],
-    f03:{action:'OLIVA revisa calidad de código, arquitectura y accesibilidad antes de implementar.',code:'"Revisa arquitectura de código, deuda técnica, responsive y accesibilidad pendiente."',outcome:'Base técnica sólida antes de escribir la primera línea.'},
-    f04:{action:'Definir el componente o función específica a implementar.',code:'"Implementar [componente] con HTML semántico, CSS mobile-first y JS vanilla."',role:'OLIVA valida criterios técnicos: semántica, modularidad y performance.',outcome:'Componente con scope técnico claro y criterios de calidad definidos.'},
+    f03:{action:'Definir el componente o función específica a implementar.',code:'"Implementar [componente] con HTML semántico, CSS mobile-first y JS vanilla."',role:'OLIVA valida criterios técnicos: semántica, modularidad y performance.',outcome:'Componente con scope técnico claro y criterios de calidad definidos.'},
+    f04:{action:'OLIVA revisa calidad de código, arquitectura y accesibilidad antes de implementar.',code:'"Revisa arquitectura de código, deuda técnica, responsive y accesibilidad pendiente."',outcome:'Base técnica sólida antes de escribir la primera línea.'},
     f05:{action:'Implementar con código limpio, semántico y accesible.',code:'HTML semántico · CSS modular · JS vanilla · accesibilidad AA mínima',role:'OLIVA guía la implementación con criterios de calidad de código persistentes.',outcome:'Código que funciona, se entiende y se puede mantener.'},
     f06:{action:'OLIVA revisa calidad de código, accesibilidad y comportamiento responsive.',code:'"Audita accesibilidad, responsive, semántica HTML y deuda técnica introducida."',role:'OLIVA actúa como auditor técnico — accesibilidad, responsive y deuda.',outcome:'Código revisado antes de deploy. Cero sorpresas en producción.'}
   },
@@ -562,8 +563,8 @@ const ROLES = {
     label:'Arquitectura',
     heroBadge: obj => `OLIVA × ${obj} · Arquitectura`,
     preChecks:['Estructura de carpetas y módulos definida','Flujo de datos mapeado','Naming conventions consistentes','Dependencias y acoplamiento revisados','Patrones de componentes definidos','Escalabilidad evaluada'],
-    f03:{action:'OLIVA revisa estructura, patrones y escalabilidad del sistema antes de construir.',code:'"Revisa estructura de archivos, flujo de datos, naming y patrones de componentes."',outcome:'Arquitectura clara que todo lo demás hereda correctamente.'},
-    f04:{action:'Definir la estructura o patrón a construir o refactorizar.',code:'"Definir arquitectura de [módulo]: naming, estructura de archivos y flujo de datos."',role:'OLIVA valida que el módulo respete los patrones de arquitectura definidos.',outcome:'Módulo con arquitectura definida antes de implementar.'},
+    f03:{action:'Definir la estructura o patrón a construir o refactorizar.',code:'"Definir arquitectura de [módulo]: naming, estructura de archivos y flujo de datos."',role:'OLIVA valida que el módulo respete los patrones de arquitectura definidos.',outcome:'Módulo con arquitectura definida antes de implementar.'},
+    f04:{action:'OLIVA revisa estructura, patrones y escalabilidad del sistema antes de construir.',code:'"Revisa estructura de archivos, flujo de datos, naming y patrones de componentes."',outcome:'Arquitectura clara que todo lo demás hereda correctamente.'},
     f05:{action:'Construir la estructura base con naming consistente y módulos desacoplados.',code:'estructura de archivos · naming consistente · módulos desacoplados · documentación',role:'OLIVA guía la construcción de la estructura base del módulo.',outcome:'Base arquitectural que facilita el trabajo de todas las capas.'},
     f06:{action:'OLIVA revisa estructura, acoplamiento y consistencia del patrón implementado.',code:'"Audita estructura de archivos, naming, acoplamiento y escalabilidad del módulo."',role:'OLIVA actúa como auditor de arquitectura — estructura, naming y acoplamiento.',outcome:'Arquitectura validada. El sistema puede crecer sin caos.'}
   }
@@ -582,18 +583,18 @@ function applyRole(key) {
   const obj = OBJECTIVES[currentObjective];
   document.getElementById('heroBadge').textContent = role.heroBadge(obj ? obj.badge.replace('OLIVA × ','') : '');
 
-  // FASE 03
-  document.getElementById('f03action').textContent = role.f03.action;
-  document.getElementById('f03code').textContent   = role.f03.code;
+  // FASE 03 — Definir Micro Objetivo
+  document.getElementById('f03action').textContent  = role.f03.action;
+  document.getElementById('f03code').textContent    = role.f03.code;
+  document.getElementById('f03role').textContent    = role.f03.role;
   document.getElementById('f03outcome').textContent = role.f03.outcome;
-  const cl = document.getElementById('preChecklist');
-  if (cl) cl.innerHTML = role.preChecks.map(c => `<li>${c}</li>`).join('');
 
-  // FASE 04
+  // FASE 04 — Revisión PRE
   document.getElementById('f04action').textContent  = role.f04.action;
   document.getElementById('f04code').textContent    = role.f04.code;
-  document.getElementById('f04role').textContent    = role.f04.role;
   document.getElementById('f04outcome').textContent = role.f04.outcome;
+  const cl = document.getElementById('preChecklist');
+  if (cl) cl.innerHTML = role.preChecks.map(c => `<li>${c}</li>`).join('');
 
   // FASE 05
   document.getElementById('f05action').textContent  = role.f05.action;
